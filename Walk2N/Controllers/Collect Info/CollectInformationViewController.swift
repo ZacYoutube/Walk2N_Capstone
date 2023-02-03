@@ -7,10 +7,9 @@
 
 import UIKit
 
+// aim to prompt to ask user to input their age, weight, and height...
 class ViewController: UIViewController {
 
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         

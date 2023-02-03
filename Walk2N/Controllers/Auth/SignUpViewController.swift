@@ -147,37 +147,6 @@ class SignUpViewController: UIViewController {
             }
         }
     }
-    
-   
-            // create user and save to firestore
-
-//            Auth.auth().createUser(withEmail: email, password: password){ (res, err) in
-//                if err != nil {
-//                    self.showErr("User already existed, please log in instead")
-//                }
-//                else {
-//                    let database = Firestore.firestore()
-//                    database.collection("users").addDocument(data: [
-//                        "uid": res!.user.uid,
-//                        "email": email,
-//                        "password": password,
-//                        "balance": 1000,
-//                        "firstName":"",
-//                        "lastName":"",
-//                        "historicalSteps":[],
-//                        "reachedStepGoal": false,
-//                        "stepGoalToday": 0,
-//                        "boughtShoes":[],
-//                        "currentShoe":""]
-//                    ) {(err) in
-//                        if err != nil {
-//                            self.showErr(err.debugDescription)
-//                        } else {
-//                            self.redirectToPages(Constants.Storyboard.homeViewController)
-//                        }
-//                    }
-//                }
-//            }
         }
         
     

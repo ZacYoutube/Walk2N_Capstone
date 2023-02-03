@@ -12,6 +12,8 @@ import HealthKit
 class HealthKitManager {
     let healthStore = HKHealthStore()
     
+    
+    // checks and get authorization from Health app for stepCount and distanceWalkingRunning metrics
     func authorizeHealthKit() -> Bool {
         var isEnabled = true
         if HKHealthStore.isHealthDataAvailable() {
@@ -36,6 +38,7 @@ class HealthKitManager {
         return formatter1.string(from: date)
     }
     
+    // this function retrieves the past 7 days of step counts from Health app
     func gettingStepCount(completion:(([Double], [String]) -> Void)?){
          guard let sampleType = HKCategoryType.quantityType(forIdentifier: .stepCount) else {
              return
