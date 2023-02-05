@@ -18,29 +18,30 @@ class HistoricalStepViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "History"
-        self.setupRemainingNavItems()
-        // Do any additional setup after loading the view.
-            HealthKitManager().gettingStepCount { steps, time in
-                var color = [NSUIColor](repeating: NSUIColor(red: 255.0, green: 0, blue: 0, alpha: 1.0), count: steps.count)
-                for i in 0..<steps.count{
-                    if steps[i] >= 1000 {
+        self.setUpNavbar()
+        HealthKitManager().gettingStepCount { steps, time in
+            var color = [NSUIColor](repeating: NSUIColor(red: 255.0, green: 0, blue: 0, alpha: 1.0), count: steps.count)
+            for i in 0..<steps.count{
+                // 1000 is the step goal: we can update it based on the ML model output
+                if steps[i] >= 1000 {
                         color[i] = NSUIColor(red: 46/255.0, green: 204/255.0, blue: 113/255.0, alpha: 1.0)
-                    }
-                }
-                self.displaySteps(stepsArr: steps, timeArr: time, color: color)
-                var average: Double = 0.0
-                var total: Double = 0.0
-                for i in 0..<steps.count{
-                    total += steps[i]
-                }
-                
-                average = Double(floor(Double(total) / Double(steps.count)))
-                
-                DispatchQueue.main.async {
-                    self.averageSteps.text = String(average)
-                    self.totalSteps.text = String(total)
                 }
             }
+            self.displaySteps(stepsArr: steps, timeArr: time, color: color)
+            var average: Double = 0.0
+            var total: Double = 0.0
+            for i in 0..<steps.count{
+                total += steps[i]
+            }
+                
+            average = Double(floor(Double(total) / Double(steps.count)))
+                
+            // keep updating on the main thread
+            DispatchQueue.main.async {
+                self.averageSteps.text = String(average)
+                self.totalSteps.text = String(total)
+            }
+        }
     }
     
     override func viewWillLayoutSubviews() {

@@ -21,11 +21,11 @@ class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setUpNavbar()
         view.addSubview(logoutBtn)
         view.backgroundColor = .systemBackground
         navigationItem.title = "Profile"
         logoutBtn.addTarget(self, action: #selector(logout), for: .touchUpInside)
-        self.setupRemainingNavItems()
     }
     
     override func viewDidLayoutSubviews() {
@@ -36,6 +36,8 @@ class ProfileViewController: UIViewController {
     
     @objc private func logout() {
         AuthManager().logout()
+    
+        // after logout, redirect to login
         let loginViewController = LoginViewController()
         loginViewController.modalPresentationStyle = .fullScreen
         present(loginViewController, animated: true)

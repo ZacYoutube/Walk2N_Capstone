@@ -58,14 +58,16 @@ class CollectInfoViewController: UIViewController, UINavigationBarDelegate, UITe
         }
     }
     
-    func showActivityIndicator() {
+    // show loading gif when in process
+    func showLoading() {
         activityView = UIActivityIndicatorView(style: .large)
         activityView?.center = self.view.center
         self.view.addSubview(activityView!)
         activityView?.startAnimating()
     }
     
-    func hideActivityIndicator(){
+    // dismiss loading gif
+    func hideLoading(){
         activityView?.stopAnimating()
     }
     
@@ -81,11 +83,11 @@ class CollectInfoViewController: UIViewController, UINavigationBarDelegate, UITe
         let fieldName = ["firstName", "lastName", "gender", "age", "height", "weight"]
         let fieldVal = [firstName as Any, lastName as Any, gender as Any, age as Any, height as Any, weight as Any]
         
-        self.showActivityIndicator()
+        self.showLoading()
         
         DatabaseManager().updateUserInfo(fieldToUpdate: fieldName, fieldValues: fieldVal) { success in
             if success {
-                self.hideActivityIndicator()
+                self.hideLoading()
                 self.dismiss(animated: true)
             } else {
                 print("failed to save the information")

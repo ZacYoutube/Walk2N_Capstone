@@ -107,14 +107,16 @@ class LoginViewController: UIViewController {
         self.hideKeyboardWhenTappedAround()
     }
     
-    func showActivityIndicator() {
+    // show loading gif when in process
+    func showLoading() {
         activityView = UIActivityIndicatorView(style: .large)
         activityView?.center = self.view.center
         self.view.addSubview(activityView!)
         activityView?.startAnimating()
     }
     
-    func hideActivityIndicator(){
+    // dismiss loading gif
+    func hideLoading(){
         activityView?.stopAnimating()
     }
     
@@ -129,12 +131,12 @@ class LoginViewController: UIViewController {
             return
         }
         
-        self.showActivityIndicator()
+        self.showLoading()
         
         AuthManager.shared.login(email: email!, password: pw!){ success in
             DispatchQueue.main.async {
                 if success {
-                    self.hideActivityIndicator()
+                    self.hideLoading()
                     self.dismiss(animated: true, completion: nil)
                 }else{
                     self.errorLabel.text = "Failed to log in"

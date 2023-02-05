@@ -11,7 +11,7 @@ class ShoeStoreViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setupRemainingNavItems()
+        self.setUpNavbar()
         // Do any additional setup after loading the view.
     }
     

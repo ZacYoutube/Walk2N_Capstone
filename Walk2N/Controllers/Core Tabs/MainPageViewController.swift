@@ -21,13 +21,14 @@ class MainPageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setUpNavbar()
         authorizeHealthKit()
-        self.setupRemainingNavItems()
         checkAuth()
         checkUserInfo()
     }
     
     private func checkUserInfo() {
+        // check whether user has input their weight height gender and age
         DatabaseManager().isUserInfoAvail { userInfoAvail in
             if userInfoAvail == false {
                 let collectUserInfoVC = self.storyboard?.instantiateViewController(withIdentifier: "CollectInfoViewController")

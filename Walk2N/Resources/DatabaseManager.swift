@@ -13,6 +13,7 @@ public class DatabaseManager {
     
     private let db = Firestore.firestore()
     
+    // check whether email is being registered
     public func canCreateAcc(email: String, completion:@escaping ((Bool) -> Void)) {
         let collectionRef = db.collection("users")
         collectionRef.whereField("email", isEqualTo: email).getDocuments { (snapshot, err) in
@@ -29,6 +30,8 @@ public class DatabaseManager {
             }
         }
     }
+    
+    // insert user info to the firestore
     public func insertUser(user: User, completion:@escaping ((Bool) -> Void)) {
         db.collection("users").addDocument(data: [
             "uid": user.uid as Any,
@@ -56,6 +59,7 @@ public class DatabaseManager {
         }
     }
     
+    // retrieve user info object from firestore
     public func getUserInfo(_ completion:@escaping(_ docSnapshot:[DocumentSnapshot])->Void ){
         let uid = Auth.auth().currentUser?.uid
         if uid != nil {
@@ -71,6 +75,7 @@ public class DatabaseManager {
         }
     }
     
+    // update user info based on array of fields and values
     public func updateUserInfo(fieldToUpdate: Array<String>, fieldValues: Array<Any>, _ completion:@escaping(_ bool: Bool) -> Void) {
         let uid = Auth.auth().currentUser?.uid
         if uid != nil {
@@ -93,6 +98,7 @@ public class DatabaseManager {
         }
     }
     
+    // check whether user has input their weight height age and gender
     public func isUserInfoAvail(completion:@escaping(_ bool: Bool) -> Void) {
         self.getUserInfo { docSnapshot in
             for doc in docSnapshot {

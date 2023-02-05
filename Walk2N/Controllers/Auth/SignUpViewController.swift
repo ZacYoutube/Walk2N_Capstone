@@ -78,14 +78,16 @@ class SignUpViewController: UIViewController {
         view.addSubview(errorLabel)
     }
     
-    func showActivityIndicator() {
+    // show loading gif when in process
+    func showLoading() {
         activityView = UIActivityIndicatorView(style: .large)
         activityView?.center = self.view.center
         self.view.addSubview(activityView!)
         activityView?.startAnimating()
     }
 
-    func hideActivityIndicator(){
+    // dismiss loading gif
+    func hideLoading(){
         activityView?.stopAnimating()
     }
     
@@ -142,7 +144,7 @@ class SignUpViewController: UIViewController {
             return
         }
         
-        self.showActivityIndicator()
+        self.showLoading()
 
         AuthManager.shared.createNewUser(email: email!, password: pass!) { registered, uid in
             DispatchQueue.main.async {
@@ -157,7 +159,7 @@ class SignUpViewController: UIViewController {
                     }
                     print("success")
                     print(registered)
-                    self.hideActivityIndicator()
+                    self.hideLoading()
                     self.dismiss(animated: true, completion: nil)
                 }
                 else{
