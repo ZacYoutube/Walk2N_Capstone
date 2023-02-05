@@ -18,6 +18,7 @@ class HistoricalStepViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "History"
+        self.setupRemainingNavItems()
         // Do any additional setup after loading the view.
             HealthKitManager().gettingStepCount { steps, time in
                 var color = [NSUIColor](repeating: NSUIColor(red: 255.0, green: 0, blue: 0, alpha: 1.0), count: steps.count)
@@ -40,16 +41,10 @@ class HistoricalStepViewController: UIViewController {
                     self.totalSteps.text = String(total)
                 }
             }
-        
-        
-        
-        
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-       
-        
     }
     
     private func displaySteps(stepsArr: Array<Double>, timeArr: Array<String>, color: Array<NSUIColor>) {

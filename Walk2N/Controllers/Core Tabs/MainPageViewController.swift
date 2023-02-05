@@ -9,7 +9,7 @@ import UIKit
 import Firebase
 
 class MainPageViewController: UIViewController {
-
+    
     private func authorizeHealthKit() {
         let isEnabled = HealthKitManager().authorizeHealthKit()
         if isEnabled == false {
@@ -22,13 +22,21 @@ class MainPageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         authorizeHealthKit()
-        let button = UIButton(type: UIButton.ButtonType.custom)
-        button.setImage(UIImage(named: "profile.png"), for: .normal)
-        button.addTarget(self, action:#selector(toProfile), for: .touchUpInside)
-        button.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
-        let barButton = UIBarButtonItem(customView: button)
-        self.navigationItem.leftBarButtonItems = [barButton]
+        self.setupRemainingNavItems()
+        checkAuth()
+        checkUserInfo()
     }
+    
+    private func checkUserInfo() {
+        DatabaseManager().isUserInfoAvail { userInfoAvail in
+            if userInfoAvail == false {
+                let collectUserInfoVC = self.storyboard?.instantiateViewController(withIdentifier: "CollectInfoViewController")
+                collectUserInfoVC!.modalPresentationStyle = .fullScreen
+                self.present(collectUserInfoVC!, animated: true)
+            }
+        }
+    }
+    
     
     private func checkAuth(){
         // check whether user is authenticated

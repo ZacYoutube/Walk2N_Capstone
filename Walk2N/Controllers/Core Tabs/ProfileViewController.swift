@@ -24,8 +24,8 @@ class ProfileViewController: UIViewController {
         view.addSubview(logoutBtn)
         view.backgroundColor = .systemBackground
         navigationItem.title = "Profile"
-
-        // Do any additional setup after loading the view.
+        logoutBtn.addTarget(self, action: #selector(logout), for: .touchUpInside)
+        self.setupRemainingNavItems()
     }
     
     override func viewDidLayoutSubviews() {
@@ -34,17 +34,13 @@ class ProfileViewController: UIViewController {
         
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        logoutBtn.addTarget(self, action: #selector(logout), for: .touchUpInside)
-    }
-    
     @objc private func logout() {
-        try! Auth.auth().signOut()
+        AuthManager().logout()
         let loginViewController = LoginViewController()
         loginViewController.modalPresentationStyle = .fullScreen
         present(loginViewController, animated: true)
     }
+    
     
 
     /*

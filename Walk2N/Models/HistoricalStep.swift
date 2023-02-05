@@ -7,13 +7,13 @@
 
 import Foundation
 
-class HistoricalStep {
-    var id: String = ""
-    var uid: String = ""
-    var stepCount: Int = 0
-    var date: Date = Date()
+public class HistoricalStep {
+    var id: String?
+    var uid: String?
+    var stepCount: Int?
+    var date: Date?
     
-    init(id: String, uid: String, stepCount: Int, date: Date) {
+    init(id: String?, uid: String?, stepCount: Int?, date: Date?) {
         self.id = id
         self.uid = uid
         self.stepCount = stepCount

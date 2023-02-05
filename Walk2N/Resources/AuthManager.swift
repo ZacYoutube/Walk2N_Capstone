@@ -38,5 +38,9 @@ public class AuthManager {
             }
         }
     }
+    
+    public func logout() {
+        try! Auth.auth().signOut()
+    }
 }
 

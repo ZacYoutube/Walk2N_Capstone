@@ -29,24 +29,78 @@ public class DatabaseManager {
             }
         }
     }
-    public func insertUser(email: String, uid: String, completion:@escaping ((Bool) -> Void)) {
+    public func insertUser(user: User, completion:@escaping ((Bool) -> Void)) {
         db.collection("users").addDocument(data: [
-            "uid": uid,
-            "email": email,
-            "password": "",
-            "balance": 1000,
-            "firstName":"",
-            "lastName":"",
-            "historicalSteps":[],
-            "reachedStepGoal": false,
-            "stepGoalToday": 0,
-            "boughtShoes":[],
-            "currentShoe":""]
+            "uid": user.uid as Any,
+            "email": user.email as Any,
+            "password": user.password as Any,
+            "balance": user.balance as Any,
+            "firstName": user.firstName as Any,
+            "lastName": user.lastName as Any,
+            "weight": user.weight as Any,
+            "height": user.height as Any,
+            "age": user.age as Any,
+            "gender": user.gender as Any,
+            "historicalSteps": user.historicalSteps as Any,
+            "reachedStepGoal": user.reachedStepGoal as Any,
+            "stepGoalToday": user.stepGoalToday as Any,
+            "boughtShoes": user.boughtShoes as Any,
+            "currentShoe": user.currentShoe as Any
+        ]
         ) {(err) in
             if err != nil {
                 completion(true)
             } else {
                 completion(false)
+            }
+        }
+    }
+    
+    public func getUserInfo(_ completion:@escaping(_ docSnapshot:[DocumentSnapshot])->Void ){
+        let uid = Auth.auth().currentUser?.uid
+        if uid != nil {
+            db.collection("users").whereField("uid", isEqualTo: uid!).getDocuments { querySnapshot, err in
+                if let err = err {
+                    print("Error getting docs: \(err)")
+                }else{
+                    if let doc = querySnapshot?.documents {
+                        completion(doc)
+                    }
+                }
+            }
+        }
+    }
+    
+    public func updateUserInfo(fieldToUpdate: Array<String>, fieldValues: Array<Any>, _ completion:@escaping(_ bool: Bool) -> Void) {
+        let uid = Auth.auth().currentUser?.uid
+        if uid != nil {
+            db.collection("users").whereField("uid", isEqualTo: uid!).getDocuments { querySnapShot, err in
+                if let err = err {
+                    print(err)
+                    completion(false)
+                }
+                else {
+                    let doc = querySnapShot?.documents.first
+                    for i in 0..<fieldToUpdate.count {
+                        doc?.reference.updateData([
+                            fieldToUpdate[i] : fieldValues[i]
+                        ])
+                    }
+                    
+                    completion(true)
+                }
+            }
+        }
+    }
+    
+    public func isUserInfoAvail(completion:@escaping(_ bool: Bool) -> Void) {
+        self.getUserInfo { docSnapshot in
+            for doc in docSnapshot {
+                if doc["age"] as AnyObject is NSNull || doc["height"] as AnyObject is NSNull || doc["weight"] as AnyObject is NSNull || doc["gender"] as AnyObject is NSNull{
+                    completion(false)
+                }else{
+                    completion(true)
+                }
             }
         }
     }

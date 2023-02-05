@@ -10,6 +10,8 @@ import Firebase
 
 class LoginViewController: UIViewController {
 
+    private var activityView: UIActivityIndicatorView?
+    
     private let header: UIView = {
         let header = UIView()
         header.backgroundColor = UIColor.white.withAlphaComponent(0.5)
@@ -102,7 +104,18 @@ class LoginViewController: UIViewController {
         view.backgroundColor = .systemBackground
         loginBtn.addTarget(self, action: #selector(login), for: .touchUpInside)
         createAccountBtn.addTarget(self, action: #selector(signup), for: .touchUpInside)
-        
+        self.hideKeyboardWhenTappedAround()
+    }
+    
+    func showActivityIndicator() {
+        activityView = UIActivityIndicatorView(style: .large)
+        activityView?.center = self.view.center
+        self.view.addSubview(activityView!)
+        activityView?.startAnimating()
+    }
+    
+    func hideActivityIndicator(){
+        activityView?.stopAnimating()
     }
     
     @objc private func login() {
@@ -116,9 +129,12 @@ class LoginViewController: UIViewController {
             return
         }
         
+        self.showActivityIndicator()
+        
         AuthManager.shared.login(email: email!, password: pw!){ success in
             DispatchQueue.main.async {
                 if success {
+                    self.hideActivityIndicator()
                     self.dismiss(animated: true, completion: nil)
                 }else{
                     self.errorLabel.text = "Failed to log in"

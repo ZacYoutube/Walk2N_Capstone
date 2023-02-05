@@ -10,6 +10,8 @@ import Firebase
 
 class SignUpViewController: UIViewController {
     
+    private var activityView: UIActivityIndicatorView?
+
     private let emailTextField: UITextField = {
         let field = UITextField()
         field.placeholder = "Enter your email"
@@ -75,11 +77,24 @@ class SignUpViewController: UIViewController {
         view.addSubview(createAccountBtn)
         view.addSubview(errorLabel)
     }
+    
+    func showActivityIndicator() {
+        activityView = UIActivityIndicatorView(style: .large)
+        activityView?.center = self.view.center
+        self.view.addSubview(activityView!)
+        activityView?.startAnimating()
+    }
+
+    func hideActivityIndicator(){
+        activityView?.stopAnimating()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         addSubView()
         view.backgroundColor = .systemBackground
         createAccountBtn.addTarget(self, action: #selector(signup), for: .touchUpInside)
+        self.hideKeyboardWhenTappedAround()
     }
     
     override func viewDidLayoutSubviews() {
@@ -127,10 +142,13 @@ class SignUpViewController: UIViewController {
             return
         }
         
+        self.showActivityIndicator()
+
         AuthManager.shared.createNewUser(email: email!, password: pass!) { registered, uid in
             DispatchQueue.main.async {
                 if registered {
-                    DatabaseManager.shared.insertUser(email: email!, uid: uid) { success in
+                    var newUser = User(uid: uid, email: email, password: pass, firstName: nil, lastName: nil, balance: 0.0, boughtShoes: nil, currentShoe: nil, historicalSteps: nil, reachedStepGoal: nil, stepGoalToday: nil, weight: nil, height: nil, age: nil, gender: nil)
+                    DatabaseManager.shared.insertUser(user: newUser) { success in
                         if success {
                             print("success add to db")
                         }else{
@@ -139,6 +157,8 @@ class SignUpViewController: UIViewController {
                     }
                     print("success")
                     print(registered)
+                    self.hideActivityIndicator()
+                    self.dismiss(animated: true, completion: nil)
                 }
                 else{
                     print("nooo")

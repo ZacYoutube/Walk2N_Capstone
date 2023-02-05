@@ -7,14 +7,14 @@
 
 import Foundation
 
-class Shoe {
-    var id: String = ""
-    var name: String = ""
-    var durability: Float = 0.0
-    var imgUrl: String = ""
-    var price: Float = 0.0
+public class Shoe {
+    var id: String?
+    var name: String?
+    var durability: Float?
+    var imgUrl: String?
+    var price: Float?
     
-    init(id: String, name: String, durability: Float, imgUrl: String, price: Float) {
+    init(id: String?, name: String?, durability: Float?, imgUrl: String?, price: Float?) {
         self.id = id
         self.name = name
         self.durability = durability

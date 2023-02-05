@@ -7,26 +7,29 @@
 
 import Foundation
 
-class User {
-    var uid: String = ""
-    var email: String = ""
-    var password: String = ""
-    var firstName: String = ""
-    var lastName: String = ""
-    var balance: Float = 0.0
-    var boughtShoes: Array<Shoe> = []
+public class User {
+    var uid: String?
+    var email: String?
+    var password: String?
+    var firstName: String?
+    var lastName: String?
+    var balance: Float?
+    var boughtShoes: Array<Shoe>?
     var currentShoe: Shoe?
-    var historicalSteps: Array<HistoricalStep> = []
-    var reachedStepGoal: Bool = false
-    var stepGoalToday: Int = 0
-    var weight: Float = 0
-    var height: Float = 0
-    var age: Int = 0
+    var historicalSteps: Array<HistoricalStep>?
+    var reachedStepGoal: Bool?
+    var stepGoalToday: Int?
+    var weight: Float?
+    var height: Float?
+    var age: Int?
+    var gender: String?
     
-    init(uid: String, email: String, password: String,
-         firstName: String, lastName: String,
-         balance: Float, boughtShoes: Array<Shoe>,
-         currentShoe: Shoe, historicalSteps: Array<HistoricalStep>, reachedStepGoal: Bool, stepGoalToday: Int, weight: Float, height: Float, age: Int) {
+    init(uid: String?, email: String?, password: String?,
+         firstName: String?, lastName: String?,
+         balance: Float?, boughtShoes: Array<Shoe>?,
+         currentShoe: Shoe?, historicalSteps: Array<HistoricalStep>?,
+         reachedStepGoal: Bool?, stepGoalToday: Int?, weight: Float?,
+         height: Float?, age: Int?, gender: String?) {
         self.uid = uid
         self.email = email
         self.password = password
@@ -41,6 +44,7 @@ class User {
         self.weight = weight
         self.height = height
         self.age = age
+        self.gender = gender
     }
     
     func setFirstName(_ firstName: String){
@@ -68,15 +72,19 @@ class User {
         self.stepGoalToday = stepGoalToday
     }
     
-    func weight(_ weight: Float) {
+    func setWeight(_ weight: Float) {
         self.weight = weight
     }
     
-    func height(_ height: Float) {
+    func setHeight(_ height: Float) {
         self.height = height
     }
     
-    func age(_ age: Int) {
+    func setAge(_ age: Int) {
         self.age = age
+    }
+    
+    func setGender(_ gender: String){
+        self.gender = gender
     }
 }
