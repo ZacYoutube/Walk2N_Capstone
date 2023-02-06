@@ -39,31 +39,34 @@ class HealthKitManager {
     }
     
     // this function retrieves the past 7 days of step counts from Health app
-    func gettingStepCount(completion:(([Double], [String]) -> Void)?){
+    func gettingStepCount(_ n: Int, completion:(([Double], [String]) -> Void)?){
          guard let sampleType = HKCategoryType.quantityType(forIdentifier: .stepCount) else {
              return
          }
-         var stepOverPast7Days: Array<Double> = []
+         var stepOverPastNDays: Array<Double> = []
          var time: Array<String> = []
          let now = Date()
-         let exactlySevenDaysAgo = Calendar.current.date(byAdding: DateComponents(day: -7), to: now)!
-         let startOfSevenDaysAgo = Calendar.current.startOfDay(for: exactlySevenDaysAgo)
-         let predicate = HKQuery.predicateForSamples(withStart: exactlySevenDaysAgo, end: now, options: .strictEndDate)
+         let exactlyNDaysAgo = Calendar.current.date(byAdding: DateComponents(day: -n), to: now)!
+         let startOfNDaysAgo = Calendar.current.startOfDay(for: exactlyNDaysAgo)
+         var predicate = HKQuery.predicateForSamples(withStart: exactlyNDaysAgo, end: now, options: .strictEndDate)
+         if n == 0 {
+             predicate = HKQuery.predicateForSamples(withStart: startOfNDaysAgo, end: now, options: .strictEndDate)
+         }
          var interval = DateComponents()
          interval.day = 1
-         let query = HKStatisticsCollectionQuery(quantityType: sampleType, quantitySamplePredicate: predicate, anchorDate: startOfSevenDaysAgo, intervalComponents: interval)
+         let query = HKStatisticsCollectionQuery(quantityType: sampleType, quantitySamplePredicate: predicate, anchorDate: startOfNDaysAgo, intervalComponents: interval)
          query.initialResultsHandler = {
              query, result, err in
              if let res = result {
-                 res.enumerateStatistics(from: startOfSevenDaysAgo, to: now) { stats, val in
+                 res.enumerateStatistics(from: startOfNDaysAgo, to: now) { stats, val in
                      if let count = stats.sumQuantity() {
                          let val = count.doubleValue(for: HKUnit.count())
                          let date = stats.startDate
-                         stepOverPast7Days.append(val)
+                         stepOverPastNDays.append(val)
                          time.append(self.convertDateToStr(date: date))
                      }
                  }
-                 completion!(stepOverPast7Days, time)
+                 completion!(stepOverPastNDays, time)
              }
          }
          healthStore.execute(query)

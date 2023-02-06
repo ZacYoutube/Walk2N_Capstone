@@ -19,7 +19,7 @@ class HistoricalStepViewController: UIViewController {
         super.viewDidLoad()
         navigationItem.title = "History"
         self.setUpNavbar()
-        HealthKitManager().gettingStepCount { steps, time in
+        HealthKitManager().gettingStepCount(7) { steps, time in
             var color = [NSUIColor](repeating: NSUIColor(red: 255.0, green: 0, blue: 0, alpha: 1.0), count: steps.count)
             for i in 0..<steps.count{
                 // 1000 is the step goal: we can update it based on the ML model output
@@ -35,6 +35,10 @@ class HistoricalStepViewController: UIViewController {
             }
                 
             average = Double(floor(Double(total) / Double(steps.count)))
+            
+            if average.isNaN {
+                average = 0.0
+            }
                 
             // keep updating on the main thread
             DispatchQueue.main.async {

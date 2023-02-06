@@ -56,13 +56,42 @@ extension UIViewController {
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         navigationController?.navigationBar.shadowImage = UIImage()
 
-        let button = UIButton(type: .custom)
-        button.setImage(UIImage (named: "profile.png"), for: .normal)
-        button.frame = CGRect(x: 0.0, y: 0.0, width: 30.0, height: 30.0)
-        button.addTarget(self, action: #selector(popNavigate), for: .touchUpInside)
-        let barButtonItem = UIBarButtonItem(customView: button)
+        let profile = UIButton(type: .custom)
+        profile.setImage(UIImage (named: "profile.png"), for: .normal)
+        profile.frame = CGRect(x: 0.0, y: 0.0, width: 30.0, height: 30.0)
+        profile.addTarget(self, action: #selector(popNavigate), for: .touchUpInside)
+        let barButtonItem = UIBarButtonItem(customView: profile)
+        
+//        let logo = UIImage(named: "")
+        let containView = UIView(frame: CGRectMake(0, 0, 120, 40))
+        let label = UILabel(frame: CGRectMake(0, 0, 80, 40))
+        DatabaseManager().getUserInfo { docSnapshot in
+            for doc in docSnapshot {
+                let balance =  doc["balance"] as? Double
+                label.text = String(balance!)
+            }
+        }
+        label.textAlignment = NSTextAlignment.center
+        label.layer.borderWidth = 0.2
+        label.layer.borderColor = UIColor.lightGray.cgColor
+        label.layer.cornerRadius = 10
+//        label.center = containView.center
 
+        containView.addSubview(label)
+
+        let imageview = UIImageView(frame: CGRectMake(90, 10, 20, 20))
+        imageview.image = UIImage(named: "zec.svg")
+        imageview.contentMode = UIView.ContentMode.scaleAspectFill
+        
+        
+        containView.addSubview(imageview)
+//        containView.layer.borderWidth = 2
+//        containView.layer.borderColor = UIColor.red.cgColor
+
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: containView)
+        
         self.navigationItem.leftBarButtonItem = barButtonItem
+//        self.navigationItem.titleView = UIImageView(image: logo)
     }
 
     @objc func popNavigate(){
@@ -71,5 +100,14 @@ extension UIViewController {
     
     @objc func dismissKeyboard() {
         view.endEditing(true)
+    }
+}
+
+
+
+// truncate double decimals
+extension Double {
+    func truncate(places : Int)-> Double {
+        return Double(floor(pow(10.0, Double(places)) * self)/pow(10.0, Double(places)))
     }
 }
