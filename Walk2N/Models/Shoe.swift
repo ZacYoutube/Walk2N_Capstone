@@ -13,13 +13,15 @@ public class Shoe {
     var durability: Float?
     var imgUrl: String?
     var price: Float?
+    var expirationDate: Date?
     
-    init(id: String?, name: String?, durability: Float?, imgUrl: String?, price: Float?) {
+    init(id: String?, name: String?, durability: Float?, imgUrl: String?, price: Float?, expirationDate: Date?) {
         self.id = id
         self.name = name
         self.durability = durability
         self.imgUrl = imgUrl
         self.price = price
+        self.expirationDate = expirationDate
     }
     
     func setDurability(_ d: Float){
@@ -33,5 +35,8 @@ public class Shoe {
     }
     func setImgUrl(_ imgUrl: String){
         self.imgUrl = imgUrl
+    }
+    func setExpirationDate(_ expirationDate: Date) {
+        self.expirationDate = expirationDate
     }
 }

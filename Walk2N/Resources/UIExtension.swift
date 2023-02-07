@@ -53,8 +53,9 @@ extension UIViewController {
     // shared navbar across different view controllers [ under development ]
     func setUpNavbar() {
         self.navigationController?.setNavigationBarHidden(false, animated: true)
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        navigationController?.navigationBar.shadowImage = UIImage()
+//        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+//        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
 
         let profile = UIButton(type: .custom)
         profile.setImage(UIImage (named: "profile.png"), for: .normal)
@@ -111,3 +112,4 @@ extension Double {
         return Double(floor(pow(10.0, Double(places)) * self)/pow(10.0, Double(places)))
     }
 }
+

@@ -110,4 +110,16 @@ public class DatabaseManager {
             }
         }
     }
+    
+    public func getShoes(completion:@escaping(_ docSnapshot:[DocumentSnapshot])->Void) {
+        db.collection("shoeStore").getDocuments { querySnapshot, err in
+            if let err = err {
+                print("Error getting docs: \(err)")
+            }else{
+                if let doc = querySnapshot?.documents {
+                    completion(doc)
+                }
+            }
+        }
+    }
 }

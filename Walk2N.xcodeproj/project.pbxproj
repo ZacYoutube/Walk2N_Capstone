@@ -20,7 +20,9 @@
 		D512E9CC2988E1C5007B0D2F /* Shoe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D512E9CB2988E1C5007B0D2F /* Shoe.swift */; };
 		D512E9CE2988E229007B0D2F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D512E9CD2988E229007B0D2F /* User.swift */; };
 		D512E9D02988E67E007B0D2F /* HistoricalStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = D512E9CF2988E67E007B0D2F /* HistoricalStep.swift */; };
-		D5A3C37B298B1AD500772D1B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5A3C37A298B1AD500772D1B /* Main.storyboard */; };
+		D53A7FC22991EDBA000220B9 /* ShoeListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53A7FC02991EDBA000220B9 /* ShoeListCollectionViewCell.swift */; };
+		D53A7FC32991EDBA000220B9 /* ShoeListCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D53A7FC12991EDBA000220B9 /* ShoeListCollectionViewCell.xib */; };
+		D53A7FC52991EE8D000220B9 /* ShoeStoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53A7FC42991EE8D000220B9 /* ShoeStoreViewController.swift */; };
 		D5A3C37D298B1BA700772D1B /* MainPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C37C298B1BA700772D1B /* MainPageViewController.swift */; };
 		D5A3C37F298B1BC300772D1B /* HistoricalStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C37E298B1BC300772D1B /* HistoricalStepViewController.swift */; };
 		D5A3C381298B1BE000772D1B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C380298B1BE000772D1B /* ProfileViewController.swift */; };
@@ -33,7 +35,7 @@
 		D5A3C398298C902E00772D1B /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C397298C902E00772D1B /* HealthKitManager.swift */; };
 		D5A3C3AD298CC6C600772D1B /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = D5A3C3AC298CC6C600772D1B /* Charts */; };
 		D5A3C3AF298CCD7B00772D1B /* BarChartExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C3AE298CCD7B00772D1B /* BarChartExtension.swift */; };
-		D5A3C3B129909A0A00772D1B /* ShoeStoreCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C3B029909A0A00772D1B /* ShoeStoreCollectionViewController.swift */; };
+		D5CA36EE2991C912000B08EA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5CA36ED2991C912000B08EA /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,7 +52,9 @@
 		D512E9CB2988E1C5007B0D2F /* Shoe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shoe.swift; sourceTree = "<group>"; };
 		D512E9CD2988E229007B0D2F /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		D512E9CF2988E67E007B0D2F /* HistoricalStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricalStep.swift; sourceTree = "<group>"; };
-		D5A3C37A298B1AD500772D1B /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../../../../../.Trash/Main.storyboard; sourceTree = "<group>"; };
+		D53A7FC02991EDBA000220B9 /* ShoeListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoeListCollectionViewCell.swift; sourceTree = "<group>"; };
+		D53A7FC12991EDBA000220B9 /* ShoeListCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShoeListCollectionViewCell.xib; sourceTree = "<group>"; };
+		D53A7FC42991EE8D000220B9 /* ShoeStoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoeStoreViewController.swift; sourceTree = "<group>"; };
 		D5A3C37C298B1BA700772D1B /* MainPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPageViewController.swift; sourceTree = "<group>"; };
 		D5A3C37E298B1BC300772D1B /* HistoricalStepViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricalStepViewController.swift; sourceTree = "<group>"; };
 		D5A3C380298B1BE000772D1B /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
@@ -62,7 +66,7 @@
 		D5A3C396298C8F8E00772D1B /* Walk2N.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Walk2N.entitlements; sourceTree = "<group>"; };
 		D5A3C397298C902E00772D1B /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
 		D5A3C3AE298CCD7B00772D1B /* BarChartExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChartExtension.swift; sourceTree = "<group>"; };
-		D5A3C3B029909A0A00772D1B /* ShoeStoreCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoeStoreCollectionViewController.swift; sourceTree = "<group>"; };
+		D5CA36ED2991C912000B08EA /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../../../../Main.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +140,15 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		D53A7FBF2991EC69000220B9 /* Shoe Collection View Cell */ = {
+			isa = PBXGroup;
+			children = (
+				D53A7FC02991EDBA000220B9 /* ShoeListCollectionViewCell.swift */,
+				D53A7FC12991EDBA000220B9 /* ShoeListCollectionViewCell.xib */,
+			);
+			path = "Shoe Collection View Cell";
+			sourceTree = "<group>";
+		};
 		D5A3C36E298B19EF00772D1B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -159,7 +172,7 @@
 		D5A3C379298B1AC700772D1B /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
-				D5A3C37A298B1AD500772D1B /* Main.storyboard */,
+				D5CA36ED2991C912000B08EA /* Main.storyboard */,
 				D512E9AD2988A33E007B0D2F /* LaunchScreen.storyboard */,
 			);
 			path = Storyboards;
@@ -168,10 +181,11 @@
 		D5A3C382298B1BF100772D1B /* Core Tabs */ = {
 			isa = PBXGroup;
 			children = (
+				D53A7FBF2991EC69000220B9 /* Shoe Collection View Cell */,
 				D5A3C37C298B1BA700772D1B /* MainPageViewController.swift */,
 				D5A3C37E298B1BC300772D1B /* HistoricalStepViewController.swift */,
 				D5A3C380298B1BE000772D1B /* ProfileViewController.swift */,
-				D5A3C3B029909A0A00772D1B /* ShoeStoreCollectionViewController.swift */,
+				D53A7FC42991EE8D000220B9 /* ShoeStoreViewController.swift */,
 			);
 			path = "Core Tabs";
 			sourceTree = "<group>";
@@ -269,9 +283,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				D512E9AF2988A33E007B0D2F /* LaunchScreen.storyboard in Resources */,
+				D53A7FC32991EDBA000220B9 /* ShoeListCollectionViewCell.xib in Resources */,
 				D512E9BE2988A997007B0D2F /* GoogleService-Info.plist in Resources */,
 				D512E9AC2988A33E007B0D2F /* Assets.xcassets in Resources */,
-				D5A3C37B298B1AD500772D1B /* Main.storyboard in Resources */,
+				D5CA36EE2991C912000B08EA /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -284,11 +299,12 @@
 			files = (
 				D5A3C37D298B1BA700772D1B /* MainPageViewController.swift in Sources */,
 				D5A3C389298B316900772D1B /* AuthManager.swift in Sources */,
+				D53A7FC22991EDBA000220B9 /* ShoeListCollectionViewCell.swift in Sources */,
 				D512E9A32988A33D007B0D2F /* AppDelegate.swift in Sources */,
 				D5A3C387298B30D000772D1B /* DatabaseManager.swift in Sources */,
 				D5A3C38B298B35E500772D1B /* UIExtension.swift in Sources */,
-				D5A3C3B129909A0A00772D1B /* ShoeStoreCollectionViewController.swift in Sources */,
 				D5A3C3AF298CCD7B00772D1B /* BarChartExtension.swift in Sources */,
+				D53A7FC52991EE8D000220B9 /* ShoeStoreViewController.swift in Sources */,
 				D5A3C37F298B1BC300772D1B /* HistoricalStepViewController.swift in Sources */,
 				D512E9B72988A468007B0D2F /* SignUpViewController.swift in Sources */,
 				D512E9B92988A480007B0D2F /* LoginViewController.swift in Sources */,
