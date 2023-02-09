@@ -91,6 +91,33 @@ public class DatabaseManager {
                             fieldToUpdate[i] : fieldValues[i]
                         ])
                     }
+                    completion(true)
+                }
+            }
+        }
+    }
+
+    
+    public func updateStepsData(fieldName: String, fieldVal: [String: Any], pop: Bool, _ completion:@escaping(_ bool: Bool) -> Void){
+        let uid = Auth.auth().currentUser?.uid
+        if uid != nil {
+            db.collection("users").whereField("uid", isEqualTo: uid!).getDocuments { querySnapShot, err in
+                if let err = err {
+                    print(err)
+                    completion(false)
+                }
+                else {
+                    let doc = querySnapShot?.documents.first
+                    if pop == true {
+                        doc?.reference.updateData([
+                            fieldName : FieldValue.arrayRemove([fieldVal])
+                        ])
+                    }
+                    else {
+                        doc?.reference.updateData([
+                            fieldName : FieldValue.arrayUnion([fieldVal])
+                        ])
+                    }
                     
                     completion(true)
                 }

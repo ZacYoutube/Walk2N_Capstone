@@ -35,6 +35,7 @@
 		D5A3C398298C902E00772D1B /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C397298C902E00772D1B /* HealthKitManager.swift */; };
 		D5A3C3AD298CC6C600772D1B /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = D5A3C3AC298CC6C600772D1B /* Charts */; };
 		D5A3C3AF298CCD7B00772D1B /* BarChartExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C3AE298CCD7B00772D1B /* BarChartExtension.swift */; };
+		D5BE8C5A2994781800ABA0D4 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D5BE8C592994781800ABA0D4 /* FirebaseFirestoreSwift */; };
 		D5CA36EE2991C912000B08EA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5CA36ED2991C912000B08EA /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
@@ -74,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5BE8C5A2994781800ABA0D4 /* FirebaseFirestoreSwift in Frameworks */,
 				D5A3C38E298B8B8900772D1B /* FirebaseDatabase in Frameworks */,
 				D512E9C12988AB27007B0D2F /* FirebaseAuth in Frameworks */,
 				D512E9C32988AB27007B0D2F /* FirebaseFirestore in Frameworks */,
@@ -235,6 +237,7 @@
 				D512E9C22988AB27007B0D2F /* FirebaseFirestore */,
 				D5A3C38D298B8B8900772D1B /* FirebaseDatabase */,
 				D5A3C3AC298CC6C600772D1B /* Charts */,
+				D5BE8C592994781800ABA0D4 /* FirebaseFirestoreSwift */,
 			);
 			productName = Walk2N;
 			productReference = D512E99F2988A33D007B0D2F /* Walk2N.app */;
@@ -566,6 +569,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D5A3C3AB298CC6C600772D1B /* XCRemoteSwiftPackageReference "Charts" */;
 			productName = Charts;
+		};
+		D5BE8C592994781800ABA0D4 /* FirebaseFirestoreSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D512E9BF2988AB27007B0D2F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestoreSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

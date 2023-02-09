@@ -8,6 +8,7 @@
 import UIKit
 import HealthKit
 import Charts
+import Firebase
 
 class HistoricalStepViewController: UIViewController {
     
@@ -19,33 +20,72 @@ class HistoricalStepViewController: UIViewController {
         super.viewDidLoad()
         navigationItem.title = "History"
         self.setUpNavbar()
-        HealthKitManager().gettingStepCount(7) { steps, time in
-            var color = [NSUIColor](repeating: NSUIColor(red: 255.0, green: 0, blue: 0, alpha: 1.0), count: steps.count)
-            for i in 0..<steps.count{
-                // 1000 is the step goal: we can update it based on the ML model output
-                if steps[i] >= 1000 {
+        
+        // read from firebase and display historical step count in bar chart
+        DatabaseManager.shared.getUserInfo { docSnapshot in
+            for doc in docSnapshot {
+                var historicalSteps = doc["historicalSteps"]! as! [Any]
+                historicalSteps = historicalSteps.sorted(by: {
+                    ((($0 as! [String:Any])["date"] as! Timestamp).dateValue()) < ((($1 as! [String:Any])["date"] as! Timestamp).dateValue())
+                })
+                historicalSteps = Array(historicalSteps[1...7])
+                var color = [NSUIColor](repeating: NSUIColor(red: 255.0, green: 0, blue: 0, alpha: 1.0), count: historicalSteps.count)
+                var timeArr: Array<String> = Array(repeating: "", count: historicalSteps.count)
+                var stepsArr: Array<Double> = Array(repeating: 0.0, count: historicalSteps.count)
+                for i in 0..<historicalSteps.count {
+                    if (historicalSteps[i] as! [String:Any])["stepCount"] as! Double >= 1000.0 {
                         color[i] = NSUIColor(red: 46/255.0, green: 204/255.0, blue: 113/255.0, alpha: 1.0)
+                    }
+                    timeArr[i] = (((historicalSteps[i] as! [String:Any])["date"] as! Timestamp).dateValue()).dayOfWeek()!
+                    stepsArr[i] = (historicalSteps[i] as! [String:Any])["stepCount"] as! Double
+                }
+                self.displaySteps(stepsArr: stepsArr, timeArr: timeArr, color: color)
+                var average: Double = 0.0
+                var total: Double = 0.0
+                for i in 0..<stepsArr.count{
+                    total += stepsArr[i]
+                }
+                average = Double(floor(Double(total) / Double(stepsArr.count)))
+                if average.isNaN {
+                    average = 0.0
+                }
+                DispatchQueue.main.async {
+                    self.averageSteps.text = String(average)
+                    self.totalSteps.text = String(total)
                 }
             }
-            self.displaySteps(stepsArr: steps, timeArr: time, color: color)
-            var average: Double = 0.0
-            var total: Double = 0.0
-            for i in 0..<steps.count{
-                total += steps[i]
-            }
-                
-            average = Double(floor(Double(total) / Double(steps.count)))
-            
-            if average.isNaN {
-                average = 0.0
-            }
-                
-            // keep updating on the main thread
-            DispatchQueue.main.async {
-                self.averageSteps.text = String(average)
-                self.totalSteps.text = String(total)
-            }
         }
+//        HealthKitManager().gettingStepCount(7) { steps, time in
+//            var color = [NSUIColor](repeating: NSUIColor(red: 255.0, green: 0, blue: 0, alpha: 1.0), count: steps.count)
+//            for i in 0..<steps.count{
+//                // 1000 is the step goal: we can update it based on the ML model output
+//                if steps[i] >= 1000 {
+//                        color[i] = NSUIColor(red: 46/255.0, green: 204/255.0, blue: 113/255.0, alpha: 1.0)
+//                }
+//            }
+//            var timeArr: Array<String> = Array(repeating: "", count: time.count)
+//            for i in 0..<time.count {
+//                timeArr[i] = time[i].dayOfWeek()!
+//             }
+//            self.displaySteps(stepsArr: steps, timeArr: timeArr, color: color)
+//            var average: Double = 0.0
+//            var total: Double = 0.0
+//            for i in 0..<steps.count{
+//                total += steps[i]
+//            }
+//
+//            average = Double(floor(Double(total) / Double(steps.count)))
+//
+//            if average.isNaN {
+//                average = 0.0
+//            }
+//
+//            // keep updating on the main thread
+//            DispatchQueue.main.async {
+//                self.averageSteps.text = String(average)
+//                self.totalSteps.text = String(total)
+//            }
+//        }
     }
     
     override func viewWillLayoutSubviews() {

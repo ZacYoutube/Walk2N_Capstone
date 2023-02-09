@@ -33,18 +33,19 @@ class HealthKitManager {
     }
     
     func convertDateToStr(date: Date) -> String {
-        let formatter1 = DateFormatter()
-        formatter1.dateStyle = .short
-        return formatter1.string(from: date)
+//        let formatter1 = DateFormatter()
+//        formatter1.dateFormat = "MM/dd/yy"
+//        return formatter1.string(from: date)
+        return date.dayOfWeek()!
     }
     
     // this function retrieves the past 7 days of step counts from Health app
-    func gettingStepCount(_ n: Int, completion:(([Double], [String]) -> Void)?){
+    func gettingStepCount(_ n: Int, completion:(([Double], [Date]) -> Void)?){
          guard let sampleType = HKCategoryType.quantityType(forIdentifier: .stepCount) else {
              return
          }
          var stepOverPastNDays: Array<Double> = []
-         var time: Array<String> = []
+         var time: Array<Date> = []
          let now = Date()
          let exactlyNDaysAgo = Calendar.current.date(byAdding: DateComponents(day: -n), to: now)!
          let startOfNDaysAgo = Calendar.current.startOfDay(for: exactlyNDaysAgo)
@@ -63,7 +64,7 @@ class HealthKitManager {
                          let val = count.doubleValue(for: HKUnit.count())
                          let date = stats.startDate
                          stepOverPastNDays.append(val)
-                         time.append(self.convertDateToStr(date: date))
+                         time.append(date)
                      }
                  }
                  completion!(stepOverPastNDays, time)

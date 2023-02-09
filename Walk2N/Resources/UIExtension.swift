@@ -113,3 +113,16 @@ extension Double {
     }
 }
 
+// convert date to day of the week
+extension Date {
+    func dayOfWeek() -> String? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEEE"
+        let str = dateFormatter.string(from: self)
+        let start = String.Index(utf16Offset: 0, in: str)
+        let end = String.Index(utf16Offset: 3, in: str)
+        let substring = String(str[start..<end])
+        return substring.capitalized
+    }
+}
+

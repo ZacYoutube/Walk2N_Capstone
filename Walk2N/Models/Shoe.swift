@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class Shoe {
+public class Shoe: Codable {
     var id: String?
     var name: String?
     var durability: Float?
@@ -22,6 +22,18 @@ public class Shoe {
         self.imgUrl = imgUrl
         self.price = price
         self.expirationDate = expirationDate
+    }
+    
+    var firestoreData: [String: Any] {
+            return [
+                "id": id as Any,
+                "name": name as Any,
+                "durability": durability as Any,
+                "imgUrl": imgUrl as Any,
+                "price": price as Any,
+                "expirationDate": expirationDate as Any,
+                "boughtDate": Date()
+            ]
     }
     
     func setDurability(_ d: Float){

@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import Firebase
 
 class ShoeStoreViewController: UIViewController {
     
@@ -30,7 +30,7 @@ class ShoeStoreViewController: UIViewController {
     private func getShoes() -> Void {
         DatabaseManager().getShoes { docSnapshot in
             for doc in docSnapshot {
-                let shoe = Shoe(id: doc.documentID, name: doc["name"] as? String, durability: doc["durability"] as? Float, imgUrl: doc["imgUrl"] as? String, price: doc["price"] as? Float, expirationDate: doc["expirationDate"] as? Date)
+                let shoe = Shoe(id: doc.documentID, name: doc["name"] as? String, durability: doc["durability"] as? Float, imgUrl: doc["imgUrl"] as? String, price: doc["price"] as? Float, expirationDate: (doc["expirationDate"] as! Timestamp).dateValue())
                 self.dataSource.append(shoe)
             }
             self.collectionView.reloadData()

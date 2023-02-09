@@ -38,7 +38,41 @@ class MainPageViewController: UIViewController {
         checkAuth()
         checkUserInfo()
         loadCircularProgress()
+        timeToAddStep()
+        
     }
+    
+    private func timeToAddStep() {
+        let cal = Calendar.current
+        let now = Date()
+        let date = cal.date(bySettingHour: 0, minute: 0, second: 0, of: now)!
+        let timer = Timer(fireAt: date, interval: 0, target: self, selector: #selector(addStepToDB), userInfo: nil, repeats: false)
+        RunLoop.main.add(timer, forMode: RunLoop.Mode.common)
+    }
+
+    @objc private func addStepToDB() {
+        if (Auth.auth().currentUser != nil) {
+            HealthKitManager().gettingStepCount(0) { stepArr, timeArr in
+                for (step, time) in zip(stepArr, timeArr) {
+//                    print(time.timeIntervalSince1970)
+                    let stepGoalToday = 1000.0
+                    var reachedGoal = false
+                    if step >= stepGoalToday {
+                        reachedGoal = true
+                    }
+                    let stepToday = HistoricalStep(id: UUID().uuidString, uid: Auth.auth().currentUser?.uid, stepCount: Int(step), date: time, reachedGoal: reachedGoal)
+                    DatabaseManager.shared.updateStepsData(fieldName: "historicalSteps", fieldVal: stepToday.firestoreData, pop: false) { success in
+                        if success == true {
+                            print("successfully added")
+                        } else {
+                            print("unsuccessfully added")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
     private func loadCircularProgress () {
         let circularPath = UIBezierPath(arcCenter: self.view.center, radius: 150, startAngle: -CGFloat.pi, endAngle: CGFloat.pi, clockwise: true)
