@@ -24,34 +24,38 @@ class HistoricalStepViewController: UIViewController {
         // read from firebase and display historical step count in bar chart
         DatabaseManager.shared.getUserInfo { docSnapshot in
             for doc in docSnapshot {
-                var historicalSteps = doc["historicalSteps"]! as! [Any]
-                historicalSteps = historicalSteps.sorted(by: {
-                    ((($0 as! [String:Any])["date"] as! Timestamp).dateValue()) < ((($1 as! [String:Any])["date"] as! Timestamp).dateValue())
-                })
-                historicalSteps = Array(historicalSteps[1...7])
-                var color = [NSUIColor](repeating: NSUIColor(red: 255.0, green: 0, blue: 0, alpha: 1.0), count: historicalSteps.count)
-                var timeArr: Array<String> = Array(repeating: "", count: historicalSteps.count)
-                var stepsArr: Array<Double> = Array(repeating: 0.0, count: historicalSteps.count)
-                for i in 0..<historicalSteps.count {
-                    if (historicalSteps[i] as! [String:Any])["stepCount"] as! Double >= 1000.0 {
-                        color[i] = NSUIColor(red: 46/255.0, green: 204/255.0, blue: 113/255.0, alpha: 1.0)
+                if doc["historicalSteps"] != nil {
+                    var historicalSteps = doc["historicalSteps"]! as! [Any]
+                    historicalSteps = historicalSteps.sorted(by: {
+                        ((($0 as! [String:Any])["date"] as! Timestamp).dateValue()) < ((($1 as! [String:Any])["date"] as! Timestamp).dateValue())
+                    })
+                    if historicalSteps.count > 7 {
+                        historicalSteps = Array(historicalSteps[1...7])
                     }
-                    timeArr[i] = (((historicalSteps[i] as! [String:Any])["date"] as! Timestamp).dateValue()).dayOfWeek()!
-                    stepsArr[i] = (historicalSteps[i] as! [String:Any])["stepCount"] as! Double
-                }
-                self.displaySteps(stepsArr: stepsArr, timeArr: timeArr, color: color)
-                var average: Double = 0.0
-                var total: Double = 0.0
-                for i in 0..<stepsArr.count{
-                    total += stepsArr[i]
-                }
-                average = Double(floor(Double(total) / Double(stepsArr.count)))
-                if average.isNaN {
-                    average = 0.0
-                }
-                DispatchQueue.main.async {
-                    self.averageSteps.text = String(average)
-                    self.totalSteps.text = String(total)
+                    var color = [NSUIColor](repeating: NSUIColor(red: 255.0, green: 0, blue: 0, alpha: 1.0), count: historicalSteps.count)
+                    var timeArr: Array<String> = Array(repeating: "", count: historicalSteps.count)
+                    var stepsArr: Array<Double> = Array(repeating: 0.0, count: historicalSteps.count)
+                    for i in 0..<historicalSteps.count {
+                        if (historicalSteps[i] as! [String:Any])["stepCount"] as! Double >= 1000.0 {
+                            color[i] = NSUIColor(red: 46/255.0, green: 204/255.0, blue: 113/255.0, alpha: 1.0)
+                        }
+                        timeArr[i] = (((historicalSteps[i] as! [String:Any])["date"] as! Timestamp).dateValue()).dayOfWeek()!
+                        stepsArr[i] = (historicalSteps[i] as! [String:Any])["stepCount"] as! Double
+                    }
+                    self.displaySteps(stepsArr: stepsArr, timeArr: timeArr, color: color)
+                    var average: Double = 0.0
+                    var total: Double = 0.0
+                    for i in 0..<stepsArr.count{
+                        total += stepsArr[i]
+                    }
+                    average = Double(floor(Double(total) / Double(stepsArr.count)))
+                    if average.isNaN {
+                        average = 0.0
+                    }
+                    DispatchQueue.main.async {
+                        self.averageSteps.text = String(average)
+                        self.totalSteps.text = String(total)
+                    }
                 }
             }
         }

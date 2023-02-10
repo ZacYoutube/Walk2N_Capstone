@@ -9,7 +9,6 @@ import UIKit
 
 class ShoeListCollectionViewCell: UICollectionViewCell {
     
-
     @IBOutlet weak var shoeName: UILabel!
     @IBOutlet weak var shoeAction: UIButton!
     @IBOutlet weak var shoeImage: UIImageView!
@@ -36,34 +35,67 @@ class ShoeListCollectionViewCell: UICollectionViewCell {
         retrieveImage(url: shoe.imgUrl!)
         shoeAction.addTarget(self, action: #selector(buyShoes), for: .touchUpInside)
         self.shoe = shoe
-        
-        print(shoe)
+        showBtn()
     }
     
-    @objc private func buyShoes() {
-        let price = Double(shoePrice.text!)
+    private func showBtn() {
         let db = DatabaseManager.shared
-        db.getUserInfo { docSnapshot in
-            var newBalanace: Double = 0.0
-            for doc in docSnapshot {
-                if doc["balance"] as! Double >= price! {
-                    newBalanace = doc["balance"] as! Double - price!
-                    db.updateUserInfo(fieldToUpdate: ["balance"], fieldValues: [newBalanace]) { success in
-                        if success {
-                            db.updateStepsData(fieldName: "boughtShoes", fieldVal: self.shoe!.firestoreData, pop: false) { bought in
-                                if bought {
-                                    print("unsuccessfully updated balance and bought shoes")
-                                } else {
-                                    print("unsuccessfully updated balance but did not bought shoes")
-                                }
-                            }
-                        } else {
-                            print("unsuccessfully updated balance")
+
+        db.checkUserUpdates { data, update in
+            if update == true {
+                
+                self.shoeAction.setTitle("Buy", for: .normal)
+                self.shoeAction.isEnabled = true
+                
+                if data["boughtShoes"] != nil {
+                    let boughtShoes = data["boughtShoes"] as! [Any]
+                    for i in 0..<boughtShoes.count {
+                        if (boughtShoes[i] as! [String:Any])["id"] as! String == self.shoe!.id! {
+                            self.shoeAction.isEnabled = false
+                            self.shoeAction.setTitle("Already Bought", for: .normal)
                         }
                     }
                 }
             }
         }
+        
+    }
+    
+    @objc private func buyShoes() {
+        let price = Double(shoePrice.text!)
+        let db = DatabaseManager.shared
+        let alert = UIAlertController(title: "Confirmation", message: "Buy this shoe?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Buy", style: .default, handler: { action in
+            db.getUserInfo { docSnapshot in
+                var newBalanace: Double = 0.0
+                for doc in docSnapshot {
+                    if doc["balance"] as! Double >= price! {
+                        newBalanace = doc["balance"] as! Double - price!
+                        db.updateUserInfo(fieldToUpdate: ["balance"], fieldValues: [newBalanace]) { success in
+                            if success {
+                                db.updateArrayData(fieldName: "boughtShoes", fieldVal: self.shoe!.firestoreData, pop: false) { bought in
+                                    if bought {
+                                        print("unsuccessfully updated balance and bought shoes")
+                                    } else {
+                                        print("unsuccessfully updated balance but did not bought shoes")
+                                    }
+                                }
+                            } else {
+                                print("unsuccessfully updated balance")
+                            }
+                        }
+                    } else {
+                        let alert = UIAlertController(title: "Error", message: "Not enough tokens", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { handler in
+                            alert.dismiss(animated: true)
+                        }))
+                        self.window?.rootViewController?.present(alert, animated: true)
+                    }
+                }
+            }
+        }))
+        self.window?.rootViewController?.present(alert, animated: true)
     }
     
     private func retrieveImage(url: String){

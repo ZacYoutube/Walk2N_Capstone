@@ -31,10 +31,12 @@
 		D5A3C38B298B35E500772D1B /* UIExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C38A298B35E500772D1B /* UIExtension.swift */; };
 		D5A3C38E298B8B8900772D1B /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = D5A3C38D298B8B8900772D1B /* FirebaseDatabase */; };
 		D5A3C391298C12B600772D1B /* CollectInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C390298C12B600772D1B /* CollectInformationViewController.swift */; };
-		D5A3C393298C5A5700772D1B /* NavViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C392298C5A5700772D1B /* NavViewController.swift */; };
 		D5A3C398298C902E00772D1B /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C397298C902E00772D1B /* HealthKitManager.swift */; };
 		D5A3C3AD298CC6C600772D1B /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = D5A3C3AC298CC6C600772D1B /* Charts */; };
 		D5A3C3AF298CCD7B00772D1B /* BarChartExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C3AE298CCD7B00772D1B /* BarChartExtension.swift */; };
+		D5A93D262996014200E12217 /* PopUpModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A93D252996014200E12217 /* PopUpModalViewController.swift */; };
+		D5A93D29299602BA00E12217 /* PopUpModalCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A93D27299602BA00E12217 /* PopUpModalCollectionViewCell.swift */; };
+		D5A93D2A299602BA00E12217 /* PopUpModalCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D5A93D28299602BA00E12217 /* PopUpModalCollectionViewCell.xib */; };
 		D5BE8C5A2994781800ABA0D4 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D5BE8C592994781800ABA0D4 /* FirebaseFirestoreSwift */; };
 		D5CA36EE2991C912000B08EA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5CA36ED2991C912000B08EA /* Main.storyboard */; };
 /* End PBXBuildFile section */
@@ -63,10 +65,12 @@
 		D5A3C388298B316900772D1B /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		D5A3C38A298B35E500772D1B /* UIExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIExtension.swift; sourceTree = "<group>"; };
 		D5A3C390298C12B600772D1B /* CollectInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectInformationViewController.swift; sourceTree = "<group>"; };
-		D5A3C392298C5A5700772D1B /* NavViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavViewController.swift; sourceTree = "<group>"; };
 		D5A3C396298C8F8E00772D1B /* Walk2N.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Walk2N.entitlements; sourceTree = "<group>"; };
 		D5A3C397298C902E00772D1B /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
 		D5A3C3AE298CCD7B00772D1B /* BarChartExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChartExtension.swift; sourceTree = "<group>"; };
+		D5A93D252996014200E12217 /* PopUpModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpModalViewController.swift; sourceTree = "<group>"; };
+		D5A93D27299602BA00E12217 /* PopUpModalCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpModalCollectionViewCell.swift; sourceTree = "<group>"; };
+		D5A93D28299602BA00E12217 /* PopUpModalCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopUpModalCollectionViewCell.xib; sourceTree = "<group>"; };
 		D5CA36ED2991C912000B08EA /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../../../../Main.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -124,10 +128,10 @@
 		D512E9BC2988A4AC007B0D2F /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				D5BE8C5B2995E17700ABA0D4 /* Modal */,
 				D5A3C38F298C129600772D1B /* Collect Info */,
 				D5A3C383298B1C2A00772D1B /* Auth */,
 				D5A3C382298B1BF100772D1B /* Core Tabs */,
-				D5A3C392298C5A5700772D1B /* NavViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -216,6 +220,16 @@
 			path = "Collect Info";
 			sourceTree = "<group>";
 		};
+		D5BE8C5B2995E17700ABA0D4 /* Modal */ = {
+			isa = PBXGroup;
+			children = (
+				D5A93D252996014200E12217 /* PopUpModalViewController.swift */,
+				D5A93D27299602BA00E12217 /* PopUpModalCollectionViewCell.swift */,
+				D5A93D28299602BA00E12217 /* PopUpModalCollectionViewCell.xib */,
+			);
+			path = Modal;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -285,6 +299,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5A93D2A299602BA00E12217 /* PopUpModalCollectionViewCell.xib in Resources */,
 				D512E9AF2988A33E007B0D2F /* LaunchScreen.storyboard in Resources */,
 				D53A7FC32991EDBA000220B9 /* ShoeListCollectionViewCell.xib in Resources */,
 				D512E9BE2988A997007B0D2F /* GoogleService-Info.plist in Resources */,
@@ -313,11 +328,12 @@
 				D512E9B92988A480007B0D2F /* LoginViewController.swift in Sources */,
 				D5A3C398298C902E00772D1B /* HealthKitManager.swift in Sources */,
 				D5A3C381298B1BE000772D1B /* ProfileViewController.swift in Sources */,
-				D5A3C393298C5A5700772D1B /* NavViewController.swift in Sources */,
+				D5A93D29299602BA00E12217 /* PopUpModalCollectionViewCell.swift in Sources */,
 				D512E9CC2988E1C5007B0D2F /* Shoe.swift in Sources */,
 				D512E9CE2988E229007B0D2F /* User.swift in Sources */,
 				D512E9C52988C02A007B0D2F /* Constants.swift in Sources */,
 				D512E9A52988A33D007B0D2F /* SceneDelegate.swift in Sources */,
+				D5A93D262996014200E12217 /* PopUpModalViewController.swift in Sources */,
 				D5A3C391298C12B600772D1B /* CollectInformationViewController.swift in Sources */,
 				D512E9D02988E67E007B0D2F /* HistoricalStep.swift in Sources */,
 			);

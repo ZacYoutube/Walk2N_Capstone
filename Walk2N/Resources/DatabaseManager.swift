@@ -98,7 +98,7 @@ public class DatabaseManager {
     }
 
     
-    public func updateStepsData(fieldName: String, fieldVal: [String: Any], pop: Bool, _ completion:@escaping(_ bool: Bool) -> Void){
+    public func updateArrayData(fieldName: String, fieldVal: [String: Any], pop: Bool, _ completion:@escaping(_ bool: Bool) -> Void){
         let uid = Auth.auth().currentUser?.uid
         if uid != nil {
             db.collection("users").whereField("uid", isEqualTo: uid!).getDocuments { querySnapShot, err in
@@ -149,4 +149,22 @@ public class DatabaseManager {
             }
         }
     }
+    
+    public func checkUserUpdates(completion:@escaping(_ data:[String: Any], _ update: Bool)->Void) {
+        let uid = Auth.auth().currentUser?.uid
+        if uid != nil {
+            db.collection("users").whereField("uid", isEqualTo: uid!).addSnapshotListener { querySnapshot, error in
+                guard let snapshot = querySnapshot else { return }
+                snapshot.documentChanges.forEach { diff in
+                    if diff.type == .modified || diff.type == .added || diff.type == .removed {
+                        completion(diff.document.data(), true)
+                    } else {
+                        completion([:], false)
+                    }
+                }
+            }
+        }
+    }
+    
+    
 }

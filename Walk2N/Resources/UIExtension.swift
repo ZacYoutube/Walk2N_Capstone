@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 extension UIView {
     
@@ -66,12 +67,20 @@ extension UIViewController {
 //        let logo = UIImage(named: "")
         let containView = UIView(frame: CGRectMake(0, 0, 120, 40))
         let label = UILabel(frame: CGRectMake(0, 0, 80, 40))
-        DatabaseManager().getUserInfo { docSnapshot in
+        DatabaseManager.shared.getUserInfo { docSnapshot in
             for doc in docSnapshot {
                 let balance =  doc["balance"] as? Double
                 label.text = String(balance!)
             }
         }
+        
+        DatabaseManager.shared.checkUserUpdates { data, update in
+            if update == true {
+                let balance = data["balance"] as? Double
+                label.text = String(balance!)
+            }
+        }
+        
         label.textAlignment = NSTextAlignment.center
         label.layer.borderWidth = 0.2
         label.layer.borderColor = UIColor.lightGray.cgColor
@@ -93,6 +102,7 @@ extension UIViewController {
         
         self.navigationItem.leftBarButtonItem = barButtonItem
 //        self.navigationItem.titleView = UIImageView(image: logo)
+        
     }
 
     @objc func popNavigate(){
@@ -115,6 +125,7 @@ extension Double {
 
 // convert date to day of the week
 extension Date {
+    typealias UnixTimestamp = Int
     func dayOfWeek() -> String? {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "EEEE"
@@ -123,6 +134,9 @@ extension Date {
         let end = String.Index(utf16Offset: 3, in: str)
         let substring = String(str[start..<end])
         return substring.capitalized
+    }
+    var unixTimestamp: UnixTimestamp {
+        return UnixTimestamp(self.timeIntervalSince1970 * 1_000) // millisecond precision
     }
 }
 

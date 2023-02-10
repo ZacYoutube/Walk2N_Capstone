@@ -13,6 +13,7 @@ class MainPageViewController: UIViewController {
     let progressShapeLayer = CAShapeLayer()
     let titleText = UILabel()
     var stepText = UILabel()
+    var tokenEarnedText = UILabel()
     let goalText = UILabel()
     var percentText = UILabel()
     var startStep: Double = 0
@@ -21,6 +22,9 @@ class MainPageViewController: UIViewController {
     var endPercent: Double = 0.0
     let duration: Double = 1
     let animateStart = Date()
+    var curShoe = UIImageView()
+    let curShoeTitle = UILabel()
+    let addShoe = UIButton()
     
     private func authorizeHealthKit() {
         let isEnabled = HealthKitManager().authorizeHealthKit()
@@ -38,8 +42,9 @@ class MainPageViewController: UIViewController {
         checkAuth()
         checkUserInfo()
         loadCircularProgress()
+        loadCurrentShoe()
         timeToAddStep()
-        
+        addShoe.addTarget(self, action: #selector(openModal), for: .touchUpInside)
     }
     
     private func timeToAddStep() {
@@ -52,16 +57,15 @@ class MainPageViewController: UIViewController {
 
     @objc private func addStepToDB() {
         if (Auth.auth().currentUser != nil) {
-            HealthKitManager().gettingStepCount(0) { stepArr, timeArr in
+            HealthKitManager().gettingStepCount(1) { stepArr, timeArr in
                 for (step, time) in zip(stepArr, timeArr) {
-//                    print(time.timeIntervalSince1970)
                     let stepGoalToday = 1000.0
                     var reachedGoal = false
                     if step >= stepGoalToday {
                         reachedGoal = true
                     }
                     let stepToday = HistoricalStep(id: UUID().uuidString, uid: Auth.auth().currentUser?.uid, stepCount: Int(step), date: time, reachedGoal: reachedGoal)
-                    DatabaseManager.shared.updateStepsData(fieldName: "historicalSteps", fieldVal: stepToday.firestoreData, pop: false) { success in
+                    DatabaseManager.shared.updateArrayData(fieldName: "historicalSteps", fieldVal: stepToday.firestoreData, pop: false) { success in
                         if success == true {
                             print("successfully added")
                         } else {
@@ -72,10 +76,68 @@ class MainPageViewController: UIViewController {
             }
         }
     }
+    
+    @objc private func openModal() {
+        let popup = PopUpModalViewController()
+        popup.title = "Choose a shoe to earn!"
+        present(UINavigationController(rootViewController: popup), animated: true)
+    }
+    
+    private func loadCurrentShoe() {
+        
+        curShoeTitle.text = "Current Shoe"
+        curShoeTitle.frame = CGRect(x: 0, y: 0, width: 250, height: 40)
+        curShoeTitle.center.x = view.center.x
+        curShoeTitle.center.y = view.top + 500
+        curShoeTitle.textAlignment = .center
+        
+        addShoe.setTitle("Choose", for: .normal)
+        addShoe.frame = CGRect(x: 0, y: 0, width: 250, height: 20)
+        addShoe.center.x = view.center.x
+        addShoe.center.y = view.top + 525
+        addShoe.setTitleColor(.systemBlue, for: .normal)
+        addShoe.titleLabel?.font =  UIFont(name: "", size: 10)
+
+        
+        curShoe.frame = CGRect(x: 0, y: 0, width: 250, height: 150)
+        curShoe.center.x = view.center.x
+        curShoe.center.y = view.top + 620
+        
+        
+        let db = DatabaseManager.shared
+        
+        db.checkUserUpdates { data, update in
+            if update == true {
+                if data["currentShoe"] as? [String: Any] != nil {
+                    let currentShoe = data["currentShoe"] as? [String: Any]
+                    if let url = URL(string: currentShoe!["imgUrl"] as! String) {
+                        URLSession.shared.dataTask(with: url) { (data, response, error) in
+                          guard let imageData = data else { return }
+                            DispatchQueue.main.async { [self] in
+                                self.curShoe.image = UIImage(data: imageData)
+                          }
+                        }.resume()
+                      }
+                } else {
+                    self.curShoe.image = nil
+                }
+            }
+        }
+        
+        curShoe.layer.borderColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0).cgColor
+        curShoe.layer.masksToBounds = true
+        curShoe.layer.cornerRadius = 10
+        curShoe.contentMode = .scaleToFill
+        curShoe.layer.borderWidth = 2
+        
+        self.view.addSubview(curShoeTitle)
+        self.view.addSubview(addShoe)
+        self.view.addSubview(curShoe)
+    }
 
 
     private func loadCircularProgress () {
-        let circularPath = UIBezierPath(arcCenter: self.view.center, radius: 150, startAngle: -CGFloat.pi, endAngle: CGFloat.pi, clockwise: true)
+        let circularPath = UIBezierPath(arcCenter: CGPoint(x: self.view.center.x, y: self.view.top + 300), radius: 150, startAngle: -CGFloat.pi, endAngle: CGFloat.pi, clockwise: true)
         progressShapeLayer.path = circularPath.cgPath
         progressShapeLayer.strokeColor = UIColor.systemGreen.cgColor
         progressShapeLayer.fillColor = nil
@@ -97,25 +159,32 @@ class MainPageViewController: UIViewController {
         titleText.font = UIFont.systemFont(ofSize: 20)
         titleText.textAlignment = .center
         titleText.center.x = view.center.x
-        titleText.center.y = view.center.y - 80
+        titleText.center.y = view.top + 220
         
         stepText.frame = CGRect(x: 0, y: 0, width: 200, height: 100)
         stepText.font = UIFont.boldSystemFont(ofSize: 60)
         stepText.textAlignment = .center
         stepText.center.x = view.center.x
-        stepText.center.y = view.center.y - 15
+        stepText.center.y = view.top + 270
         
         goalText.frame = CGRect(x: 0, y: 0, width: 150, height: 40)
         goalText.textAlignment = .center
         goalText.center.x = view.center.x
-        goalText.center.y = view.center.y + 50
+        goalText.center.y = view.top + 320
         goalText.text = "Goal: \(Int(getStepGoalToday()))"
         
         percentText.frame = CGRect(x: 0, y: 0, width: 150, height: 40)
         percentText.textAlignment = .center
         percentText.center.x = view.center.x
-        percentText.center.y = view.center.y + 100
+        percentText.center.y = view.top + 360
         percentText.textColor = UIColor.lightGray
+        
+        tokenEarnedText.frame = CGRect(x: 0, y: 0, width: 150, height: 40)
+        tokenEarnedText.textAlignment = .center
+        tokenEarnedText.center.x = view.center.x
+        tokenEarnedText.center.y = view.top + 400
+        tokenEarnedText.text = "Tokens earned: 0"
+        tokenEarnedText.textColor = UIColor.lightGray
         
         getCurrentStep { curStep in
             DispatchQueue.main.async {
@@ -125,6 +194,7 @@ class MainPageViewController: UIViewController {
                 self.view.addSubview(self.stepText)
                 self.view.addSubview(self.goalText)
                 self.view.addSubview(self.percentText)
+                self.view.addSubview(self.tokenEarnedText)
             }
         }
         
