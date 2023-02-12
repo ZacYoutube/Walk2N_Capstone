@@ -74,7 +74,7 @@ extension UIViewController {
             }
         }
         
-        DatabaseManager.shared.checkUserUpdates { data, update in
+        DatabaseManager.shared.checkUserUpdates { data, update, added, deleted in
             if update == true {
                 let balance = data["balance"] as? Double
                 label.text = String(balance!)

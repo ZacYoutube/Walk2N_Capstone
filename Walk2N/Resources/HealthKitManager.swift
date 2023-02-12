@@ -72,4 +72,28 @@ class HealthKitManager {
          }
          healthStore.execute(query)
      }
+    
+    func getStepCountBetweenTimestamps(startDate: Date, endDate: Date, completion: @escaping (Double, Error?) -> Void) {
+                
+        let stepsCount = HKQuantityType.quantityType(forIdentifier: .stepCount)!
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])
+        
+        let query = HKSampleQuery(sampleType: stepsCount, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { (query, samples, error) in
+            guard error == nil else {
+                completion(0, error)
+                return
+            }
+            
+            var stepCount = 0.0
+            for sample in samples as! [HKQuantitySample] {
+                let quantity = sample.quantity
+                let count = quantity.doubleValue(for: HKUnit.count())
+                stepCount += count
+            }
+            
+            completion(stepCount, nil)
+        }
+        
+        healthStore.execute(query)
+    }
 }

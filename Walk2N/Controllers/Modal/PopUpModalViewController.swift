@@ -33,8 +33,8 @@ class PopUpModalViewController: UIViewController {
     private func getBoughtShoes() -> Void {
         let db = DatabaseManager.shared
 
-        db.checkUserUpdates { data, update in
-            if update == true {
+        db.checkUserUpdates { data, update, added, deleted in
+            if update == true || added == true || deleted == true {
                 if data["boughtShoes"] != nil {
                     self.dataSource = []
                     let boughtShoes = data["boughtShoes"] as! [Any]

@@ -41,8 +41,8 @@ class ShoeListCollectionViewCell: UICollectionViewCell {
     private func showBtn() {
         let db = DatabaseManager.shared
 
-        db.checkUserUpdates { data, update in
-            if update == true {
+        db.checkUserUpdates { data, update, added, deleted in
+            if added == true || deleted == true || update == true {
                 
                 self.shoeAction.setTitle("Buy", for: .normal)
                 self.shoeAction.isEnabled = true

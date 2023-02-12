@@ -150,16 +150,23 @@ public class DatabaseManager {
         }
     }
     
-    public func checkUserUpdates(completion:@escaping(_ data:[String: Any], _ update: Bool)->Void) {
+    public func checkUserUpdates(completion:@escaping(_ data:[String: Any], _ update: Bool, _ addition: Bool, _ deletion: Bool)->Void) {
         let uid = Auth.auth().currentUser?.uid
         if uid != nil {
             db.collection("users").whereField("uid", isEqualTo: uid!).addSnapshotListener { querySnapshot, error in
                 guard let snapshot = querySnapshot else { return }
                 snapshot.documentChanges.forEach { diff in
-                    if diff.type == .modified || diff.type == .added || diff.type == .removed {
-                        completion(diff.document.data(), true)
-                    } else {
-                        completion([:], false)
+                    if diff.type == .modified {
+                        completion(diff.document.data(), true, false, false)
+                    }
+                    else if diff.type == .added {
+                        completion(diff.document.data(), false, true, false)
+                    }
+                    else if diff.type == .removed {
+                        completion(diff.document.data(), false, false, true)
+                    }
+                    else {
+                        completion([:], false, false, false)
                     }
                 }
             }

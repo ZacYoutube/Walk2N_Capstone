@@ -38,6 +38,7 @@ class MainPageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setUpNavbar()
+        navigationItem.title = "Home"
         authorizeHealthKit()
         checkAuth()
         checkUserInfo()
@@ -57,7 +58,7 @@ class MainPageViewController: UIViewController {
 
     @objc private func addStepToDB() {
         if (Auth.auth().currentUser != nil) {
-            HealthKitManager().gettingStepCount(1) { stepArr, timeArr in
+            HealthKitManager().gettingStepCount(0) { stepArr, timeArr in
                 for (step, time) in zip(stepArr, timeArr) {
                     let stepGoalToday = 1000.0
                     var reachedGoal = false
@@ -103,11 +104,10 @@ class MainPageViewController: UIViewController {
         curShoe.center.x = view.center.x
         curShoe.center.y = view.top + 620
         
-        
         let db = DatabaseManager.shared
         
-        db.checkUserUpdates { data, update in
-            if update == true {
+        db.checkUserUpdates { data, update, added, deleted in
+            if added == true || deleted == true || update == true {
                 if data["currentShoe"] as? [String: Any] != nil {
                     let currentShoe = data["currentShoe"] as? [String: Any]
                     if let url = URL(string: currentShoe!["imgUrl"] as! String) {

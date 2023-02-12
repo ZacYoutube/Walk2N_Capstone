@@ -69,8 +69,8 @@ class PopUpModalCollectionViewCell: UICollectionViewCell {
     // stupid way of handling, maybe improve in the future :((
     @objc private func checkWear() {
         let db = DatabaseManager.shared
-        db.checkUserUpdates { data, update in
-            if update == true {
+        db.checkUserUpdates { data, update, added, deleted in
+            if update == true || added == true || deleted == true {
                 
                 self.wearBtn.setTitle("Wear", for: .normal)
                 self.wearBtn.removeTarget(self, action: #selector(self.unwear), for: .touchUpInside)

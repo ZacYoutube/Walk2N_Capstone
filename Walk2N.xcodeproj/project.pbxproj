@@ -23,6 +23,11 @@
 		D53A7FC22991EDBA000220B9 /* ShoeListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53A7FC02991EDBA000220B9 /* ShoeListCollectionViewCell.swift */; };
 		D53A7FC32991EDBA000220B9 /* ShoeListCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D53A7FC12991EDBA000220B9 /* ShoeListCollectionViewCell.xib */; };
 		D53A7FC52991EE8D000220B9 /* ShoeStoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53A7FC42991EE8D000220B9 /* ShoeStoreViewController.swift */; };
+		D597DF792996DFA100DF4D13 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D597DF782996DFA100DF4D13 /* Main.storyboard */; };
+		D597DF7B29976A4D00DF4D13 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D597DF7A29976A4D00DF4D13 /* CoreLocation.framework */; };
+		D597DF7E29976CCA00DF4D13 /* TrackRunViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597DF7D29976CCA00DF4D13 /* TrackRunViewController.swift */; };
+		D597DF802997713F00DF4D13 /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597DF7F2997713F00DF4D13 /* Annotation.swift */; };
+		D597DF8429984B1300DF4D13 /* StepCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597DF8329984B1300DF4D13 /* StepCounter.swift */; };
 		D5A3C37D298B1BA700772D1B /* MainPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C37C298B1BA700772D1B /* MainPageViewController.swift */; };
 		D5A3C37F298B1BC300772D1B /* HistoricalStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C37E298B1BC300772D1B /* HistoricalStepViewController.swift */; };
 		D5A3C381298B1BE000772D1B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C380298B1BE000772D1B /* ProfileViewController.swift */; };
@@ -38,7 +43,6 @@
 		D5A93D29299602BA00E12217 /* PopUpModalCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A93D27299602BA00E12217 /* PopUpModalCollectionViewCell.swift */; };
 		D5A93D2A299602BA00E12217 /* PopUpModalCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D5A93D28299602BA00E12217 /* PopUpModalCollectionViewCell.xib */; };
 		D5BE8C5A2994781800ABA0D4 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D5BE8C592994781800ABA0D4 /* FirebaseFirestoreSwift */; };
-		D5CA36EE2991C912000B08EA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5CA36ED2991C912000B08EA /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +62,11 @@
 		D53A7FC02991EDBA000220B9 /* ShoeListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoeListCollectionViewCell.swift; sourceTree = "<group>"; };
 		D53A7FC12991EDBA000220B9 /* ShoeListCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShoeListCollectionViewCell.xib; sourceTree = "<group>"; };
 		D53A7FC42991EE8D000220B9 /* ShoeStoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoeStoreViewController.swift; sourceTree = "<group>"; };
+		D597DF782996DFA100DF4D13 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../../../../Main.storyboard; sourceTree = "<group>"; };
+		D597DF7A29976A4D00DF4D13 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		D597DF7D29976CCA00DF4D13 /* TrackRunViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackRunViewController.swift; sourceTree = "<group>"; };
+		D597DF7F2997713F00DF4D13 /* Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Annotation.swift; sourceTree = "<group>"; };
+		D597DF8329984B1300DF4D13 /* StepCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepCounter.swift; sourceTree = "<group>"; };
 		D5A3C37C298B1BA700772D1B /* MainPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPageViewController.swift; sourceTree = "<group>"; };
 		D5A3C37E298B1BC300772D1B /* HistoricalStepViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricalStepViewController.swift; sourceTree = "<group>"; };
 		D5A3C380298B1BE000772D1B /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
@@ -71,7 +80,6 @@
 		D5A93D252996014200E12217 /* PopUpModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpModalViewController.swift; sourceTree = "<group>"; };
 		D5A93D27299602BA00E12217 /* PopUpModalCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpModalCollectionViewCell.swift; sourceTree = "<group>"; };
 		D5A93D28299602BA00E12217 /* PopUpModalCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopUpModalCollectionViewCell.xib; sourceTree = "<group>"; };
-		D5CA36ED2991C912000B08EA /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../../../../Main.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D597DF7B29976A4D00DF4D13 /* CoreLocation.framework in Frameworks */,
 				D5BE8C5A2994781800ABA0D4 /* FirebaseFirestoreSwift in Frameworks */,
 				D5A3C38E298B8B8900772D1B /* FirebaseDatabase in Frameworks */,
 				D512E9C12988AB27007B0D2F /* FirebaseAuth in Frameworks */,
@@ -155,6 +164,16 @@
 			path = "Shoe Collection View Cell";
 			sourceTree = "<group>";
 		};
+		D597DF7C29976C6100DF4D13 /* Track run */ = {
+			isa = PBXGroup;
+			children = (
+				D597DF7D29976CCA00DF4D13 /* TrackRunViewController.swift */,
+				D597DF7F2997713F00DF4D13 /* Annotation.swift */,
+				D597DF8329984B1300DF4D13 /* StepCounter.swift */,
+			);
+			path = "Track run";
+			sourceTree = "<group>";
+		};
 		D5A3C36E298B19EF00772D1B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -178,7 +197,7 @@
 		D5A3C379298B1AC700772D1B /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
-				D5CA36ED2991C912000B08EA /* Main.storyboard */,
+				D597DF782996DFA100DF4D13 /* Main.storyboard */,
 				D512E9AD2988A33E007B0D2F /* LaunchScreen.storyboard */,
 			);
 			path = Storyboards;
@@ -187,6 +206,7 @@
 		D5A3C382298B1BF100772D1B /* Core Tabs */ = {
 			isa = PBXGroup;
 			children = (
+				D597DF7C29976C6100DF4D13 /* Track run */,
 				D53A7FBF2991EC69000220B9 /* Shoe Collection View Cell */,
 				D5A3C37C298B1BA700772D1B /* MainPageViewController.swift */,
 				D5A3C37E298B1BC300772D1B /* HistoricalStepViewController.swift */,
@@ -208,6 +228,7 @@
 		D5A3C38C298B8B8900772D1B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D597DF7A29976A4D00DF4D13 /* CoreLocation.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -302,9 +323,9 @@
 				D5A93D2A299602BA00E12217 /* PopUpModalCollectionViewCell.xib in Resources */,
 				D512E9AF2988A33E007B0D2F /* LaunchScreen.storyboard in Resources */,
 				D53A7FC32991EDBA000220B9 /* ShoeListCollectionViewCell.xib in Resources */,
+				D597DF792996DFA100DF4D13 /* Main.storyboard in Resources */,
 				D512E9BE2988A997007B0D2F /* GoogleService-Info.plist in Resources */,
 				D512E9AC2988A33E007B0D2F /* Assets.xcassets in Resources */,
-				D5CA36EE2991C912000B08EA /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,7 +342,9 @@
 				D512E9A32988A33D007B0D2F /* AppDelegate.swift in Sources */,
 				D5A3C387298B30D000772D1B /* DatabaseManager.swift in Sources */,
 				D5A3C38B298B35E500772D1B /* UIExtension.swift in Sources */,
+				D597DF7E29976CCA00DF4D13 /* TrackRunViewController.swift in Sources */,
 				D5A3C3AF298CCD7B00772D1B /* BarChartExtension.swift in Sources */,
+				D597DF8429984B1300DF4D13 /* StepCounter.swift in Sources */,
 				D53A7FC52991EE8D000220B9 /* ShoeStoreViewController.swift in Sources */,
 				D5A3C37F298B1BC300772D1B /* HistoricalStepViewController.swift in Sources */,
 				D512E9B72988A468007B0D2F /* SignUpViewController.swift in Sources */,
@@ -329,6 +352,7 @@
 				D5A3C398298C902E00772D1B /* HealthKitManager.swift in Sources */,
 				D5A3C381298B1BE000772D1B /* ProfileViewController.swift in Sources */,
 				D5A93D29299602BA00E12217 /* PopUpModalCollectionViewCell.swift in Sources */,
+				D597DF802997713F00DF4D13 /* Annotation.swift in Sources */,
 				D512E9CC2988E1C5007B0D2F /* Shoe.swift in Sources */,
 				D512E9CE2988E229007B0D2F /* User.swift in Sources */,
 				D512E9C52988C02A007B0D2F /* Constants.swift in Sources */,
@@ -478,6 +502,12 @@
 				DEVELOPMENT_TEAM = NLUG78M5NL;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Walk2N/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Need access to share health statistics";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Need access to location";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Allow location";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Need access to location";
+				INFOPLIST_KEY_NSMotionUsageDescription = "Please allow for counting the steps";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -506,6 +536,12 @@
 				DEVELOPMENT_TEAM = NLUG78M5NL;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Walk2N/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Need access to share health statistics";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Need access to location";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Allow location";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Need access to location";
+				INFOPLIST_KEY_NSMotionUsageDescription = "Please allow for counting the steps";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
