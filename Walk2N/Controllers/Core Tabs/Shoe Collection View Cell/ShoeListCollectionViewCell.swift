@@ -48,13 +48,16 @@ class ShoeListCollectionViewCell: UICollectionViewCell {
                 self.shoeAction.isEnabled = true
                 
                 if data["boughtShoes"] != nil {
-                    let boughtShoes = data["boughtShoes"] as! [Any]
-                    for i in 0..<boughtShoes.count {
-                        if (boughtShoes[i] as! [String:Any])["id"] as! String == self.shoe!.id! {
-                            self.shoeAction.isEnabled = false
-                            self.shoeAction.setTitle("Already Bought", for: .normal)
+                    let boughtShoes = data["boughtShoes"] as? [Any]
+                    if boughtShoes != nil {
+                        for i in 0..<boughtShoes!.count {
+                            if (boughtShoes![i] as! [String:Any])["id"] as! String == self.shoe!.id! {
+                                self.shoeAction.isEnabled = false
+                                self.shoeAction.setTitle("Already Bought", for: .normal)
+                            }
                         }
                     }
+                    
                 }
             }
         }

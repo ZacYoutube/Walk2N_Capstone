@@ -37,13 +37,16 @@ class PopUpModalViewController: UIViewController {
             if update == true || added == true || deleted == true {
                 if data["boughtShoes"] != nil {
                     self.dataSource = []
-                    let boughtShoes = data["boughtShoes"] as! [Any]
-                    for i in 0..<boughtShoes.count {
-                        let bs = boughtShoes[i] as! [String: Any]
-                        let shoe = Shoe(id: bs["id"] as! String, name: bs["name"] as! String, durability: bs["durability"] as! Float, imgUrl: bs["imgUrl"] as! String, price: bs["price"] as! Float, expirationDate: (bs["expirationDate"] as! Timestamp).dateValue() as Date?)
-                        self.dataSource.append(shoe)
+                    let boughtShoes = data["boughtShoes"] as? [Any]
+                    if boughtShoes != nil {
+                        for i in 0..<boughtShoes!.count {
+                            let bs = boughtShoes![i] as! [String: Any]
+                            let shoe = Shoe(id: bs["id"] as! String, name: bs["name"] as! String, durability: bs["durability"] as! Float, imgUrl: bs["imgUrl"] as! String, price: bs["price"] as! Float, expirationDate: (bs["expirationDate"] as! Timestamp).dateValue() as Date?)
+                            self.dataSource.append(shoe)
+                        }
+                        self.collectionView.reloadData()
                     }
-                    self.collectionView.reloadData()
+                   
                 }
             }
         }

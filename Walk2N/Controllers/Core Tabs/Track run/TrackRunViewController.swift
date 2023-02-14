@@ -120,7 +120,7 @@ class TrackRunViewController: UIViewController {
         displayRoute()
         
         endRunTime = Date()
-        calculateBonus()
+//        calculateBonus()
     }
     
     private func calculateBonus() {

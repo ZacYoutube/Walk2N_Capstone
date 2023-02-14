@@ -53,10 +53,6 @@ extension UIViewController {
     
     // shared navbar across different view controllers [ under development ]
     func setUpNavbar() {
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
-//        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-//        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.barTintColor = UIColor.white
 
         let profile = UIButton(type: .custom)
         profile.setImage(UIImage (named: "profile.png"), for: .normal)
@@ -64,7 +60,6 @@ extension UIViewController {
         profile.addTarget(self, action: #selector(popNavigate), for: .touchUpInside)
         let barButtonItem = UIBarButtonItem(customView: profile)
         
-//        let logo = UIImage(named: "")
         let containView = UIView(frame: CGRectMake(0, 0, 120, 40))
         let label = UILabel(frame: CGRectMake(0, 0, 80, 40))
         DatabaseManager.shared.getUserInfo { docSnapshot in
@@ -95,14 +90,11 @@ extension UIViewController {
         
         
         containView.addSubview(imageview)
-//        containView.layer.borderWidth = 2
-//        containView.layer.borderColor = UIColor.red.cgColor
 
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: containView)
         
         self.navigationItem.leftBarButtonItem = barButtonItem
-//        self.navigationItem.titleView = UIImageView(image: logo)
-        
+        self.navigationController?.navigationBar.backgroundColor = .white
     }
 
     @objc func popNavigate(){
@@ -123,7 +115,7 @@ extension Double {
     }
 }
 
-// convert date to day of the week
+// convert date to day of the week and get its timestamp
 extension Date {
     typealias UnixTimestamp = Int
     func dayOfWeek() -> String? {
@@ -136,7 +128,7 @@ extension Date {
         return substring.capitalized
     }
     var unixTimestamp: UnixTimestamp {
-        return UnixTimestamp(self.timeIntervalSince1970 * 1_000) // millisecond precision
+        return UnixTimestamp(self.timeIntervalSince1970 * 1_000)
     }
 }
 

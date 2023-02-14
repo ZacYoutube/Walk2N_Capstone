@@ -47,6 +47,11 @@ extension BarChartView {
         self.data = chartData
         self.data?.notifyDataChanged()
         self.notifyDataSetChanged()
+        self.leftAxis.axisMinimum = 0.0
+        self.leftAxis.axisMaximum = 2000.0
+        self.xAxis.drawLimitLinesBehindDataEnabled = true
+        
+    
 
         self.animate(xAxisDuration: 2.0, yAxisDuration: 2.0, easingOption: .linear)
 
