@@ -53,7 +53,7 @@ extension BarChartView {
         
     
 
-        self.animate(xAxisDuration: 2.0, yAxisDuration: 2.0, easingOption: .linear)
+        self.animate(xAxisDuration: 1.0, yAxisDuration: 1.0, easingOption: .linear)
 
     }
 

@@ -9,10 +9,10 @@ import UIKit
 import Firebase
 
 struct setting {
-    let title: String
-    let image: UIImage
-    let text: String
-    let arrow: Bool
+    let title: String?
+    let image: UIImage?
+    let text: String?
+    let arrow: Bool?
     let handler: (() -> Void)
 }
 
@@ -20,8 +20,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     let db = DatabaseManager.shared
     
-    var settingOptions = [setting]()
-
+    var settingOptions = [setting](repeating: setting(title: nil, image: nil, text: nil, arrow: false, handler: {}), count: 9)
     
     private let profileImageView: UIImageView = {
         let iv = UIImageView()
@@ -108,25 +107,53 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func configure() {
         
+        db.getUserInfo { docSnapshot in
+            for doc in docSnapshot {
+                if doc["balance"] != nil {
+                    let balance = String(describing: (doc["balance"] as! Double).truncate(places: 2))
+                    self.settingOptions[0] = (setting(title: "Balance", image: UIImage(named: "balance.png")!, text: balance, arrow: false, handler: {}))
+                }
+                if doc["age"] != nil {
+                    let age = String(describing: Int(doc["age"] as! Double))
+                    self.settingOptions[1] = (setting(title: "Age", image: UIImage(named: "weight.png")!, text: "\(age)", arrow: false, handler: {}))
+                }
+                if doc["height"] != nil {
+                    let height = String(describing: (doc["height"] as! Double))
+                    self.settingOptions[2] = (setting(title: "Height", image: UIImage(named: "height.png")!, text: "\(height) cm", arrow: false, handler: {}))
+                }
+                if doc["weight"] != nil {
+                    let weight = String(describing: (doc["weight"] as! Double))
+                    self.settingOptions[3] = (setting(title: "Weight", image: UIImage(named: "weight.png")!, text: "\(weight) kg", arrow: false, handler: {}))
+                }
+                self.tableView.reloadData()
+            }
+        }
+        
+        
         db.checkUserUpdates { data, update, addition, deletion in
             DispatchQueue.main.async {
-                if update == true || addition == true || deletion == true {
+                if update == true {
                     if data["balance"] != nil {
                         let balance = String(describing: (data["balance"] as! Double).truncate(places: 2))
-                        self.settingOptions.append(setting(title: "Balance", image: UIImage(named: "balance.png")!, text: balance, arrow: false, handler: {}))
+                        let setting = setting(title: "Balance", image: UIImage(named: "balance.png")!, text: balance, arrow: false, handler: {})
+                        self.settingOptions[0] = setting
                     }
                     if data["age"] != nil {
                         let age = String(describing: Int(data["age"] as! Double))
-                        self.settingOptions.append(setting(title: "Age", image: UIImage(named: "weight.png")!, text: "\(age)", arrow: false, handler: {}))
+                        let setting = setting(title: "Age", image: UIImage(named: "age.png")!, text: "\(age)", arrow: false, handler: {})
+                        self.settingOptions[1] = setting
                     }
                     if data["height"] != nil {
                         let height = String(describing: (data["height"] as! Double))
-                        self.settingOptions.append(setting(title: "Height", image: UIImage(named: "height.png")!, text: "\(height) cm", arrow: false, handler: {}))
+                        let setting = setting(title: "Height", image: UIImage(named: "height.png")!, text: "\(height) cm", arrow: false, handler: {})
+                        self.settingOptions[2] = setting
                     }
                     if data["weight"] != nil {
-                        let weight = String(describing: (data["weight"] as! Double))
-                        self.settingOptions.append(setting(title: "Weight", image: UIImage(named: "weight.png")!, text: "\(weight) kg", arrow: false, handler: {}))
+                        let weight = String(describing: (data["weight"] as! Double).truncate(places: 2))
+                        let setting = setting(title: "Weight", image: UIImage(named: "weight.png")!, text: "\(weight) kg", arrow: false, handler: {})
+                        self.settingOptions[3] = setting
                     }
+                    
                 }
                 
                 self.tableView.reloadData()
@@ -141,7 +168,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 for i in 0..<steps.count {
                     sum += Int(steps[i])
                 }
-                self.settingOptions.append(setting(title: "Steps (past week)", image: UIImage(named: "steps.png")!, text: "\(sum)", arrow: false, handler: {}))
+                self.settingOptions[4] = (setting(title: "Steps (past week)", image: UIImage(named: "steps.png")!, text: "\(sum)", arrow: false, handler: {}))
                 
                 self.tableView.reloadData()
             }
@@ -150,10 +177,10 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         hk.gettingDistance(7) { dist in
             DispatchQueue.main.async {
                 let distance = String(describing: (dist).truncate(places: 2))
-                self.settingOptions.append(setting(title: "Distance (past week)", image: UIImage(named: "dist.png")!, text: "\(distance) km", arrow: false, handler: {}))
-                self.settingOptions.append(setting(title: "Terms of use", image: UIImage(named: "terms.png")!, text: "", arrow: true, handler: {}))
-                self.settingOptions.append(setting(title: "Privacy", image: UIImage(named: "privacy.png")!, text: "", arrow: true, handler: {}))
-                self.settingOptions.append(setting(title: "Log out", image: UIImage(named: "logout.png")!, text: "", arrow: false) {
+                self.settingOptions[5] = (setting(title: "Distance (past week)", image: UIImage(named: "dist.png")!, text: "\(distance) km", arrow: false, handler: {}))
+                self.settingOptions[6] = (setting(title: "Terms of use", image: UIImage(named: "terms.png")!, text: "", arrow: true, handler: {}))
+                self.settingOptions[7] = (setting(title: "Privacy", image: UIImage(named: "privacy.png")!, text: "", arrow: true, handler: {}))
+                self.settingOptions[8] = (setting(title: "Log out", image: UIImage(named: "logout.png")!, text: "", arrow: false) {
                     self.logout()
                 })
                 
