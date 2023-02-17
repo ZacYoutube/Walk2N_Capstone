@@ -35,6 +35,41 @@ extension UIView {
     public var right: CGFloat {
         return frame.origin.x + frame.size.width
     }
+    
+    func anchor(top: NSLayoutYAxisAnchor? = nil, left: NSLayoutXAxisAnchor? = nil, bottom: NSLayoutYAxisAnchor? = nil, right: NSLayoutXAxisAnchor? = nil, paddingTop: CGFloat? = 0,
+                paddingLeft: CGFloat? = 0, paddingBottom: CGFloat? = 0, paddingRight: CGFloat? = 0, width: CGFloat? = nil, height: CGFloat? = nil) {
+        
+        translatesAutoresizingMaskIntoConstraints = false
+        
+        if let top = top {
+            topAnchor.constraint(equalTo: top, constant: paddingTop!).isActive = true
+        }
+        
+        if let left = left {
+            leftAnchor.constraint(equalTo: left, constant: paddingLeft!).isActive = true
+        }
+        
+        if let bottom = bottom {
+            if let paddingBottom = paddingBottom {
+                bottomAnchor.constraint(equalTo: bottom, constant: -paddingBottom).isActive = true
+            }
+        }
+        
+        if let right = right {
+            if let paddingRight = paddingRight {
+                rightAnchor.constraint(equalTo: right, constant: -paddingRight).isActive = true
+            }
+        }
+        
+        if let width = width {
+            widthAnchor.constraint(equalToConstant: width).isActive = true
+        }
+        
+        if let height = height {
+            heightAnchor.constraint(equalToConstant: height).isActive = true
+        }
+    }
+       
 }
 
 extension UIViewController {
@@ -51,13 +86,27 @@ extension UIViewController {
         self.navigationController!.pushViewController(destController as! UIViewController, animated: true)
     }
     
+    func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage {
+        
+        let scale = newWidth / image.size.width
+        let newHeight = image.size.height * scale
+        UIGraphicsBeginImageContext(CGSizeMake(newWidth, newHeight))
+        image.draw(in: CGRectMake(0, 0, newWidth, newHeight))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage!
+   }
+    
     // shared navbar across different view controllers [ under development ]
     func setUpNavbar() {
 
         let profile = UIButton(type: .custom)
-        profile.setImage(UIImage (named: "profile.png"), for: .normal)
+        var profileImage = UIImage(named: "profile.png")
+        profileImage = resizeImage(image: profileImage!, newWidth: 45).circleMasked
+        profile.setImage(profileImage, for: .normal)
         profile.frame = CGRect(x: 0.0, y: 0.0, width: 30.0, height: 30.0)
-        profile.addTarget(self, action: #selector(popNavigate), for: .touchUpInside)
+        profile.addTarget(self, action: #selector(navigateToProfile), for: .touchUpInside)
         let barButtonItem = UIBarButtonItem(customView: profile)
         
         let containView = UIView(frame: CGRectMake(0, 0, 120, 40))
@@ -94,11 +143,12 @@ extension UIViewController {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: containView)
         
         self.navigationItem.leftBarButtonItem = barButtonItem
+        
         self.navigationController?.navigationBar.backgroundColor = .white
     }
 
-    @objc func popNavigate(){
-        self.navigationController?.popViewController(animated: true)
+    @objc func navigateToProfile(){
+        self.tabBarController?.selectedIndex = 4
     }
     
     @objc func dismissKeyboard() {
@@ -130,5 +180,37 @@ extension Date {
     var unixTimestamp: UnixTimestamp {
         return UnixTimestamp(self.timeIntervalSince1970 * 1_000)
     }
+}
+
+extension UIImage {
+    var isPortrait:  Bool    { size.height > size.width }
+    var isLandscape: Bool    { size.width > size.height }
+    var breadth:     CGFloat { min(size.width, size.height) }
+    var breadthSize: CGSize  { .init(width: breadth, height: breadth) }
+    var breadthRect: CGRect  { .init(origin: .zero, size: breadthSize) }
+    var circleMasked: UIImage? {
+        guard let cgImage = cgImage?
+            .cropping(to: .init(origin: .init(x: isLandscape ? ((size.width-size.height)/2).rounded(.down) : 0,
+                                              y: isPortrait  ? ((size.height-size.width)/2).rounded(.down) : 0),
+                                size: breadthSize)) else { return nil }
+        let format = imageRendererFormat
+        format.opaque = false
+        return UIGraphicsImageRenderer(size: breadthSize, format: format).image { _ in
+            UIBezierPath(ovalIn: breadthRect).addClip()
+            UIImage(cgImage: cgImage, scale: format.scale, orientation: imageOrientation)
+                .draw(in: .init(origin: .zero, size: breadthSize))
+            UIBezierPath(ovalIn: breadthRect).lineWidth = 100
+            UIColor.gray.setStroke()
+            UIBezierPath(ovalIn: breadthRect).stroke()
+        }
+    }
+}
+
+extension UIColor {
+    static func rgb(red: CGFloat, green: CGFloat, blue: CGFloat) -> UIColor {
+        return UIColor(red: red/255, green: green/255, blue: blue/255, alpha: 1)
+    }
+    
+    static let grayish = UIColor.rgb(red: 237, green: 237, blue: 237)
 }
 

@@ -100,15 +100,14 @@ class HistoricalStepViewController: UIViewController {
     
     private func displaySteps(stepsArr: Array<Double>, timeArr: Array<String>, color: Array<NSUIColor>) {
         DispatchQueue.main.async {
-            let barChart = BarChartView(frame: CGRect(x: 0, y: 0, width: self.view.width, height: self.view.height - 100))
+            let barChart = BarChartView(frame: CGRect(x: 0, y: 0, width: self.view.width, height: self.view.width))
             barChart.setChartValues(xAxisValues: timeArr, values: stepsArr, color: color, label: "Steps")
             barChart.chartDescription.enabled = false
             barChart.xAxis.drawGridLinesEnabled = false
             barChart.xAxis.drawAxisLineEnabled = false
             barChart.rightAxis.enabled = false
             barChart.leftAxis.enabled = false
-            barChart.center.x = self.view.center.x
-            barChart.center.y = self.view.center.y - 100
+            barChart.center = self.view.center
 
             self.view.addSubview(barChart)
         }

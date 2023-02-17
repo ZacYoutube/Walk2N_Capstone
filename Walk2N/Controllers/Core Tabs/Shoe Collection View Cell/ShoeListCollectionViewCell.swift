@@ -26,7 +26,7 @@ class ShoeListCollectionViewCell: UICollectionViewCell {
     
     public func configure(with shoe: Shoe) {
         let df = DateFormatter()
-        df.dateFormat = "MM/dd/YYYY"
+        df.dateFormat = "MM/dd/YY"
         let expDate = df.string(from: shoe.expirationDate ?? Date())
         shoePrice.text = String(shoe.price!)
         shoeExpirationDate.text = expDate
@@ -36,6 +36,16 @@ class ShoeListCollectionViewCell: UICollectionViewCell {
         shoeAction.addTarget(self, action: #selector(buyShoes), for: .touchUpInside)
         self.shoe = shoe
         showBtn()
+        
+        let cell = self
+        
+        cell.layer.cornerRadius = 10
+        cell.layer.shadowColor = UIColor.black.cgColor
+        cell.layer.shadowOpacity = 0.5
+        cell.layer.shadowOffset = CGSize(width: 0, height: 2)
+        cell.layer.shadowRadius = 4
+        
+        cell.layer.cornerRadius = 10
     }
     
     private func showBtn() {

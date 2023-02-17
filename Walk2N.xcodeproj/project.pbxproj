@@ -28,6 +28,7 @@
 		D597DF7E29976CCA00DF4D13 /* TrackRunViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597DF7D29976CCA00DF4D13 /* TrackRunViewController.swift */; };
 		D597DF802997713F00DF4D13 /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597DF7F2997713F00DF4D13 /* Annotation.swift */; };
 		D597DF8429984B1300DF4D13 /* StepCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597DF8329984B1300DF4D13 /* StepCounter.swift */; };
+		D597DF87299EF53D00DF4D13 /* ProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597DF86299EF53D00DF4D13 /* ProfileTableViewCell.swift */; };
 		D5A3C37D298B1BA700772D1B /* MainPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C37C298B1BA700772D1B /* MainPageViewController.swift */; };
 		D5A3C37F298B1BC300772D1B /* HistoricalStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C37E298B1BC300772D1B /* HistoricalStepViewController.swift */; };
 		D5A3C381298B1BE000772D1B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C380298B1BE000772D1B /* ProfileViewController.swift */; };
@@ -67,6 +68,7 @@
 		D597DF7D29976CCA00DF4D13 /* TrackRunViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackRunViewController.swift; sourceTree = "<group>"; };
 		D597DF7F2997713F00DF4D13 /* Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Annotation.swift; sourceTree = "<group>"; };
 		D597DF8329984B1300DF4D13 /* StepCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepCounter.swift; sourceTree = "<group>"; };
+		D597DF86299EF53D00DF4D13 /* ProfileTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewCell.swift; sourceTree = "<group>"; };
 		D5A3C37C298B1BA700772D1B /* MainPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPageViewController.swift; sourceTree = "<group>"; };
 		D5A3C37E298B1BC300772D1B /* HistoricalStepViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricalStepViewController.swift; sourceTree = "<group>"; };
 		D5A3C380298B1BE000772D1B /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
@@ -174,6 +176,14 @@
 			path = "Track run";
 			sourceTree = "<group>";
 		};
+		D597DF85299EF50A00DF4D13 /* Profile Table Cell */ = {
+			isa = PBXGroup;
+			children = (
+				D597DF86299EF53D00DF4D13 /* ProfileTableViewCell.swift */,
+			);
+			path = "Profile Table Cell";
+			sourceTree = "<group>";
+		};
 		D5A3C36E298B19EF00772D1B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -206,6 +216,7 @@
 		D5A3C382298B1BF100772D1B /* Core Tabs */ = {
 			isa = PBXGroup;
 			children = (
+				D597DF85299EF50A00DF4D13 /* Profile Table Cell */,
 				D597DF7C29976C6100DF4D13 /* Track run */,
 				D53A7FBF2991EC69000220B9 /* Shoe Collection View Cell */,
 				D5A3C37C298B1BA700772D1B /* MainPageViewController.swift */,
@@ -359,6 +370,7 @@
 				D512E9A52988A33D007B0D2F /* SceneDelegate.swift in Sources */,
 				D5A93D262996014200E12217 /* PopUpModalViewController.swift in Sources */,
 				D5A3C391298C12B600772D1B /* CollectInformationViewController.swift in Sources */,
+				D597DF87299EF53D00DF4D13 /* ProfileTableViewCell.swift in Sources */,
 				D512E9D02988E67E007B0D2F /* HistoricalStep.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

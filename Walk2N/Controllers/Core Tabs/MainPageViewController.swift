@@ -44,40 +44,10 @@ class MainPageViewController: UIViewController {
         checkUserInfo()
         loadCircularProgress()
         loadCurrentShoe()
-        timeToAddStep()
         addShoe.addTarget(self, action: #selector(openModal), for: .touchUpInside)
     }
     
-    private func timeToAddStep() {
-        let cal = Calendar.current
-        let now = Date()
-        let date = cal.date(bySettingHour: 0, minute: 0, second: 0, of: now)!
-        let timer = Timer(fireAt: date, interval: 0, target: self, selector: #selector(addStepToDB), userInfo: nil, repeats: false)
-        RunLoop.main.add(timer, forMode: RunLoop.Mode.common)
-    }
 
-    @objc private func addStepToDB() {
-        if (Auth.auth().currentUser != nil) {
-            HealthKitManager().gettingStepCount(0) { stepArr, timeArr in
-                for (step, time) in zip(stepArr, timeArr) {
-                    let stepGoalToday = 1000.0
-                    var reachedGoal = false
-                    if step >= stepGoalToday {
-                        reachedGoal = true
-                    }
-                    let stepToday = HistoricalStep(id: UUID().uuidString, uid: Auth.auth().currentUser?.uid, stepCount: Int(step), date: time, reachedGoal: reachedGoal)
-                    DatabaseManager.shared.updateArrayData(fieldName: "historicalSteps", fieldVal: stepToday.firestoreData, pop: false) { success in
-                        if success == true {
-                            print("successfully added")
-                        } else {
-                            print("unsuccessfully added")
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
     @objc private func openModal() {
         let popup = PopUpModalViewController()
         popup.title = "Choose a shoe to earn!"
@@ -86,7 +56,6 @@ class MainPageViewController: UIViewController {
     
     private func loadCurrentShoe() {
         
-        curShoeTitle.text = "Current Shoe"
         curShoeTitle.frame = CGRect(x: 0, y: 0, width: 250, height: 40)
         curShoeTitle.center.x = view.center.x
         curShoeTitle.center.y = view.top + 500
@@ -110,6 +79,7 @@ class MainPageViewController: UIViewController {
             if added == true || deleted == true || update == true {
                 if data["currentShoe"] as? [String: Any] != nil {
                     let currentShoe = data["currentShoe"] as? [String: Any]
+                    self.curShoeTitle.text = "Current Shoe: \(currentShoe!["name"] as! String)"
                     if let url = URL(string: currentShoe!["imgUrl"] as! String) {
                         URLSession.shared.dataTask(with: url) { (data, response, error) in
                           guard let imageData = data else { return }
@@ -119,16 +89,17 @@ class MainPageViewController: UIViewController {
                         }.resume()
                       }
                 } else {
-                    self.curShoe.image = nil
+                    self.curShoe.image = UIImage(named: "blank-removebg-preview.png")
+                    self.curShoeTitle.text = "Current Shoe"
                 }
             }
         }
         
-        curShoe.layer.borderColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0).cgColor
-        curShoe.layer.masksToBounds = true
-        curShoe.layer.cornerRadius = 10
-        curShoe.contentMode = .scaleToFill
-        curShoe.layer.borderWidth = 2
+//        curShoe.layer.borderColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0).cgColor
+//        curShoe.layer.masksToBounds = true
+//        curShoe.layer.cornerRadius = 10
+//        curShoe.contentMode = .scaleToFill
+//        curShoe.layer.borderWidth = 2
         
         self.view.addSubview(curShoeTitle)
         self.view.addSubview(addShoe)
@@ -220,11 +191,13 @@ class MainPageViewController: UIViewController {
         let animation = CABasicAnimation(keyPath: "strokeEnd")
         let stepGoalToday = getStepGoalToday()
         getCurrentStep { steps in
-            animation.toValue = Double(steps / stepGoalToday).truncate(places: 1)
-            animation.duration = CFTimeInterval(self.duration)
-            animation.fillMode = CAMediaTimingFillMode.forwards
-            animation.isRemovedOnCompletion = false
-            self.progressShapeLayer.add(animation, forKey: "stepPercentage")
+            DispatchQueue.main.async {
+                animation.toValue = Double(steps / stepGoalToday).truncate(places: 1)
+                animation.duration = CFTimeInterval(self.duration)
+                animation.fillMode = CAMediaTimingFillMode.forwards
+                animation.isRemovedOnCompletion = false
+                self.progressShapeLayer.add(animation, forKey: "stepPercentage")
+            }
         }
     }
     

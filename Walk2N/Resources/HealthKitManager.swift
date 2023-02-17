@@ -96,4 +96,33 @@ class HealthKitManager {
         
         healthStore.execute(query)
     }
+    
+    
+    
+    func gettingDistance(_ n: Int, completion:((Double) -> Void)?){
+        guard let type = HKSampleType.quantityType(forIdentifier: .distanceWalkingRunning) else {
+            fatalError("Something went wrong retriebing quantity type distanceWalkingRunning")
+        }
+        let now = Date()
+        let exactlyNDaysAgo = Calendar.current.date(byAdding: DateComponents(day: -n), to: now)!
+        let startOfNDaysAgo = Calendar.current.startOfDay(for: exactlyNDaysAgo)
+        var predicate = HKQuery.predicateForSamples(withStart: exactlyNDaysAgo, end: now, options: .strictEndDate)
+        if n == 0 {
+            predicate = HKQuery.predicateForSamples(withStart: startOfNDaysAgo, end: now, options: .strictEndDate)
+        }
+
+        let query = HKStatisticsQuery(quantityType: type, quantitySamplePredicate: predicate, options: [.cumulativeSum]) { (query, statistics, error) in
+            var value: Double = 0
+
+            if error != nil {
+                print("something went wrong")
+            } else if let quantity = statistics?.sumQuantity() {
+                value = quantity.doubleValue(for: HKUnit.meterUnit(with: .kilo))
+            }
+            DispatchQueue.main.async {
+                completion!(value)
+            }
+        }
+        healthStore.execute(query)
+    }
 }

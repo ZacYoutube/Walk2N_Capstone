@@ -19,7 +19,7 @@ class ShoeStoreViewController: UIViewController {
         self.setUpNavbar()
         navigationItem.title = "Store"
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: 180, height: 350)
+        layout.itemSize = CGSize(width: 180, height: 300)
         collectionView.collectionViewLayout = layout
         collectionView.register(ShoeListCollectionViewCell.nib(), forCellWithReuseIdentifier: ShoeListCollectionViewCell.identifier)
         collectionView.delegate = self
@@ -61,7 +61,7 @@ extension ShoeStoreViewController: UICollectionViewDataSource {
 
 extension ShoeStoreViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 180, height: 350)
+        return CGSize(width: 180, height: 300)
     }
 }
 
