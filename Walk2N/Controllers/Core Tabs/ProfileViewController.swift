@@ -115,7 +115,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 }
                 if doc["age"] != nil {
                     let age = String(describing: Int(doc["age"] as! Double))
-                    self.settingOptions[1] = (setting(title: "Age", image: UIImage(named: "weight.png")!, text: "\(age)", arrow: false, handler: {}))
+                    self.settingOptions[1] = (setting(title: "Age", image: UIImage(named: "age.png")!, text: "\(age)", arrow: false, handler: {}))
                 }
                 if doc["height"] != nil {
                     let height = String(describing: (doc["height"] as! Double))
