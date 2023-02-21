@@ -13,13 +13,17 @@ public class HistoricalStep {
     var stepCount: Int?
     var date: Date?
     var reachedGoal: Bool?
+    var wearShoe: Bool?
+    var stepGoal: Double?
     
-    init(id: String?, uid: String?, stepCount: Int?, date: Date?, reachedGoal: Bool?) {
+    init(id: String?, uid: String?, stepCount: Int?, date: Date?, reachedGoal: Bool?, wearShoe: Bool?, stepGoal: Double?) {
         self.id = id
         self.uid = uid
         self.stepCount = stepCount
         self.date = date
         self.reachedGoal = reachedGoal
+        self.wearShoe = wearShoe
+        self.stepGoal = stepGoal
     }
     
     var firestoreData: [String: Any] {
@@ -28,19 +32,10 @@ public class HistoricalStep {
                 "uid": uid as Any,
                 "stepCount": stepCount as Any,
                 "date": date as Any,
-                "reachedGoal": reachedGoal as Any
+                "reachedGoal": reachedGoal as Any,
+                "wearShoe": wearShoe as Any,
+                "stepGoal": stepGoal as Any
             ]
-    }
-    
-    func setStepCount(_ step: Int){
-        self.stepCount = step
-    }
-    func setDate(_ date: Date){
-        self.date = date
-    }
-    
-    func setReachedGoal(_ reachedGoal: Bool) {
-        self.reachedGoal = reachedGoal
     }
    
 }

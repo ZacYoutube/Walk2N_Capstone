@@ -82,8 +82,8 @@ class LoginViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         header.frame = CGRect(x: 0, y: view.safeAreaInsets.top, width: view.width, height: view.height / 3.0)
-        let logo = UIImageView(image: UIImage(named: "sneaker1"))
-        logo.frame = CGRectMake(100, 150, 150, 150)
+        let logo = UIImageView(image: UIImage(named: "shoe"))
+        logo.frame = CGRectMake(100, 150, 150, 100)
         
         logo.center = CGPoint(x: header.width  / 2,
                               y: header.height / 2)

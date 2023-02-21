@@ -45,7 +45,7 @@
                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="qMg-VN-STx">
                         <rect key="frame" x="0.0" y="158" width="234" height="30"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Durability" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d5u-l4-GTa">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Award/Step" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d5u-l4-GTa">
                                 <rect key="frame" x="0.0" y="0.0" width="117" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <nil key="textColor"/>
@@ -106,10 +106,12 @@
             <constraints>
                 <constraint firstItem="kJ9-Ni-fTd" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="141-e1-MxH"/>
                 <constraint firstItem="oHs-dy-sDb" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="3xw-Mg-23V"/>
+                <constraint firstAttribute="trailing" secondItem="kJ9-Ni-fTd" secondAttribute="trailing" id="5xG-TO-Ax4"/>
                 <constraint firstItem="oHs-dy-sDb" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="8La-9F-lRe"/>
                 <constraint firstItem="kJ9-Ni-fTd" firstAttribute="top" secondItem="oHs-dy-sDb" secondAttribute="bottom" id="8kO-Ab-2wR"/>
                 <constraint firstAttribute="trailing" secondItem="qMg-VN-STx" secondAttribute="trailing" id="FiK-24-kmJ"/>
                 <constraint firstItem="9W7-pE-RwU" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="Hw2-EK-Weg"/>
+                <constraint firstItem="kJ9-Ni-fTd" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="Iwx-tP-GPH"/>
                 <constraint firstAttribute="trailing" secondItem="Z7a-I1-e3d" secondAttribute="trailing" id="LAd-Sz-vQ0"/>
                 <constraint firstItem="Z7a-I1-e3d" firstAttribute="top" secondItem="9W7-pE-RwU" secondAttribute="bottom" constant="20" id="LcL-7V-IGi"/>
                 <constraint firstAttribute="trailing" secondItem="oHs-dy-sDb" secondAttribute="trailing" id="WDX-Cv-rGc"/>

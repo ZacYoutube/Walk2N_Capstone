@@ -47,9 +47,13 @@ extension BarChartView {
         self.data = chartData
         self.data?.notifyDataChanged()
         self.notifyDataSetChanged()
-        self.leftAxis.axisMinimum = 0.0
-        self.leftAxis.axisMaximum = 2000.0
-        self.xAxis.drawLimitLinesBehindDataEnabled = true
+//        self.xAxis.drawLimitLinesBehindDataEnabled = true
+        
+        self.pinchZoomEnabled = false
+        self.drawBarShadowEnabled = false
+        self.drawBordersEnabled = false
+        self.doubleTapToZoomEnabled = false
+//        self.drawGridBackgroundEnabled = true
         
     
 

@@ -15,12 +15,15 @@ class HistoricalStepViewController: UIViewController {
 
     @IBOutlet weak var averageSteps: UILabel!
     @IBOutlet weak var totalSteps: UILabel!
+    let barChart = BarChartView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "History"
         self.setUpNavbar()
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         // read from firebase and display historical step count in bar chart
         DatabaseManager.shared.getUserInfo { docSnapshot in
             for doc in docSnapshot {
@@ -30,13 +33,13 @@ class HistoricalStepViewController: UIViewController {
                         ((($0 as! [String:Any])["date"] as! Timestamp).dateValue()) < ((($1 as! [String:Any])["date"] as! Timestamp).dateValue())
                     })
                     if historicalSteps.count > 7 {
-                        historicalSteps = Array(historicalSteps[1...7])
+                        historicalSteps = Array(historicalSteps[historicalSteps.count - 8...historicalSteps.count - 1])
                     }
-                    var color = [NSUIColor](repeating: NSUIColor(red: 255.0, green: 0, blue: 0, alpha: 1.0), count: historicalSteps.count)
+                    var color = [NSUIColor](repeating: NSUIColor(red: 139.0, green: 0, blue: 0, alpha: 1.0), count: historicalSteps.count)
                     var timeArr: Array<String> = Array(repeating: "", count: historicalSteps.count)
                     var stepsArr: Array<Double> = Array(repeating: 0.0, count: historicalSteps.count)
                     for i in 0..<historicalSteps.count {
-                        if (historicalSteps[i] as! [String:Any])["stepCount"] as! Double >= 1000.0 {
+                        if (historicalSteps[i] as! [String:Any])["stepCount"] as! Double >= (historicalSteps[i] as! [String:Any])["stepGoal"] as! Double {
                             color[i] = NSUIColor(red: 46/255.0, green: 204/255.0, blue: 113/255.0, alpha: 1.0)
                         }
                         timeArr[i] = (((historicalSteps[i] as! [String:Any])["date"] as! Timestamp).dateValue()).dayOfWeek()!
@@ -100,16 +103,18 @@ class HistoricalStepViewController: UIViewController {
     
     private func displaySteps(stepsArr: Array<Double>, timeArr: Array<String>, color: Array<NSUIColor>) {
         DispatchQueue.main.async {
-            let barChart = BarChartView(frame: CGRect(x: 0, y: 0, width: self.view.width, height: self.view.width))
-            barChart.setChartValues(xAxisValues: timeArr, values: stepsArr, color: color, label: "Steps")
-            barChart.chartDescription.enabled = false
-            barChart.xAxis.drawGridLinesEnabled = false
-            barChart.xAxis.drawAxisLineEnabled = false
-            barChart.rightAxis.enabled = false
-            barChart.leftAxis.enabled = false
-            barChart.center = self.view.center
+            self.barChart.frame = CGRect(x: 0, y: 0, width: self.view.width, height: self.view.width + 50)
+            self.barChart.setChartValues(xAxisValues: timeArr, values: stepsArr, color: color, label: "Steps")
+            self.barChart.chartDescription.enabled = false
+            self.barChart.xAxis.drawGridLinesEnabled = false
+            self.barChart.xAxis.drawAxisLineEnabled = false
+            self.barChart.rightAxis.enabled = false
+            self.barChart.leftAxis.enabled = false
+            self.barChart.center.x = self.view.center.x
+            self.barChart.center.y = self.view.center.y + 50
 
-            self.view.addSubview(barChart)
+
+            self.view.addSubview(self.barChart)
         }
     }
     

@@ -17,19 +17,22 @@ public class User {
     var boughtShoes: Array<Shoe>?
     var currentShoe: Shoe?
     var historicalSteps: Array<HistoricalStep>?
-    var reachedStepGoal: Bool?
+    var bonusEarnedToday: Double?
     var stepGoalToday: Int?
     var weight: Float?
     var height: Float?
     var age: Int?
     var gender: String?
+    var bonusHistory: Array<Bonus>?
+    var bonusAwardedForReachingStepGoal: Bool?
+    var bonusEarnedDuringRealTimeRun: Double?
     
     init(uid: String?, email: String?, password: String?,
          firstName: String?, lastName: String?,
          balance: Float?, boughtShoes: Array<Shoe>?,
          currentShoe: Shoe?, historicalSteps: Array<HistoricalStep>?,
-         reachedStepGoal: Bool?, stepGoalToday: Int?, weight: Float?,
-         height: Float?, age: Int?, gender: String?) {
+         bonusEarnedToday: Double?, stepGoalToday: Int?, weight: Float?,
+         height: Float?, age: Int?, gender: String?, bonusHistory: Array<Bonus>?, bonusAwardedForReachingStepGoal: Bool?, bonusEarnedDuringRealTimeRun: Double?) {
         self.uid = uid
         self.email = email
         self.password = password
@@ -39,52 +42,14 @@ public class User {
         self.boughtShoes = boughtShoes
         self.currentShoe = currentShoe
         self.historicalSteps = historicalSteps
-        self.reachedStepGoal = reachedStepGoal
+        self.bonusEarnedToday = bonusEarnedToday
         self.stepGoalToday = stepGoalToday
         self.weight = weight
         self.height = height
         self.age = age
         self.gender = gender
-    }
-    
-    func setFirstName(_ firstName: String){
-        self.firstName = firstName
-    }
-    func setLast(_ lastName: String){
-        self.lastName = lastName
-    }
-    func setBalance(_ balance: Float){
-        self.balance = balance
-    }
-    func setBoughtShoes(_ boughtShoes: Array<Shoe>){
-        self.boughtShoes = boughtShoes
-    }
-    func setCurrentShoe(_ currentShoe: Shoe){
-        self.currentShoe = currentShoe
-    }
-    func setHistoricalSteps(_ historicalSteps: Array<HistoricalStep>){
-        self.historicalSteps = historicalSteps
-    }
-    func setReachedStepGoal(_ reachedStepGoal: Bool){
-        self.reachedStepGoal = reachedStepGoal
-    }
-    func setStepGoalToday(_ stepGoalToday: Int){
-        self.stepGoalToday = stepGoalToday
-    }
-    
-    func setWeight(_ weight: Float) {
-        self.weight = weight
-    }
-    
-    func setHeight(_ height: Float) {
-        self.height = height
-    }
-    
-    func setAge(_ age: Int) {
-        self.age = age
-    }
-    
-    func setGender(_ gender: String){
-        self.gender = gender
+        self.bonusHistory = bonusHistory
+        self.bonusAwardedForReachingStepGoal = bonusAwardedForReachingStepGoal
+        self.bonusEarnedDuringRealTimeRun = bonusEarnedDuringRealTimeRun
     }
 }

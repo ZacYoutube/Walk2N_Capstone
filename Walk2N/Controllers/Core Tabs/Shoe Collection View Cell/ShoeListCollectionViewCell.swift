@@ -17,7 +17,7 @@ class ShoeListCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var shoeDurability: UILabel!
     
     static let identifier = "ShoeListCollectionViewCell"
-    
+        
     var shoe: Shoe? = nil
     
     override func awakeFromNib() {
@@ -30,7 +30,7 @@ class ShoeListCollectionViewCell: UICollectionViewCell {
         let expDate = df.string(from: shoe.expirationDate ?? Date())
         shoePrice.text = String(shoe.price!)
         shoeExpirationDate.text = expDate
-        shoeDurability.text = String(shoe.durability!)
+        shoeDurability.text = String(shoe.awardPerStep!)
         shoeName.text = String(shoe.name!)
         retrieveImage(url: shoe.imgUrl!)
         shoeAction.addTarget(self, action: #selector(buyShoes), for: .touchUpInside)
@@ -88,14 +88,14 @@ class ShoeListCollectionViewCell: UICollectionViewCell {
                         db.updateUserInfo(fieldToUpdate: ["balance"], fieldValues: [newBalanace]) { success in
                             if success {
                                 db.updateArrayData(fieldName: "boughtShoes", fieldVal: self.shoe!.firestoreData, pop: false) { bought in
-                                    if bought {
-                                        print("unsuccessfully updated balance and bought shoes")
-                                    } else {
-                                        print("unsuccessfully updated balance but did not bought shoes")
-                                    }
+//                                    if bought {
+//                                        print("unsuccessfully updated balance and bought shoes")
+//                                    } else {
+//                                        print("unsuccessfully updated balance but did not bought shoes")
+//                                    }
                                 }
                             } else {
-                                print("unsuccessfully updated balance")
+//                                print("unsuccessfully updated balance")
                             }
                         }
                     } else {

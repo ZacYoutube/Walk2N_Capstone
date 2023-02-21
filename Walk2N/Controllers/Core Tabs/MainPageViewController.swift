@@ -25,6 +25,7 @@ class MainPageViewController: UIViewController {
     var curShoe = UIImageView()
     let curShoeTitle = UILabel()
     let addShoe = UIButton()
+    let db = DatabaseManager.shared
     
     private func authorizeHealthKit() {
         let isEnabled = HealthKitManager().authorizeHealthKit()
@@ -37,14 +38,19 @@ class MainPageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setUpNavbar()
         navigationItem.title = "Home"
         authorizeHealthKit()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.setUpNavbar()
         checkAuth()
         checkUserInfo()
         loadCircularProgress()
         loadCurrentShoe()
         addShoe.addTarget(self, action: #selector(openModal), for: .touchUpInside)
+        db.updateHistoricalSteps()
+        db.updateBonus()
     }
     
 
@@ -68,13 +74,16 @@ class MainPageViewController: UIViewController {
         addShoe.setTitleColor(.systemBlue, for: .normal)
         addShoe.titleLabel?.font =  UIFont(name: "", size: 10)
 
-        
-        curShoe.frame = CGRect(x: 0, y: 0, width: 250, height: 150)
+        curShoe.frame = CGRect(x: 0, y: 0, width: 250, height: 120)
         curShoe.center.x = view.center.x
         curShoe.center.y = view.top + 620
         
-        let db = DatabaseManager.shared
-        
+        curShoe.layer.cornerRadius = 10
+        curShoe.layer.shadowColor = UIColor.black.cgColor
+        curShoe.layer.shadowOpacity = 0.5
+        curShoe.layer.shadowOffset = CGSize(width: 0, height: 2)
+        curShoe.layer.shadowRadius = 4
+                
         db.checkUserUpdates { data, update, added, deleted in
             if added == true || deleted == true || update == true {
                 if data["currentShoe"] as? [String: Any] != nil {
@@ -154,13 +163,53 @@ class MainPageViewController: UIViewController {
         tokenEarnedText.textAlignment = .center
         tokenEarnedText.center.x = view.center.x
         tokenEarnedText.center.y = view.top + 400
-        tokenEarnedText.text = "Tokens earned: 0"
-        tokenEarnedText.textColor = UIColor.lightGray
+        
+        tokenEarnedText.textColor = UIColor.systemGreen
+        tokenEarnedText.font = tokenEarnedText.font.withSize(13)
+        
+        db.getUserInfo { docSnapshot in
+            for doc in docSnapshot {
+                if doc["bonusEarnedToday"] != nil {
+                    let bonusEarnedToday = (doc["bonusEarnedToday"] as! Double).truncate(places: 2)
+                    self.tokenEarnedText.text = "Today Earned: \(bonusEarnedToday)"
+                }
+            }
+        }
+        
+        db.checkUserUpdates { data, update, addition, deletion in
+            if update == true {
+                if data["bonusEarnedToday"] != nil {
+                    let bonusEarnedToday = (data["bonusEarnedToday"] as! Double).truncate(places: 2)
+                    self.tokenEarnedText.text = "Today Earned: \(bonusEarnedToday)"
+                }
+            }
+        }
         
         getCurrentStep { curStep in
             DispatchQueue.main.async {
                 self.endStep = curStep
                 self.endPercent = Double(curStep / self.getStepGoalToday()) * 100.truncate(places: 2)
+                
+                self.animateText(target: 1)
+                
+                self.db.getUserInfo { docSnapshot in
+                    for doc in docSnapshot {
+                        if doc["historicalSteps"] != nil {
+                            var historicalSteps = doc["historicalSteps"] as! [Any]
+                            historicalSteps = historicalSteps.sorted(by: {
+                                ((($0 as! [String:Any])["date"] as! Timestamp).dateValue()) < ((($1 as! [String:Any])["date"] as! Timestamp).dateValue())
+                            })
+                            let reachedGoal = (historicalSteps[historicalSteps.count - 1] as! [String: Any])["reachedGoal"] as! Bool
+                            if reachedGoal == true {
+                                self.percentText.text = "Goal Reached!"
+                            } else {
+                                self.animateText(target: 2)
+                            }
+                        }
+                    }
+                }
+    
+                
                 self.view.addSubview(self.titleText)
                 self.view.addSubview(self.stepText)
                 self.view.addSubview(self.goalText)
@@ -169,8 +218,7 @@ class MainPageViewController: UIViewController {
             }
         }
         
-        animateText(target: 1)
-        animateText(target: 2)
+        
         view.layer.addSublayer(trackLayer)
         view.layer.addSublayer(self.progressShapeLayer)
         setPercentage()
@@ -219,7 +267,7 @@ class MainPageViewController: UIViewController {
     
     private func checkUserInfo() {
         // check whether user has input their weight height gender and age
-        DatabaseManager().isUserInfoAvail { userInfoAvail in
+        db.isUserInfoAvail { userInfoAvail in
             if userInfoAvail == false {
                 let collectUserInfoVC = self.storyboard?.instantiateViewController(withIdentifier: "CollectInfoViewController")
                 collectUserInfoVC!.modalPresentationStyle = .fullScreen

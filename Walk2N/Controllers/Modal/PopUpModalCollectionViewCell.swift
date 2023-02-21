@@ -29,13 +29,21 @@ class PopUpModalCollectionViewCell: UICollectionViewCell {
         df.dateFormat = "MM/dd/YYYY"
         let expDate = df.string(from: shoe.expirationDate ?? Date())
         shoeExpirationDate.text = expDate
-        shoeDurability.text = String(shoe.durability!)
+        shoeDurability.text = String(shoe.awardPerStep!)
         shoeName.text = String(shoe.name!)
         retrieveImage(url: shoe.imgUrl!)
         wearBtn.addTarget(self, action: #selector(wear), for: .touchUpInside)
         removeBtn.addTarget(self, action: #selector(remove), for: .touchUpInside)
         checkWear()
         self.shoe = shoe
+        
+        let cell = self
+        
+        cell.layer.cornerRadius = 10
+        cell.layer.shadowColor = UIColor.black.cgColor
+        cell.layer.shadowOpacity = 0.5
+        cell.layer.shadowOffset = CGSize(width: 0, height: 2)
+        cell.layer.shadowRadius = 4
     }
     
     @objc private func remove() {
@@ -45,15 +53,16 @@ class PopUpModalCollectionViewCell: UICollectionViewCell {
         let db = DatabaseManager.shared
             db.getUserInfo { docSnapshot in
                 for doc in docSnapshot {
-                    if (doc["boughtShoes"] as? [Any]) != nil && (doc["currentShoe"] as? [String: Any]) != nil {
+                    if (doc["boughtShoes"] as? [Any]) != nil {
                         let boughtShoes = doc["boughtShoes"] as! [Any]
-                        let currentShoe = doc["currentShoe"] as! [String: Any]
                         for i in 0..<boughtShoes.count {
                             let elem = (boughtShoes[i] as! [String: Any])
                             if elem["id"] as! String == self.shoe!.id! {
                                 db.updateArrayData(fieldName: "boughtShoes", fieldVal: elem, pop: true) { bool in }
-                                if currentShoe["id"] as! String == self.shoe!.id! {
-                                    db.updateUserInfo(fieldToUpdate: ["currentShoe"], fieldValues: [nil]) { bool in }
+                                if (doc["currentShoe"] as? [String: Any]) != nil {
+                                    let currentShoe = doc["currentShoe"] as! [String: Any]
+                                    if currentShoe["id"] as! String == self.shoe!.id!{
+                                        db.updateUserInfo(fieldToUpdate: ["currentShoe"], fieldValues: [nil]) { bool in }}
                                 }
                             }
                         }

@@ -35,8 +35,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = UIFont.boldSystemFont(ofSize: 26)
-        label.textColor = .gray
+        label.font = UIFont.boldSystemFont(ofSize: 36)
+        label.textColor = .black
         return label
     }()
     
@@ -50,7 +50,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     lazy var containerView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.grayish
+        view.backgroundColor = UIColor.white
         
         view.addSubview(profileImageView)
         profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -77,6 +77,9 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         view.backgroundColor = .white
         view.addSubview(containerView)
         containerView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 300)
@@ -97,7 +100,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.dataSource = self
         tableView.anchor(top: containerView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, height: view.height - 300 - (self.tabBarController?.tabBar.frame.size.height)!)
         tableView.contentInset = UIEdgeInsets(top: -35, left: 0, bottom: -37, right: 0);
-
+        tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
+        tableView.backgroundColor = UIColor.white
         configure()
     }
     
@@ -125,54 +129,85 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                     let weight = String(describing: (doc["weight"] as! Double))
                     self.settingOptions[3] = (setting(title: "Weight", image: UIImage(named: "weight.png")!, text: "\(weight) kg", arrow: false, handler: {}))
                 }
-                self.tableView.reloadData()
-            }
-        }
-        
-        
-        db.checkUserUpdates { data, update, addition, deletion in
-            DispatchQueue.main.async {
-                if update == true {
-                    if data["balance"] != nil {
-                        let balance = String(describing: (data["balance"] as! Double).truncate(places: 2))
-                        let setting = setting(title: "Balance", image: UIImage(named: "balance.png")!, text: balance, arrow: false, handler: {})
-                        self.settingOptions[0] = setting
+                if doc["historicalSteps"] != nil {
+                    let historicalSteps = doc["historicalSteps"] as! [Any]
+                    var count = 0
+                    if historicalSteps.count > 7 {
+                        for i in historicalSteps.count - 8...historicalSteps.count - 1 {
+                            let stepData = historicalSteps[i] as! [String: Any]
+                            count += stepData["stepCount"] as! Int
+                        }
+                    } else {
+                        for i in 0..<historicalSteps.count {
+                            let stepData = historicalSteps[i] as! [String: Any]
+                            count += stepData["stepCount"] as! Int
+                        }
                     }
-                    if data["age"] != nil {
-                        let age = String(describing: Int(data["age"] as! Double))
-                        let setting = setting(title: "Age", image: UIImage(named: "age.png")!, text: "\(age)", arrow: false, handler: {})
-                        self.settingOptions[1] = setting
-                    }
-                    if data["height"] != nil {
-                        let height = String(describing: (data["height"] as! Double))
-                        let setting = setting(title: "Height", image: UIImage(named: "height.png")!, text: "\(height) cm", arrow: false, handler: {})
-                        self.settingOptions[2] = setting
-                    }
-                    if data["weight"] != nil {
-                        let weight = String(describing: (data["weight"] as! Double).truncate(places: 2))
-                        let setting = setting(title: "Weight", image: UIImage(named: "weight.png")!, text: "\(weight) kg", arrow: false, handler: {})
-                        self.settingOptions[3] = setting
-                    }
-                    
+                    self.settingOptions[4] = (setting(title: "Steps (past week)", image: UIImage(named: "steps.png")!, text: "\(count)", arrow: false, handler: {}))
                 }
-                
                 self.tableView.reloadData()
             }
         }
+        
+        
+//        db.checkUserUpdates { data, update, addition, deletion in
+//            DispatchQueue.main.async {
+//                if update == true {
+//                    if data["balance"] != nil {
+//                        let balance = String(describing: (data["balance"] as! Double).truncate(places: 2))
+//                        let setting = setting(title: "Balance", image: UIImage(named: "balance.png")!, text: balance, arrow: false, handler: {})
+//                        self.settingOptions[0] = setting
+//                    }
+//                    if data["age"] != nil {
+//                        let age = String(describing: Int(data["age"] as! Double))
+//                        let setting = setting(title: "Age", image: UIImage(named: "age.png")!, text: "\(age)", arrow: false, handler: {})
+//                        self.settingOptions[1] = setting
+//                    }
+//                    if data["height"] != nil {
+//                        let height = String(describing: (data["height"] as! Double))
+//                        let setting = setting(title: "Height", image: UIImage(named: "height.png")!, text: "\(height) cm", arrow: false, handler: {})
+//                        self.settingOptions[2] = setting
+//                    }
+//                    if data["weight"] != nil {
+//                        let weight = String(describing: (data["weight"] as! Double).truncate(places: 2))
+//                        let setting = setting(title: "Weight", image: UIImage(named: "weight.png")!, text: "\(weight) kg", arrow: false, handler: {})
+//                        self.settingOptions[3] = setting
+//                    }
+//                    if data["historicalSteps"] != nil {
+//                        let historicalSteps = data["historicalSteps"] as! [Any]
+//                        var count = 0
+//                        if historicalSteps.count > 7 {
+//                            for i in historicalSteps.count - 7...historicalSteps.count {
+//                                let stepData = historicalSteps[i] as! [String: Any]
+//                                count += stepData["stepCount"] as! Int
+//                            }
+//                        } else {
+//                            for i in 0..<historicalSteps.count {
+//                                let stepData = historicalSteps[i] as! [String: Any]
+//                                count += stepData["stepCount"] as! Int
+//                            }
+//                        }
+//                        self.settingOptions[4] = (setting(title: "Steps (past week)", image: UIImage(named: "steps.png")!, text: "\(count)", arrow: false, handler: {}))
+//                    }
+//                }
+//
+//                self.tableView.reloadData()
+//            }
+//        }
         
         let hk = HealthKitManager()
         
-        hk.gettingStepCount(7) { steps, dates in
-            DispatchQueue.main.async {
-                var sum = 0
-                for i in 0..<steps.count {
-                    sum += Int(steps[i])
-                }
-                self.settingOptions[4] = (setting(title: "Steps (past week)", image: UIImage(named: "steps.png")!, text: "\(sum)", arrow: false, handler: {}))
-                
-                self.tableView.reloadData()
-            }
-        }
+//        hk.gettingStepCount(7) { steps, dates in
+//            DispatchQueue.main.async {
+//                var sum = 0
+//                for i in 0..<steps.count {
+//                    sum += Int(steps[i])
+//                }
+//                self.settingOptions[4] = (setting(title: "Steps (past week)", image: UIImage(named: "steps.png")!, text: "\(sum)", arrow: false, handler: {}))
+//
+//                self.tableView.reloadData()
+//            }
+//        }
         
         hk.gettingDistance(7) { dist in
             DispatchQueue.main.async {
@@ -217,6 +252,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             return UITableViewCell()
         }
         cell.configure(with: setting)
+        cell.separatorInset = UIEdgeInsets.zero
+        cell.layoutMargins = UIEdgeInsets.zero
         return cell
     }
     
@@ -227,8 +264,11 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 65.0;
+        return 50.0;
     }
     
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.backgroundColor = UIColor.clear
+    }
 
 }

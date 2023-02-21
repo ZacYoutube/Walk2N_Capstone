@@ -29,6 +29,7 @@
 		D597DF802997713F00DF4D13 /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597DF7F2997713F00DF4D13 /* Annotation.swift */; };
 		D597DF8429984B1300DF4D13 /* StepCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597DF8329984B1300DF4D13 /* StepCounter.swift */; };
 		D597DF87299EF53D00DF4D13 /* ProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597DF86299EF53D00DF4D13 /* ProfileTableViewCell.swift */; };
+		D597DF8929A2C0B500DF4D13 /* Bonus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597DF8829A2C0B500DF4D13 /* Bonus.swift */; };
 		D5A3C37D298B1BA700772D1B /* MainPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C37C298B1BA700772D1B /* MainPageViewController.swift */; };
 		D5A3C37F298B1BC300772D1B /* HistoricalStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C37E298B1BC300772D1B /* HistoricalStepViewController.swift */; };
 		D5A3C381298B1BE000772D1B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C380298B1BE000772D1B /* ProfileViewController.swift */; };
@@ -69,6 +70,7 @@
 		D597DF7F2997713F00DF4D13 /* Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Annotation.swift; sourceTree = "<group>"; };
 		D597DF8329984B1300DF4D13 /* StepCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepCounter.swift; sourceTree = "<group>"; };
 		D597DF86299EF53D00DF4D13 /* ProfileTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewCell.swift; sourceTree = "<group>"; };
+		D597DF8829A2C0B500DF4D13 /* Bonus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bonus.swift; sourceTree = "<group>"; };
 		D5A3C37C298B1BA700772D1B /* MainPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPageViewController.swift; sourceTree = "<group>"; };
 		D5A3C37E298B1BC300772D1B /* HistoricalStepViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricalStepViewController.swift; sourceTree = "<group>"; };
 		D5A3C380298B1BE000772D1B /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 				D512E9CB2988E1C5007B0D2F /* Shoe.swift */,
 				D512E9CD2988E229007B0D2F /* User.swift */,
 				D512E9CF2988E67E007B0D2F /* HistoricalStep.swift */,
+				D597DF8829A2C0B500DF4D13 /* Bonus.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -366,6 +369,7 @@
 				D597DF802997713F00DF4D13 /* Annotation.swift in Sources */,
 				D512E9CC2988E1C5007B0D2F /* Shoe.swift in Sources */,
 				D512E9CE2988E229007B0D2F /* User.swift in Sources */,
+				D597DF8929A2C0B500DF4D13 /* Bonus.swift in Sources */,
 				D512E9C52988C02A007B0D2F /* Constants.swift in Sources */,
 				D512E9A52988A33D007B0D2F /* SceneDelegate.swift in Sources */,
 				D5A93D262996014200E12217 /* PopUpModalViewController.swift in Sources */,

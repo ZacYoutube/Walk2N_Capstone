@@ -149,7 +149,7 @@ class SignUpViewController: UIViewController {
         AuthManager.shared.createNewUser(email: email!, password: pass!) { registered, uid in
             DispatchQueue.main.async {
                 if registered {
-                    var newUser = User(uid: uid, email: email, password: pass, firstName: nil, lastName: nil, balance: 0.0, boughtShoes: nil, currentShoe: nil, historicalSteps: nil, reachedStepGoal: nil, stepGoalToday: nil, weight: nil, height: nil, age: nil, gender: nil)
+                    var newUser = User(uid: uid, email: email, password: pass, firstName: nil, lastName: nil, balance: 0.0, boughtShoes: nil, currentShoe: nil, historicalSteps: nil, bonusEarnedToday: 0.0, stepGoalToday: nil, weight: nil, height: nil, age: nil, gender: nil, bonusHistory: [], bonusAwardedForReachingStepGoal: false, bonusEarnedDuringRealTimeRun: 0.0)
                     DatabaseManager.shared.insertUser(user: newUser) { success in
                         if success {
                             print("success add to db")
@@ -157,13 +157,11 @@ class SignUpViewController: UIViewController {
                             print()
                         }
                     }
-                    print("success")
                     print(registered)
                     self.hideLoading()
                     self.dismiss(animated: true, completion: nil)
                 }
                 else{
-                    print("nooo")
                     print(registered)
                 }
             }

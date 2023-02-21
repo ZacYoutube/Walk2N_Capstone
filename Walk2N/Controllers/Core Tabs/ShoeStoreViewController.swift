@@ -31,7 +31,7 @@ class ShoeStoreViewController: UIViewController {
     private func getShoes() -> Void {
         DatabaseManager().getShoes { docSnapshot in
             for doc in docSnapshot {
-                let shoe = Shoe(id: doc.documentID, name: doc["name"] as? String, durability: doc["durability"] as? Float, imgUrl: doc["imgUrl"] as? String, price: doc["price"] as? Float, expirationDate: (doc["expirationDate"] as! Timestamp).dateValue())
+                let shoe = Shoe(id: doc.documentID, name: doc["name"] as? String, awardPerStep: (doc["awardPerStep"] as! Double), imgUrl: doc["imgUrl"] as? String, price: doc["price"] as? Double, expirationDate: (doc["expirationDate"] as! Timestamp).dateValue())
                 self.dataSource.append(shoe)
             }
             self.collectionView.reloadData()

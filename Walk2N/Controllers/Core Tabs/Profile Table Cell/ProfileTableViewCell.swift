@@ -38,9 +38,13 @@ class ProfileTableViewCell: UITableViewCell {
     public func configure(with setting: setting) {
         titleLabels.text = setting.title
         textLabels.text = setting.text
+        titleLabels.font = UIFont.boldSystemFont(ofSize: 16.0)
+
         iv.image = setting.image
         if setting.arrow == true {
             accessoryType = .disclosureIndicator
+        } else {
+            accessoryType = .none
         }
     }
     
@@ -68,7 +72,7 @@ class ProfileTableViewCell: UITableViewCell {
                              y: 0,
                              width: contentView.frame.size.width - 20 - container.frame.size.width,
                              height: contentView.frame.size.height)
-        textLabels.frame = CGRect(x: titleLabels.frame.size.width, y: 0, width: 100, height: contentView.frame.size.height)
+        textLabels.frame = CGRect(x: titleLabels.frame.size.width - 60, y: 0, width: 100, height: contentView.frame.size.height)
     }
     
     override func prepareForReuse() {

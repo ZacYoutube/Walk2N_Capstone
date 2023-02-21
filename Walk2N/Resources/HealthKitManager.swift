@@ -70,6 +70,20 @@ class HealthKitManager {
                  completion!(stepOverPastNDays, time)
              }
          }
+        query.statisticsUpdateHandler = {
+            query, statistics, result, error in
+            if let res = result {
+                res.enumerateStatistics(from: startOfNDaysAgo, to: now) { stats, val in
+                    if let count = stats.sumQuantity() {
+                        let val = count.doubleValue(for: HKUnit.count())
+                        let date = stats.startDate
+                        stepOverPastNDays.append(val)
+                        time.append(date)
+                    }
+                }
+                completion!(stepOverPastNDays, time)
+            }
+        }
          healthStore.execute(query)
      }
     

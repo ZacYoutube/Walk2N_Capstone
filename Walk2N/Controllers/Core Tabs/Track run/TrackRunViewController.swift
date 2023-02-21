@@ -36,6 +36,7 @@ class TrackRunViewController: UIViewController {
     
     var currency: Double? = 0.0
 
+//    var timer : Timer?
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,7 +49,7 @@ class TrackRunViewController: UIViewController {
     
     func setup() {
         runButton.setTitleColor(.green, for: .normal)
-        runButton.setTitle("START MOVE & EARN", for: .normal)
+        runButton.setTitle("START MOVE", for: .normal)
         distanceLabel.isHidden = true
         stepsLabel.isHidden = true
         distanceLabel.textColor = .systemRed
@@ -109,6 +110,7 @@ class TrackRunViewController: UIViewController {
         startRunTime = Date()
     }
     
+    
     func stopRun() {
         isRunning = false
         
@@ -120,7 +122,7 @@ class TrackRunViewController: UIViewController {
         displayRoute()
         
         endRunTime = Date()
-//        calculateBonus()
+        calculateBonus()
     }
     
     private func calculateBonus() {
@@ -128,21 +130,33 @@ class TrackRunViewController: UIViewController {
         self.stepCounter.getSteps(from: self.startRunTime!) { stepsTaken in
             
             DispatchQueue.main.async {
-                let steps = Double(stepsTaken!)
-                let currentShoe = self.currentShoe!
-                let balance = self.currency
-                let stepGoalToday = 1000.0
-                var stepsString: String = ""
-                
-                // here we can calculate the bonus - formula for now
-                let bonus = steps * Double(currentShoe.price!) * 0.0001 + (steps >= stepGoalToday ? 100 : 0) * 2
-                stepsString = "Steps Taken: \(Int(steps)), bonus earned: \(Double(bonus).truncate(places: 2))"
-                self.stepsLabel.text = stepsString
-                let newBalance: Double = balance! + bonus
-                DatabaseManager().updateUserInfo(fieldToUpdate: ["balance"], fieldValues: [newBalance]) { bool in }
+                if self.currentShoe != nil {
+                    let steps = Double(stepsTaken!)
+                    let currentShoe = self.currentShoe!
+                    let balance = self.currency
+                    let stepGoalToday = 1000.0
+                    var stepsString: String = ""
+                    var bonus: Double = 0.0
+                    
+                    let db = DatabaseManager.shared
+                    
+                    // here we can calculate the bonus - formula for now
+                    db.getUserInfo { docSnapshot in
+                        for doc in docSnapshot {
+                            if (doc["currentShoe"] as? [String: Any]) != nil {
+                                if self.distanceTraveled * 0.001 > 0.0 {
+                                    let bonusSoFar = doc["bonusEarnedToday"] as! Double
+                                    bonus = bonusSoFar + steps * currentShoe.awardPerStep!
+                                    db.updateUserInfo(fieldToUpdate: ["bonusEarnedToday", "balance", "bonusEarnedDuringRealTimeRun"], fieldValues: [bonus, balance! + bonus - bonusSoFar, bonus - bonusSoFar]) { bool in }
+                                    stepsString = "Steps Taken: \(Int(steps)), bonus earned: \(Double(bonus - bonusSoFar).truncate(places: 2))"
+                                    self.stepsLabel.text = stepsString
+                                }
+                            }
+                        }
+                        
+                    }
+                }
             }
-            
-            
         }
     }
     
@@ -170,10 +184,10 @@ extension TrackRunViewController{
                 if added == true || deleted == true {
                     if user["currentShoe"] is [String: Any] {
                         let user = user["currentShoe"] as? [String: Any]
-                        self.currentShoe = Shoe(id: user?["id"] as? String, name: user?["name"] as? String, durability: user?["durability"] as? Float, imgUrl: user?["imgUrl"] as? String, price: user?["price"] as? Float, expirationDate: (user?["expirationDate"] as! Timestamp).dateValue())
+                        self.currentShoe = Shoe(id: user?["id"] as? String, name: user?["name"] as? String, awardPerStep: user?["awardPerStep"] as? Double, imgUrl: user?["imgUrl"] as? String, price: user?["price"] as? Double, expirationDate: (user?["expirationDate"] as! Timestamp).dateValue())
                         self.toggleRun()
                     } else {
-                        if self.runButton.title(for: .normal) == "START MOVE & EARN" {
+                        if self.runButton.title(for: .normal) == "START MOVE" {
                             let alert = UIAlertController(title: "Confirmation", message: "You will not receive any bonus if you don't wear a shoe. Are you sure?", preferredStyle: .alert)
                             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                             alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in
@@ -195,12 +209,12 @@ extension TrackRunViewController{
     }
     
     private func toggleRun() {
-        if self.runButton.title(for: .normal) == "START MOVE & EARN" {
+        if self.runButton.title(for: .normal) == "START MOVE" {
             self.runButton.setTitle("STOP MOVE", for: .normal)
             self.startRun()
             self.runButton.setTitleColor(.red, for: .normal)
         } else {
-            self.runButton.setTitle("START MOVE & EARN", for: .normal)
+            self.runButton.setTitle("START MOVE", for: .normal)
             self.stopRun()
             self.runButton.setTitleColor(.green, for: .normal)
         }

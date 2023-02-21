@@ -46,7 +46,7 @@ class PopUpModalViewController: UIViewController {
                             if expiredDate < now {
                                 db.updateArrayData(fieldName: "boughtShoes", fieldVal: bs, pop: true) { bool in }
                             } else {
-                                let shoe = Shoe(id: bs["id"] as! String, name: bs["name"] as! String, durability: bs["durability"] as! Float, imgUrl: bs["imgUrl"] as! String, price: bs["price"] as! Float, expirationDate: (bs["expirationDate"] as! Timestamp).dateValue() as Date?)
+                                let shoe = Shoe(id: bs["id"] as! String, name: bs["name"] as! String, awardPerStep: bs["awardPerStep"] as! Double, imgUrl: bs["imgUrl"] as! String, price: bs["price"] as! Double, expirationDate: (bs["expirationDate"] as! Timestamp).dateValue() as Date?)
                                 self.dataSource.append(shoe)
                             }
                         }
