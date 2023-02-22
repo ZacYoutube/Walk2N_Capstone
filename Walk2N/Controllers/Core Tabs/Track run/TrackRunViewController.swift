@@ -18,6 +18,7 @@ class TrackRunViewController: UIViewController {
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var errorView: UILabel!
     @IBOutlet weak var stepsLabel: UILabel!
+    @IBOutlet weak var sv: UIStackView!
     
     let locationManager = CLLocationManager()
     let regionInMeters: Double = 500
@@ -48,7 +49,7 @@ class TrackRunViewController: UIViewController {
     }
     
     func setup() {
-        runButton.setTitleColor(.green, for: .normal)
+        runButton.setTitleColor(.lessDark, for: .normal)
         runButton.setTitle("START MOVE", for: .normal)
         distanceLabel.isHidden = true
         stepsLabel.isHidden = true
@@ -101,6 +102,8 @@ class TrackRunViewController: UIViewController {
         isRunning = true
         distanceLabel.isHidden = true
         stepsLabel.isHidden = true
+        sv.isHidden = true
+        
         distanceLabel.text = ""
         stepsLabel.text = ""
         
@@ -116,6 +119,12 @@ class TrackRunViewController: UIViewController {
         
         distanceLabel.isHidden = false
         stepsLabel.isHidden = false
+        distanceLabel.textColor = .lessDark
+        stepsLabel.textColor = .lessDark
+        
+        sv.isHidden = false
+        sv.backgroundColor = .lightGreen
+        sv.layer.cornerRadius = 8
         
         locationManager.allowsBackgroundLocationUpdates = false
         locationManager.stopUpdatingLocation()
@@ -163,7 +172,7 @@ class TrackRunViewController: UIViewController {
     func enableButtons() {
         runButton.isEnabled = true
         runButton.isHidden = false
-        runButton.layer.backgroundColor = #colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 0.75)
+        runButton.layer.backgroundColor = UIColor.lightGreen.cgColor
         runButton.layer.cornerRadius = 16
     }
     
@@ -216,7 +225,7 @@ extension TrackRunViewController{
         } else {
             self.runButton.setTitle("START MOVE", for: .normal)
             self.stopRun()
-            self.runButton.setTitleColor(.green, for: .normal)
+            self.runButton.setTitleColor(UIColor.lessDark, for: .normal)
         }
     }
 }

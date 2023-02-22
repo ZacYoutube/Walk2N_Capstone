@@ -195,7 +195,7 @@ public class DatabaseManager {
                     let bonusEarnedDuringRealTimeRun = doc["bonusEarnedDuringRealTimeRun"] as! Double
                     
                     var awardPerStep: Double? = 0.0
-                    if doc["currentShoe"] != nil {
+                    if doc["currentShoe"] as? [String: Any] != nil {
                         let currentShoe = doc["currentShoe"] as! [String: Any]
                         awardPerStep = (currentShoe["awardPerStep"] as! Double)
                     }
@@ -209,16 +209,19 @@ public class DatabaseManager {
                     }
                     
                     HealthKitManager().gettingStepCount(0) { steps, time in
-                        let currentStep = steps[0]
                         
-                        if wearShoe == true && newestSteps < currentStep {
-
-                            // do the formula here:
-                            bonusEarned = (currentStep - newestSteps) * awardPerStep!
-                            newEarning = balance + bonusEarned - bonusEarnedDuringRealTimeRun
+                        if steps.count > 0 {
+                            let currentStep = steps[0]
                             
-                            db.updateUserInfo(fieldToUpdate: ["balance"], fieldValues: [newEarning]) { bool in }
-                            db.updateUserInfo(fieldToUpdate: ["bonusEarnedToday"], fieldValues: [bonusSoFar + bonusEarned - bonusEarnedDuringRealTimeRun]) { bool in }
+                            if wearShoe == true && newestSteps < currentStep {
+
+                                // do the formula here:
+                                bonusEarned = (currentStep - newestSteps) * awardPerStep!
+                                newEarning = balance + bonusEarned - bonusEarnedDuringRealTimeRun
+                                
+                                db.updateUserInfo(fieldToUpdate: ["balance"], fieldValues: [newEarning]) { bool in }
+                                db.updateUserInfo(fieldToUpdate: ["bonusEarnedToday"], fieldValues: [bonusSoFar + bonusEarned - bonusEarnedDuringRealTimeRun]) { bool in }
+                            }
                         }
                     }
                     
@@ -318,22 +321,25 @@ public class DatabaseManager {
                     } else {
                         // if it is the same day, check if steps are the same, if not, update the same day step count
                         HealthKitManager().gettingStepCount(0) { stepArr, timeArr in
-                            let stepToday = stepArr[0]
-                            let stepCount = newestStep["stepCount"] as! Double
-                            if stepToday != stepCount {
-                                var newestHistoricalArray = []
-                                for i in 0..<historicalSteps.count {
-                                    if (historicalSteps[i] as! [String: Any])["id"] as! String == newestStep["id"] as! String {
-                                        let elem = historicalSteps[i] as! [String: Any]
-                                        let reachedGoal = stepToday >= 1000
-                                        let wearShoe = doc["currentShoe"] as? [String: Any]? == nil ? false: true
-                                        let newElem = HistoricalStep(id: (elem["id"] as! String), uid: (elem["uid"] as! String), stepCount: Int(stepToday), date: (elem["date"] as! Timestamp).dateValue(), reachedGoal: reachedGoal, wearShoe: wearShoe, stepGoal: (elem["stepGoal"] as! Double))
-                                        newestHistoricalArray.append(newElem.firestoreData)
-                                    } else {
-                                        newestHistoricalArray.append(historicalSteps[i])
+                            if stepArr.count > 0 {
+                                let stepToday = stepArr[0]
+                                let stepCount = newestStep["stepCount"] as! Double
+                                
+                                if stepToday != stepCount {
+                                    var newestHistoricalArray = []
+                                    for i in 0..<historicalSteps.count {
+                                        if (historicalSteps[i] as! [String: Any])["id"] as! String == newestStep["id"] as! String {
+                                            let elem = historicalSteps[i] as! [String: Any]
+                                            let reachedGoal = stepToday >= 1000
+                                            let wearShoe = doc["currentShoe"] as? [String: Any]? == nil ? false: true
+                                            let newElem = HistoricalStep(id: (elem["id"] as! String), uid: (elem["uid"] as! String), stepCount: Int(stepToday), date: (elem["date"] as! Timestamp).dateValue(), reachedGoal: reachedGoal, wearShoe: wearShoe, stepGoal: (elem["stepGoal"] as! Double))
+                                            newestHistoricalArray.append(newElem.firestoreData)
+                                        } else {
+                                            newestHistoricalArray.append(historicalSteps[i])
+                                        }
                                     }
+                                    db.updateUserInfo(fieldToUpdate: ["historicalSteps"], fieldValues: [newestHistoricalArray]) { bool in }
                                 }
-                                db.updateUserInfo(fieldToUpdate: ["historicalSteps"], fieldValues: [newestHistoricalArray]) { bool in }
                             }
                         }
                     }
@@ -347,6 +353,7 @@ public class DatabaseManager {
 
     private func addStepToDB(_ n: Int) {
         if (Auth.auth().currentUser != nil) {
+            DatabaseManager().updateUserInfo(fieldToUpdate: ["bonusEarnedToday", "bonusEarnedDuringRealTimeRun"], fieldValues: [0, 0]) { bool in }
             HealthKitManager().gettingStepCount(n) { stepArr, timeArr in
                 for (step, time) in zip(stepArr, timeArr) {
                     let stepGoalToday = 1000.0

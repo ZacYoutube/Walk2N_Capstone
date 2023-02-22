@@ -32,12 +32,24 @@ class ShoeListCollectionViewCell: UICollectionViewCell {
         shoeExpirationDate.text = expDate
         shoeDurability.text = String(shoe.awardPerStep!)
         shoeName.text = String(shoe.name!)
+        
+        shoeAction.backgroundColor = UIColor.rgb(red: 139, green: 203, blue: 187)
+        shoeAction.setTitleColor(UIColor.rgb(red: 73, green: 81, blue: 88), for: .normal)
+        shoeAction.layer.cornerRadius = 8
+        
+        shoePrice.textColor = UIColor.rgb(red: 73, green: 81, blue: 88)
+        shoeExpirationDate.textColor = UIColor.rgb(red: 73, green: 81, blue: 88)
+        shoeDurability.textColor = UIColor.rgb(red: 73, green: 81, blue: 88)
+        shoeName.textColor = UIColor.rgb(red: 73, green: 81, blue: 88)
+        
         retrieveImage(url: shoe.imgUrl!)
         shoeAction.addTarget(self, action: #selector(buyShoes), for: .touchUpInside)
         self.shoe = shoe
         showBtn()
         
         let cell = self
+        
+        cell.backgroundColor = .white
         
         cell.layer.cornerRadius = 10
         cell.layer.shadowColor = UIColor.black.cgColor
@@ -64,6 +76,7 @@ class ShoeListCollectionViewCell: UICollectionViewCell {
                             if (boughtShoes![i] as! [String:Any])["id"] as! String == self.shoe!.id! {
                                 self.shoeAction.isEnabled = false
                                 self.shoeAction.setTitle("Already Bought", for: .normal)
+                                self.shoeAction.backgroundColor = nil
                             }
                         }
                     }

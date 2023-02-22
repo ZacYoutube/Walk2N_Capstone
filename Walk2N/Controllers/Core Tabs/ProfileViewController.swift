@@ -28,7 +28,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
         iv.layer.borderWidth = 3
-        iv.layer.borderColor = UIColor.gray.cgColor
+        iv.layer.borderColor = UIColor.lessDark.cgColor
+        iv.layer.backgroundColor = UIColor.lightGreen.cgColor
         return iv
     }()
     
@@ -36,7 +37,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         let label = UILabel()
         label.textAlignment = .center
         label.font = UIFont.boldSystemFont(ofSize: 36)
-        label.textColor = .black
+        label.textColor = .lessDark
         return label
     }()
     
@@ -44,13 +45,13 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         let label = UILabel()
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 18)
-        label.textColor = .gray
+        label.textColor = .lessDark
         return label
     }()
     
     lazy var containerView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = .white
         
         view.addSubview(profileImageView)
         profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true

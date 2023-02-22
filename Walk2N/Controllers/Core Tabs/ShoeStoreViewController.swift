@@ -19,7 +19,9 @@ class ShoeStoreViewController: UIViewController {
         self.setUpNavbar()
         navigationItem.title = "Store"
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: 180, height: 300)
+        layout.itemSize = CGSize(width: 180, height: 320)
+        collectionView.backgroundColor = UIColor(red: 245/250, green: 245/250, blue: 245/250, alpha: 1)
+        collectionView.contentInset = UIEdgeInsets(top: 10, left: 10, bottom: 20, right: 10)
         collectionView.collectionViewLayout = layout
         collectionView.register(ShoeListCollectionViewCell.nib(), forCellWithReuseIdentifier: ShoeListCollectionViewCell.identifier)
         collectionView.delegate = self
@@ -60,8 +62,14 @@ extension ShoeStoreViewController: UICollectionViewDataSource {
 }
 
 extension ShoeStoreViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 180, height: 300)
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        return CGSize(width: 180, height: 300)
+//    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 10
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 10
     }
 }
 

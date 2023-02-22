@@ -17,13 +17,13 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="RNc-i2-faH">
-                        <rect key="frame" x="0.0" y="0.0" width="237" height="148"/>
+                        <rect key="frame" x="10" y="10" width="217" height="148"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="148" id="w4K-Z3-GGe"/>
                         </constraints>
                     </imageView>
                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="0fy-Ra-EZp">
-                        <rect key="frame" x="20" y="158" width="197" height="15.666666666666657"/>
+                        <rect key="frame" x="20" y="168" width="197" height="15.666666666666657"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aPG-Y7-vIn">
                                 <rect key="frame" x="0.0" y="0.0" width="98.666666666666671" height="15.666666666666666"/>
@@ -40,7 +40,7 @@
                         </subviews>
                     </stackView>
                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Fdq-1j-vFJ">
-                        <rect key="frame" x="20" y="183.66666666666666" width="197" height="15.666666666666657"/>
+                        <rect key="frame" x="20" y="193.66666666666666" width="197" height="15.666666666666657"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Award/Step" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NOQ-3f-SJM">
                                 <rect key="frame" x="0.0" y="0.0" width="98.666666666666671" height="15.666666666666666"/>
@@ -57,7 +57,7 @@
                         </subviews>
                     </stackView>
                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Etz-E1-Nnd">
-                        <rect key="frame" x="20" y="209.33333333333334" width="197" height="15.666666666666657"/>
+                        <rect key="frame" x="20" y="219.33333333333334" width="197" height="15.666666666666657"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Expires on" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z3O-rT-jaw">
                                 <rect key="frame" x="0.0" y="0.0" width="98.666666666666671" height="15.666666666666666"/>
@@ -74,7 +74,7 @@
                         </subviews>
                     </stackView>
                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="1Mm-QB-GwG">
-                        <rect key="frame" x="20" y="235" width="197" height="15.666666666666657"/>
+                        <rect key="frame" x="20" y="245" width="197" height="15.666666666666686"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Price" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ra3-bz-BzZ">
                                 <rect key="frame" x="0.0" y="0.0" width="98.666666666666671" height="15.666666666666666"/>
@@ -91,7 +91,7 @@
                         </subviews>
                     </stackView>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q2F-nx-qyb">
-                        <rect key="frame" x="183.66666666666666" y="260.66666666666669" width="53.333333333333343" height="34.333333333333314"/>
+                        <rect key="frame" x="178.66666666666666" y="270.66666666666669" width="53.333333333333343" height="34.333333333333314"/>
                         <state key="normal" title="Button"/>
                         <buttonConfiguration key="configuration" style="plain" title="Buy"/>
                     </button>
@@ -103,18 +103,19 @@
                 <constraint firstItem="Etz-E1-Nnd" firstAttribute="top" secondItem="Fdq-1j-vFJ" secondAttribute="bottom" constant="10" id="BQ8-rl-QVV"/>
                 <constraint firstAttribute="trailing" secondItem="Fdq-1j-vFJ" secondAttribute="trailing" constant="20" id="EfV-EI-Qkd"/>
                 <constraint firstItem="1Mm-QB-GwG" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="20" id="FBe-ED-3vD"/>
-                <constraint firstAttribute="trailing" secondItem="Q2F-nx-qyb" secondAttribute="trailing" id="I80-A9-GI6"/>
                 <constraint firstItem="0fy-Ra-EZp" firstAttribute="top" secondItem="RNc-i2-faH" secondAttribute="bottom" constant="10" id="JV4-Co-arc"/>
                 <constraint firstItem="Fdq-1j-vFJ" firstAttribute="top" secondItem="0fy-Ra-EZp" secondAttribute="bottom" constant="10" id="MDM-aT-TIX"/>
-                <constraint firstItem="RNc-i2-faH" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="QE3-fo-bDG"/>
                 <constraint firstItem="0fy-Ra-EZp" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="20" id="QhG-m7-fjV"/>
+                <constraint firstAttribute="trailing" secondItem="RNc-i2-faH" secondAttribute="trailing" constant="10" id="Tu4-5B-0JT"/>
                 <constraint firstAttribute="trailing" secondItem="Etz-E1-Nnd" secondAttribute="trailing" constant="20" id="UgZ-BR-syo"/>
-                <constraint firstAttribute="trailing" secondItem="RNc-i2-faH" secondAttribute="trailing" id="Wjg-kl-vjD"/>
                 <constraint firstItem="1Mm-QB-GwG" firstAttribute="top" secondItem="Etz-E1-Nnd" secondAttribute="bottom" constant="10" id="aot-Kp-odv"/>
                 <constraint firstItem="Etz-E1-Nnd" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="20" id="c65-hv-TeR"/>
-                <constraint firstItem="RNc-i2-faH" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="dqA-NT-bfY"/>
+                <constraint firstAttribute="trailing" secondItem="Q2F-nx-qyb" secondAttribute="trailing" constant="5" id="ceu-nv-P1G"/>
+                <constraint firstItem="RNc-i2-faH" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="10" id="fAX-Px-mUv"/>
                 <constraint firstItem="Q2F-nx-qyb" firstAttribute="top" secondItem="1Mm-QB-GwG" secondAttribute="bottom" constant="10" id="hI1-Re-rm6"/>
+                <constraint firstItem="RNc-i2-faH" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="10" id="ksf-zF-hdj"/>
                 <constraint firstAttribute="trailing" secondItem="0fy-Ra-EZp" secondAttribute="trailing" constant="20" id="nTu-OC-xpZ"/>
+                <constraint firstItem="0fy-Ra-EZp" firstAttribute="top" secondItem="RNc-i2-faH" secondAttribute="bottom" constant="10" id="q3M-8L-x1h"/>
                 <constraint firstAttribute="trailing" secondItem="1Mm-QB-GwG" secondAttribute="trailing" constant="20" id="uNE-NL-xRb"/>
             </constraints>
             <size key="customSize" width="237" height="303"/>

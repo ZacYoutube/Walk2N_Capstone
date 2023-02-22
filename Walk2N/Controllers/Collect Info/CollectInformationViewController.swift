@@ -47,6 +47,8 @@ class CollectInfoViewController: UIViewController, UINavigationBarDelegate, UITe
         self.hideKeyboardWhenTappedAround()
         
         continueBtn.addTarget(self, action: #selector(updateCollectedInfo), for: .touchUpInside)
+        continueBtn.backgroundColor = .lightGreen
+        continueBtn.setTitleColor(.lessDark, for: .normal)
     }
     
     private func checkInfoInput() {

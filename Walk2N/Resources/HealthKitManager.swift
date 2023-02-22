@@ -39,7 +39,7 @@ class HealthKitManager {
         return date.dayOfWeek()!
     }
     
-    // this function retrieves the past 7 days of step counts from Health app
+    // this function retrieves the past n days of step counts from Health app
     func gettingStepCount(_ n: Int, completion:(([Double], [Date]) -> Void)?){
          guard let sampleType = HKCategoryType.quantityType(forIdentifier: .stepCount) else {
              return

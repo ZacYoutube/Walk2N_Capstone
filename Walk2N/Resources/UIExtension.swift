@@ -211,5 +211,74 @@ extension UIColor {
     }
     
     static let grayish = UIColor.rgb(red: 237, green: 237, blue: 237)
+    
+    static let lightGreen = UIColor.rgb(red: 139, green: 203, blue: 187)
+    static let lessDark = UIColor.rgb(red: 73, green: 81, blue: 88)
+    static let background = UIColor(red: 245/250, green: 245/250, blue: 245/250, alpha: 1)
+    static let lightRed = UIColor.rgb(red: 241, green: 160, blue: 159)
 }
+
+extension NSMutableAttributedString {
+    var fontSize:CGFloat { return 16 }
+    var boldFont:UIFont { return UIFont.boldSystemFont(ofSize: fontSize) }
+    var normalFont:UIFont { return UIFont.systemFont(ofSize: fontSize)}
+    
+    func bold(_ value:String) -> NSMutableAttributedString {
+        
+        let attributes:[NSAttributedString.Key : Any] = [
+            .font : boldFont
+        ]
+        
+        self.append(NSAttributedString(string: value, attributes:attributes))
+        return self
+    }
+    
+    func normal(_ value:String) -> NSMutableAttributedString {
+        
+        let attributes:[NSAttributedString.Key : Any] = [
+            .font : normalFont,
+        ]
+        
+        self.append(NSAttributedString(string: value, attributes:attributes))
+        return self
+    }
+    /* Other styling methods */
+    func orangeHighlight(_ value:String) -> NSMutableAttributedString {
+        
+        let attributes:[NSAttributedString.Key : Any] = [
+            .font :  normalFont,
+            .foregroundColor : UIColor.white,
+            .backgroundColor : UIColor.orange
+        ]
+        
+        self.append(NSAttributedString(string: value, attributes:attributes))
+        return self
+    }
+    
+    func blackHighlight(_ value:String) -> NSMutableAttributedString {
+        
+        let attributes:[NSAttributedString.Key : Any] = [
+            .font :  normalFont,
+            .foregroundColor : UIColor.white,
+            .backgroundColor : UIColor.black
+            
+        ]
+        
+        self.append(NSAttributedString(string: value, attributes:attributes))
+        return self
+    }
+    
+    func underlined(_ value:String) -> NSMutableAttributedString {
+        
+        let attributes:[NSAttributedString.Key : Any] = [
+            .font :  normalFont,
+            .underlineStyle : NSUnderlineStyle.single.rawValue
+            
+        ]
+        
+        self.append(NSAttributedString(string: value, attributes:attributes))
+        return self
+    }
+}
+
 

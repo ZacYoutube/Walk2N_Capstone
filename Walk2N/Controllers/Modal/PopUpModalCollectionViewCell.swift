@@ -28,17 +28,32 @@ class PopUpModalCollectionViewCell: UICollectionViewCell {
         let df = DateFormatter()
         df.dateFormat = "MM/dd/YYYY"
         let expDate = df.string(from: shoe.expirationDate ?? Date())
+        
         shoeExpirationDate.text = expDate
         shoeDurability.text = String(shoe.awardPerStep!)
         shoeName.text = String(shoe.name!)
+        
+        shoeExpirationDate.textColor = UIColor.rgb(red: 73, green: 81, blue: 88)
+        shoeDurability.textColor = UIColor.rgb(red: 73, green: 81, blue: 88)
+        shoeName.textColor = UIColor.rgb(red: 73, green: 81, blue: 88)
         retrieveImage(url: shoe.imgUrl!)
+        
         wearBtn.addTarget(self, action: #selector(wear), for: .touchUpInside)
         removeBtn.addTarget(self, action: #selector(remove), for: .touchUpInside)
+        
+        wearBtn.backgroundColor = UIColor.lightGreen
+        wearBtn.setTitleColor(UIColor.lessDark, for: .normal)
+        removeBtn.backgroundColor = UIColor.lightGreen
+        removeBtn.tintColor = .lessDark
+        
+        wearBtn.layer.cornerRadius = 8
+        removeBtn.layer.cornerRadius = 8
+        
         checkWear()
         self.shoe = shoe
         
         let cell = self
-        
+        cell.backgroundColor = .white
         cell.layer.cornerRadius = 10
         cell.layer.shadowColor = UIColor.black.cgColor
         cell.layer.shadowOpacity = 0.5
@@ -82,14 +97,14 @@ class PopUpModalCollectionViewCell: UICollectionViewCell {
             if update == true || added == true || deleted == true {
                 
                 self.wearBtn.setTitle("Wear", for: .normal)
-                self.wearBtn.removeTarget(self, action: #selector(self.unwear), for: .touchUpInside)
+                self.wearBtn.removeTarget(self, action: #selector(self.unwear), for: .allEvents)
                 self.wearBtn.addTarget(self, action: #selector(self.wear), for: .touchUpInside)
                 
                 if data["currentShoe"] as? [String: Any] != nil {
                     let currentShoe = data["currentShoe"] as! [String: Any]
                     if self.shoe?.id! == (currentShoe["id"] as! String) {
                         self.wearBtn.setTitle("Unwore", for: .normal)
-                        self.wearBtn.removeTarget(self, action: #selector(self.wear), for: .touchUpInside)
+                        self.wearBtn.removeTarget(self, action: #selector(self.wear), for: .allEvents)
                         self.wearBtn.addTarget(self, action: #selector(self.unwear), for: .touchUpInside)
                     } 
                 }

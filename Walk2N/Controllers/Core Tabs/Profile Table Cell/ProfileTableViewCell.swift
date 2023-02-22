@@ -39,6 +39,8 @@ class ProfileTableViewCell: UITableViewCell {
         titleLabels.text = setting.title
         textLabels.text = setting.text
         titleLabels.font = UIFont.boldSystemFont(ofSize: 16.0)
+        titleLabels.textColor = UIColor.rgb(red: 73, green: 81, blue: 88)
+        textLabels.textColor = UIColor.rgb(red: 73, green: 81, blue: 88)
 
         iv.image = setting.image
         if setting.arrow == true {
