@@ -49,14 +49,15 @@ class LoginViewController: UIViewController {
         let btn = UIButton()
         btn.setTitle("Login", for: .normal)
         btn.layer.cornerRadius = 10
-        btn.backgroundColor = .systemBlue
+        btn.backgroundColor = .lightGreen
+        btn.setTitleColor(.lessDark, for: .normal)
         return btn
     }()
     
     private let createAccountBtn: UIButton = {
         let btn = UIButton()
         btn.setTitle("New user? Sign up here!", for: .normal)
-        btn.setTitleColor(.link, for: .normal)
+        btn.setTitleColor(.lightGreen, for: .normal)
         btn.layer.cornerRadius = 10
         return btn
     }()
@@ -141,6 +142,7 @@ class LoginViewController: UIViewController {
                 }else{
                     self.errorLabel.text = "Failed to log in"
                     self.errorLabel.alpha = 1
+                    self.hideLoading()
                     return
                 }
             }

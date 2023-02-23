@@ -7,6 +7,7 @@
 
 import UIKit
 import Firebase
+import Charts
 
 extension UIView {
     
@@ -112,15 +113,15 @@ extension UIViewController {
         let label = UILabel(frame: CGRectMake(0, 0, 80, 40))
         DatabaseManager.shared.getUserInfo { docSnapshot in
             for doc in docSnapshot {
-                let balance =  doc["balance"] as? Double
-                label.text = String(balance!)
+                let balance =  (doc["balance"] as! Double).truncate(places: 2)
+                label.text = String(balance)
             }
         }
         
         DatabaseManager.shared.checkUserUpdates { data, update, added, deleted in
             if update == true {
-                let balance = data["balance"] as? Double
-                label.text = String(balance!)
+                let balance = (data["balance"] as! Double).truncate(places: 2)
+                label.text = String(balance)
             }
         }
         
@@ -280,5 +281,122 @@ extension NSMutableAttributedString {
         return self
     }
 }
+
+// from online source in order to make barchart view work
+
+extension BarChartView {
+
+    private class BarChartFormatter: NSObject,AxisValueFormatter {
+
+        var values : [String]
+        required init (values : [String]) {
+            self.values = values
+            super.init()
+        }
+
+
+        func stringForValue(_ value: Double, axis: AxisBase?) -> String {
+            return values[Int(value)]
+        }
+    }
+
+    func setChartValues (xAxisValues : [String], values : [Double], color: [NSUIColor], label : String) {
+
+        var barChartDataEntries = [BarChartDataEntry]()
+
+        for i in 0..<values.count {
+            let dataEntry = BarChartDataEntry(x: Double(i), y: values[i])
+            barChartDataEntries.append(dataEntry)
+        }
+        let chartDataSet = BarChartDataSet(entries: barChartDataEntries, label: label)
+        chartDataSet.colors = color
+        let chartData = BarChartData(dataSet: chartDataSet)
+
+        let formatter = BarChartFormatter(values: xAxisValues)
+        let xAxis = XAxis()
+        xAxis.valueFormatter = formatter
+        self.xAxis.valueFormatter = xAxis.valueFormatter
+        self.xAxis.labelPosition = .bottom
+
+        self.data = chartData
+        self.data?.notifyDataChanged()
+        self.notifyDataSetChanged()
+//        self.xAxis.drawLimitLinesBehindDataEnabled = true
+        
+        self.pinchZoomEnabled = false
+        self.drawBarShadowEnabled = false
+        self.drawBordersEnabled = false
+        self.doubleTapToZoomEnabled = false
+//        self.drawGridBackgroundEnabled = true
+        
+    
+
+        self.animate(xAxisDuration: 1.0, yAxisDuration: 1.0, easingOption: .linear)
+
+    }
+
+}
+
+
+extension LineChartView {
+
+    private class LineChartFormatter: NSObject,AxisValueFormatter {
+
+        var values : [String]
+        required init (values : [String]) {
+            self.values = values
+            super.init()
+        }
+
+
+        func stringForValue(_ value: Double, axis: AxisBase?) -> String {
+            return values[Int(value)]
+        }
+    }
+
+    func setChartValues (xAxisValues : [String], values : [Double], label : String) {
+
+        var lineChartDataEntries = [ChartDataEntry]()
+
+        for i in 0..<values.count {
+            let dataEntry = BarChartDataEntry(x: Double(i), y: values[i])
+            lineChartDataEntries.append(dataEntry)
+        }
+        let chartDataSet = LineChartDataSet(entries: lineChartDataEntries, label: label)
+        chartDataSet.mode = .cubicBezier
+        chartDataSet.drawCirclesEnabled = false
+        chartDataSet.lineWidth = 2
+        chartDataSet.setColor(NSUIColor(cgColor: UIColor.lessDark.cgColor))
+        chartDataSet.drawHorizontalHighlightIndicatorEnabled = false
+        chartDataSet.drawVerticalHighlightIndicatorEnabled = false
+        chartDataSet.drawFilledEnabled = true
+        chartDataSet.fill = ColorFill(color: .lightGreen)
+        
+        let chartData = LineChartData(dataSet: chartDataSet)
+
+        let formatter = LineChartFormatter(values: xAxisValues)
+        let xAxis = XAxis()
+        xAxis.valueFormatter = formatter
+        self.xAxis.valueFormatter = xAxis.valueFormatter
+        self.xAxis.labelPosition = .bottom
+
+        self.data = chartData
+        self.data?.notifyDataChanged()
+        self.notifyDataSetChanged()
+//        self.xAxis.drawLimitLinesBehindDataEnabled = true
+        
+        self.pinchZoomEnabled = false
+        self.drawBordersEnabled = false
+        self.doubleTapToZoomEnabled = false
+        self.drawGridBackgroundEnabled = false
+        
+    
+
+        self.animate(xAxisDuration: 1.0, yAxisDuration: 1.0, easingOption: .linear)
+
+    }
+
+}
+
 
 

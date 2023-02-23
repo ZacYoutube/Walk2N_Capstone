@@ -30,6 +30,20 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         iv.layer.borderWidth = 3
         iv.layer.borderColor = UIColor.lessDark.cgColor
         iv.layer.backgroundColor = UIColor.lightGreen.cgColor
+//        iv.addInitials(first: "S", second: "Y")
+        
+//        let initialLabel = UILabel()
+//        initialLabel.frame.size = CGSize(width: 50.0, height: 50.0)
+//        initialLabel.textColor = UIColor.lessDark
+//        initialLabel.text = String("S") + String("Y")
+//        initialLabel.textAlignment = NSTextAlignment.center
+//        initialLabel.backgroundColor = UIColor.lightGreen
+//        initialLabel.layer.cornerRadius = 50.0
+//
+//        UIGraphicsBeginImageContext(initialLabel.frame.size)
+//        initialLabel.layer.render(in: UIGraphicsGetCurrentContext()!)
+//        iv.image = UIGraphicsGetImageFromCurrentImageContext()
+//            UIGraphicsEndImageContext()
         return iv
     }()
     
@@ -55,8 +69,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         view.addSubview(profileImageView)
         profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        profileImageView.anchor(top: view.topAnchor, paddingTop: 88,
-                                width: 120, height: 120)
+        profileImageView.anchor(top: view.topAnchor, paddingTop: 88, width: 120, height: 120)
         profileImageView.layer.cornerRadius = 120 / 2
         
         view.addSubview(nameLabel)
@@ -114,23 +127,23 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         db.getUserInfo { docSnapshot in
             for doc in docSnapshot {
-                if doc["balance"] != nil {
+                if doc["balance"] != nil && (doc["balance"] as? Double) != nil {
                     let balance = String(describing: (doc["balance"] as! Double).truncate(places: 2))
                     self.settingOptions[0] = (setting(title: "Balance", image: UIImage(named: "balance.png")!, text: balance, arrow: false, handler: {}))
                 }
-                if doc["age"] != nil {
+                if doc["age"] != nil && (doc["age"] as? Double) != nil {
                     let age = String(describing: Int(doc["age"] as! Double))
                     self.settingOptions[1] = (setting(title: "Age", image: UIImage(named: "age.png")!, text: "\(age)", arrow: false, handler: {}))
                 }
-                if doc["height"] != nil {
+                if doc["height"] != nil && (doc["height"] as? Double) != nil{
                     let height = String(describing: (doc["height"] as! Double))
                     self.settingOptions[2] = (setting(title: "Height", image: UIImage(named: "height.png")!, text: "\(height) cm", arrow: false, handler: {}))
                 }
-                if doc["weight"] != nil {
+                if doc["weight"] != nil && (doc["weight"] as? Double) != nil{
                     let weight = String(describing: (doc["weight"] as! Double))
                     self.settingOptions[3] = (setting(title: "Weight", image: UIImage(named: "weight.png")!, text: "\(weight) kg", arrow: false, handler: {}))
                 }
-                if doc["historicalSteps"] != nil {
+                if doc["historicalSteps"] != nil && (doc["historicalSteps"] as? [Any]) != nil{
                     let historicalSteps = doc["historicalSteps"] as! [Any]
                     var count = 0
                     if historicalSteps.count > 7 {

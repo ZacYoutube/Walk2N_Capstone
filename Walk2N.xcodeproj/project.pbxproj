@@ -23,6 +23,10 @@
 		D53A7FC22991EDBA000220B9 /* ShoeListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53A7FC02991EDBA000220B9 /* ShoeListCollectionViewCell.swift */; };
 		D53A7FC32991EDBA000220B9 /* ShoeListCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D53A7FC12991EDBA000220B9 /* ShoeListCollectionViewCell.xib */; };
 		D53A7FC52991EE8D000220B9 /* ShoeStoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53A7FC42991EE8D000220B9 /* ShoeStoreViewController.swift */; };
+		D5631F9B29A6B799007E4678 /* goal_predictor.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D5631F9A29A6B799007E4678 /* goal_predictor.mlmodel */; };
+		D5631F9D29A6B842007E4678 /* GoalPredictManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5631F9C29A6B842007E4678 /* GoalPredictManager.swift */; };
+		D5631F9F29A70958007E4678 /* alert_predictor.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D5631F9E29A70958007E4678 /* alert_predictor.mlmodel */; };
+		D5631FA129A70C3B007E4678 /* AlertPredictManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5631FA029A70C3B007E4678 /* AlertPredictManager.swift */; };
 		D597DF792996DFA100DF4D13 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D597DF782996DFA100DF4D13 /* Main.storyboard */; };
 		D597DF7B29976A4D00DF4D13 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D597DF7A29976A4D00DF4D13 /* CoreLocation.framework */; };
 		D597DF7E29976CCA00DF4D13 /* TrackRunViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597DF7D29976CCA00DF4D13 /* TrackRunViewController.swift */; };
@@ -40,7 +44,6 @@
 		D5A3C391298C12B600772D1B /* CollectInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C390298C12B600772D1B /* CollectInformationViewController.swift */; };
 		D5A3C398298C902E00772D1B /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C397298C902E00772D1B /* HealthKitManager.swift */; };
 		D5A3C3AD298CC6C600772D1B /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = D5A3C3AC298CC6C600772D1B /* Charts */; };
-		D5A3C3AF298CCD7B00772D1B /* BarChartExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C3AE298CCD7B00772D1B /* BarChartExtension.swift */; };
 		D5A93D262996014200E12217 /* PopUpModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A93D252996014200E12217 /* PopUpModalViewController.swift */; };
 		D5A93D29299602BA00E12217 /* PopUpModalCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A93D27299602BA00E12217 /* PopUpModalCollectionViewCell.swift */; };
 		D5A93D2A299602BA00E12217 /* PopUpModalCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D5A93D28299602BA00E12217 /* PopUpModalCollectionViewCell.xib */; };
@@ -64,6 +67,10 @@
 		D53A7FC02991EDBA000220B9 /* ShoeListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoeListCollectionViewCell.swift; sourceTree = "<group>"; };
 		D53A7FC12991EDBA000220B9 /* ShoeListCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShoeListCollectionViewCell.xib; sourceTree = "<group>"; };
 		D53A7FC42991EE8D000220B9 /* ShoeStoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoeStoreViewController.swift; sourceTree = "<group>"; };
+		D5631F9A29A6B799007E4678 /* goal_predictor.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = goal_predictor.mlmodel; sourceTree = "<group>"; };
+		D5631F9C29A6B842007E4678 /* GoalPredictManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalPredictManager.swift; sourceTree = "<group>"; };
+		D5631F9E29A70958007E4678 /* alert_predictor.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = alert_predictor.mlmodel; sourceTree = "<group>"; };
+		D5631FA029A70C3B007E4678 /* AlertPredictManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPredictManager.swift; sourceTree = "<group>"; };
 		D597DF782996DFA100DF4D13 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../../../../Main.storyboard; sourceTree = "<group>"; };
 		D597DF7A29976A4D00DF4D13 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		D597DF7D29976CCA00DF4D13 /* TrackRunViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackRunViewController.swift; sourceTree = "<group>"; };
@@ -80,7 +87,6 @@
 		D5A3C390298C12B600772D1B /* CollectInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectInformationViewController.swift; sourceTree = "<group>"; };
 		D5A3C396298C8F8E00772D1B /* Walk2N.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Walk2N.entitlements; sourceTree = "<group>"; };
 		D5A3C397298C902E00772D1B /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
-		D5A3C3AE298CCD7B00772D1B /* BarChartExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChartExtension.swift; sourceTree = "<group>"; };
 		D5A93D252996014200E12217 /* PopUpModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpModalViewController.swift; sourceTree = "<group>"; };
 		D5A93D27299602BA00E12217 /* PopUpModalCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpModalCollectionViewCell.swift; sourceTree = "<group>"; };
 		D5A93D28299602BA00E12217 /* PopUpModalCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopUpModalCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -123,6 +129,8 @@
 		D512E9A12988A33D007B0D2F /* Walk2N */ = {
 			isa = PBXGroup;
 			children = (
+				D5631F9E29A70958007E4678 /* alert_predictor.mlmodel */,
+				D5631F9A29A6B799007E4678 /* goal_predictor.mlmodel */,
 				D5A3C396298C8F8E00772D1B /* Walk2N.entitlements */,
 				D5A3C36E298B19EF00772D1B /* Resources */,
 				D512E9CA2988E1B5007B0D2F /* Models */,
@@ -194,7 +202,8 @@
 				D5A3C386298B30CF00772D1B /* DatabaseManager.swift */,
 				D5A3C388298B316900772D1B /* AuthManager.swift */,
 				D5A3C38A298B35E500772D1B /* UIExtension.swift */,
-				D5A3C3AE298CCD7B00772D1B /* BarChartExtension.swift */,
+				D5631F9C29A6B842007E4678 /* GoalPredictManager.swift */,
+				D5631FA029A70C3B007E4678 /* AlertPredictManager.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -353,17 +362,20 @@
 				D5A3C37D298B1BA700772D1B /* MainPageViewController.swift in Sources */,
 				D5A3C389298B316900772D1B /* AuthManager.swift in Sources */,
 				D53A7FC22991EDBA000220B9 /* ShoeListCollectionViewCell.swift in Sources */,
+				D5631F9F29A70958007E4678 /* alert_predictor.mlmodel in Sources */,
+				D5631FA129A70C3B007E4678 /* AlertPredictManager.swift in Sources */,
 				D512E9A32988A33D007B0D2F /* AppDelegate.swift in Sources */,
 				D5A3C387298B30D000772D1B /* DatabaseManager.swift in Sources */,
 				D5A3C38B298B35E500772D1B /* UIExtension.swift in Sources */,
 				D597DF7E29976CCA00DF4D13 /* TrackRunViewController.swift in Sources */,
-				D5A3C3AF298CCD7B00772D1B /* BarChartExtension.swift in Sources */,
+				D5631F9B29A6B799007E4678 /* goal_predictor.mlmodel in Sources */,
 				D597DF8429984B1300DF4D13 /* StepCounter.swift in Sources */,
 				D53A7FC52991EE8D000220B9 /* ShoeStoreViewController.swift in Sources */,
 				D5A3C37F298B1BC300772D1B /* HistoricalStepViewController.swift in Sources */,
 				D512E9B72988A468007B0D2F /* SignUpViewController.swift in Sources */,
 				D512E9B92988A480007B0D2F /* LoginViewController.swift in Sources */,
 				D5A3C398298C902E00772D1B /* HealthKitManager.swift in Sources */,
+				D5631F9D29A6B842007E4678 /* GoalPredictManager.swift in Sources */,
 				D5A3C381298B1BE000772D1B /* ProfileViewController.swift in Sources */,
 				D5A93D29299602BA00E12217 /* PopUpModalCollectionViewCell.swift in Sources */,
 				D597DF802997713F00DF4D13 /* Annotation.swift in Sources */,

@@ -35,6 +35,7 @@ class MainPageViewController: UIViewController {
     let curShoeTitle = UILabel()
     let addShoe = UIButton()
     let db = DatabaseManager.shared
+    let goalPredictor = GoalPredictManager.shared
     
     private func authorizeHealthKit() {
         let isEnabled = HealthKitManager().authorizeHealthKit()
@@ -54,21 +55,21 @@ class MainPageViewController: UIViewController {
         stepGoalContainer.backgroundColor = .white
         bonusEarnedContainer.backgroundColor = .white
         currentShoeContainer.backgroundColor = .white
-        
-        loadCurrentShoe()
-
+//        goalPredictor.predict()
+        AlertPredictManager().predictAndSetupNotification()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         self.setUpNavbar()
         checkAuth()
         checkUserInfo()
+        checkStepGoal()
         loadCircularProgress()
+        loadCurrentShoe()
         loadStepGoalView()
         loadBonusView()
         addShoe.addTarget(self, action: #selector(openModal), for: .touchUpInside)
-        db.updateHistoricalSteps()
-        db.updateBonus()
+        db.updateBonusAndHistoricalSteps()
         
     }
     
@@ -93,6 +94,16 @@ class MainPageViewController: UIViewController {
         popup.title = "Choose a shoe to earn!"
         present(UINavigationController(rootViewController: popup), animated: true)
     }
+    
+    private func checkStepGoal() {
+        db.getUserInfo { docSnapshot in
+            for doc in docSnapshot {
+                if doc["stepGoalToday"] == nil || (doc["stepGoalToday"] as? Double) == nil {
+                    GoalPredictManager.shared.predict()
+                }
+            }
+        }
+    }
 
     private func loadCircularProgress () {
         let circularPath = UIBezierPath(arcCenter: CGPoint(x: self.progressCircleContainer.center.x - 20, y: self.progressCircleContainer.center.y + 45), radius: 140, startAngle: CGFloat.pi, endAngle: 2 * CGFloat.pi, clockwise: true)
@@ -116,8 +127,10 @@ class MainPageViewController: UIViewController {
         trackLayer.lineWidth = 10
         trackLayer.lineCap = CAShapeLayerLineCap.round
         
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM d, yyyy"
         // add text
-        titleText.text = "Today's Steps"
+        titleText.text = "\(dateFormatter.string(from: Date()))"
         titleText.frame = CGRect(x: 0, y: 0, width: 150, height: 40)
         titleText.font = UIFont.systemFont(ofSize: 18)
         titleText.textAlignment = .center
@@ -141,13 +154,15 @@ class MainPageViewController: UIViewController {
         getCurrentStep { curStep in
             DispatchQueue.main.async {
                 self.endStep = curStep
-                self.endPercent = Double(curStep / self.getStepGoalToday()) * 100.truncate(places: 2)
-                
                 self.animateText(target: 1)
                 
                 self.db.getUserInfo { docSnapshot in
                     for doc in docSnapshot {
-                        if doc["historicalSteps"] != nil {
+                        if doc["stepGoalToday"] != nil && (doc["stepGoalToday"] as? Double) != nil {
+                            let stepGoalToday = doc["stepGoalToday"] as! Double
+                            self.endPercent = Double(curStep / stepGoalToday) * 100.truncate(places: 2)
+                        }
+                        if doc["historicalSteps"] != nil && (doc["historicalSteps"] as? [Any]) != nil {
                             var historicalSteps = doc["historicalSteps"] as! [Any]
                             historicalSteps = historicalSteps.sorted(by: {
                                 ((($0 as! [String:Any])["date"] as! Timestamp).dateValue()) < ((($1 as! [String:Any])["date"] as! Timestamp).dateValue())
@@ -184,10 +199,10 @@ class MainPageViewController: UIViewController {
         stackView.layoutMargins = UIEdgeInsets(top: 0, left: 25, bottom: 0, right: 25)
         stackView.isLayoutMarginsRelativeArrangement = true
         
-        let goalIcon = UIImage(named: "goal.png")
+        let goalIcon = UIImage(named: "stepGoal.png")
         goalIconIv.image = goalIcon
         
-        goalIconIv.layer.shadowColor = UIColor.black.cgColor
+        goalIconIv.layer.shadowColor = UIColor.rgb(red: 124, green: 180, blue: 172).cgColor
         goalIconIv.layer.shadowOpacity = 0.5
         goalIconIv.layer.shadowOffset = CGSize(width: 0, height: 2)
         goalIconIv.layer.shadowRadius = 4
@@ -197,7 +212,14 @@ class MainPageViewController: UIViewController {
         goalIconIv.widthAnchor.constraint(equalToConstant: 60).isActive = true
         
 //        goalText.text = "Today's Step Goal: \(Int(getStepGoalToday()))"
-        goalText.attributedText = NSMutableAttributedString().normal("Today's Step Goal: ").bold("\(Int(getStepGoalToday()))")
+        db.getUserInfo { docSnapshot in
+            for doc in docSnapshot {
+                if doc["stepGoalToday"] != nil && (doc["stepGoalToday"] as? Double) != nil{
+                    let steps = doc["stepGoalToday"] as! Double
+                    self.goalText.attributedText = NSMutableAttributedString().normal("Today's Step Goal: ").bold("\(Int(steps))")
+                }
+            }
+        }
         goalText.textColor = UIColor.black
         goalText.textColor = UIColor.rgb(red: 73, green: 81, blue: 88)
         
@@ -216,11 +238,11 @@ class MainPageViewController: UIViewController {
         stackView.layoutMargins = UIEdgeInsets(top: 0, left: 25, bottom: 0, right: 25)
         stackView.isLayoutMarginsRelativeArrangement = true
 
-        let bonusIcon = UIImage(named: "bonus.png")
+        let bonusIcon = UIImage(named: "bonusEarned.png")
         bonusIconIv.image = bonusIcon
         bonusIconIv.layer.cornerRadius = 10
         
-        bonusIconIv.layer.shadowColor = UIColor.black.cgColor
+        bonusIconIv.layer.shadowColor = UIColor.rgb(red: 124, green: 180, blue: 172).cgColor
         bonusIconIv.layer.shadowOpacity = 0.5
         bonusIconIv.layer.shadowOffset = CGSize(width: 0, height: 2)
         bonusIconIv.layer.shadowRadius = 4
@@ -231,7 +253,7 @@ class MainPageViewController: UIViewController {
         
         db.getUserInfo { docSnapshot in
             for doc in docSnapshot {
-                if doc["bonusEarnedToday"] != nil {
+                if doc["bonusEarnedToday"] != nil && (doc["bonusEarnedToday"] as? Double) != nil{
                     let bonusEarnedToday = (doc["bonusEarnedToday"] as! Double).truncate(places: 2)
 //                    self.bonusText.text = "Tokens Earned Today: \(bonusEarnedToday)"
                     self.bonusText.attributedText = NSMutableAttributedString().normal("Tokens Earned Today: ").bold("\(bonusEarnedToday)")
@@ -241,7 +263,7 @@ class MainPageViewController: UIViewController {
         
         db.checkUserUpdates { data, update, addition, deletion in
             if update == true {
-                if data["bonusEarnedToday"] != nil {
+                if data["bonusEarnedToday"] != nil && (data["bonusEarnedToday"] as? Double) != nil {
                     let bonusEarnedToday = (data["bonusEarnedToday"] as! Double).truncate(places: 2)
                     self.bonusText.attributedText = NSMutableAttributedString().normal("Tokens Earned Today: ").bold("\(bonusEarnedToday)")
                 }
@@ -270,7 +292,7 @@ class MainPageViewController: UIViewController {
         curShoeTitle.textAlignment = .center
         curShoeTitle.textColor = UIColor.rgb(red: 73, green: 81, blue: 88)
         
-        addShoe.setTitle("Choose", for: .normal)
+        addShoe.setTitle("My Shoes", for: .normal)
         addShoe.backgroundColor =  UIColor.rgb(red: 139, green: 203, blue: 187)
         addShoe.setTitleColor(UIColor.rgb(red: 73, green: 81, blue: 88), for: .normal)
         addShoe.titleLabel?.font =  UIFont(name: "", size: 10)
@@ -297,13 +319,20 @@ class MainPageViewController: UIViewController {
                           guard let imageData = data else { return }
                             DispatchQueue.main.async { [self] in
                                 self.curShoe.image = UIImage(data: imageData)
+                                self.curShoe.layer.borderColor = nil
+                                self.curShoe.layer.borderWidth = 0
                                 self.curShoe.heightAnchor.constraint(equalToConstant: 100).isActive = true
                                 self.curShoe.widthAnchor.constraint(equalToConstant: 200).isActive = true
                           }
                         }.resume()
                       }
                 } else {
-                    self.curShoe.image = UIImage(named: "emptyShoe")
+//                    self.curShoe.image = UIImage(named: "emptyShoe")
+                    self.curShoe.layer.borderColor = UIColor.lessDark.cgColor
+                    self.curShoe.layer.masksToBounds = true
+                    self.curShoe.layer.cornerRadius = 8
+                    self.curShoe.layer.borderWidth = 2
+                    self.curShoe.contentMode = .scaleToFill
                     self.curShoeTitle.attributedText = NSMutableAttributedString().normal("Select a shoe to wear")
                     self.curShoe.heightAnchor.constraint(equalToConstant: 160).isActive = true
                     self.curShoe.widthAnchor.constraint(equalToConstant: 200).isActive = true
@@ -340,14 +369,21 @@ class MainPageViewController: UIViewController {
     
     private func setPercentage () {
         let animation = CABasicAnimation(keyPath: "strokeEnd")
-        let stepGoalToday = getStepGoalToday()
         getCurrentStep { steps in
             DispatchQueue.main.async {
-                animation.toValue = Double(steps / stepGoalToday).truncate(places: 1)
-                animation.duration = CFTimeInterval(self.duration)
-                animation.fillMode = CAMediaTimingFillMode.forwards
-                animation.isRemovedOnCompletion = false
-                self.progressShapeLayer.add(animation, forKey: "stepPercentage")
+                self.db.getUserInfo { docSnapshot in
+                    for doc in docSnapshot {
+                        if doc["stepGoalToday"] != nil && (doc["stepGoalToday"] as? Double) != nil {
+                            let stepGoal = doc["stepGoalToday"] as! Double
+                            animation.toValue = Double(steps / stepGoal).truncate(places: 2)
+                            animation.duration = CFTimeInterval(self.duration - 0.5)
+                            animation.fillMode = CAMediaTimingFillMode.forwards
+                            animation.isRemovedOnCompletion = false
+                            self.progressShapeLayer.add(animation, forKey: "stepPercentage")
+                        }
+                    }
+                }
+                
             }
         }
     }
@@ -362,11 +398,9 @@ class MainPageViewController: UIViewController {
         }
     }
     
-    private func getStepGoalToday() -> Double {
-        
-        // output by ML model
-        return 1000.0
-    }
+//    private func getStepGoalToday() -> Double {
+//
+//    }
     
     private func checkUserInfo() {
         // check whether user has input their weight height gender and age

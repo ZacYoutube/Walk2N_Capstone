@@ -139,4 +139,54 @@ class HealthKitManager {
         }
         healthStore.execute(query)
     }
+    
+    func gettingDistanceArr(_ n: Int, completion:(([Double], [Date]) -> Void)?){
+        guard let type = HKSampleType.quantityType(forIdentifier: .distanceWalkingRunning) else {
+            fatalError("Something went wrong retriebing quantity type distanceWalkingRunning")
+        }
+        let now = Date()
+        let exactlyNDaysAgo = Calendar.current.date(byAdding: DateComponents(day: -n), to: now)!
+        let startOfNDaysAgo = Calendar.current.startOfDay(for: exactlyNDaysAgo)
+        var predicate = HKQuery.predicateForSamples(withStart: exactlyNDaysAgo, end: now, options: .strictEndDate)
+        var distanceArr: [Double] = []
+        var distanceDate: [Date] = []
+        if n == 0 {
+            predicate = HKQuery.predicateForSamples(withStart: startOfNDaysAgo, end: now, options: .strictEndDate)
+        }
+        var interval = DateComponents()
+        interval.day = 1
+
+        let query = HKStatisticsCollectionQuery(quantityType: type, quantitySamplePredicate: predicate, anchorDate: startOfNDaysAgo, intervalComponents: interval)
+        query.initialResultsHandler = {
+            query, result, err in
+            if let res = result {
+                res.enumerateStatistics(from: startOfNDaysAgo, to: now) { stats, val in
+                    if let count = stats.sumQuantity() {
+                        let val = count.doubleValue(for: HKUnit.meter())
+                        let date = stats.startDate
+                        distanceArr.append(val)
+                        distanceDate.append(date)
+                        print(val)
+                    }
+                }
+                completion!(distanceArr, distanceDate)
+            }
+        }
+        
+        query.statisticsUpdateHandler = {
+            query, statistics, result, error in
+            if let res = result {
+                res.enumerateStatistics(from: startOfNDaysAgo, to: now) { stats, val in
+                    if let count = stats.sumQuantity() {
+                        let val = count.doubleValue(for: HKUnit.count())
+                        let date = stats.startDate
+                        distanceArr.append(val)
+                        distanceDate.append(date)
+                    }
+                }
+                completion!(distanceArr, distanceDate)
+            }
+        }
+        healthStore.execute(query)
+    }
 }

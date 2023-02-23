@@ -10,11 +10,23 @@ import HealthKit
 import Charts
 import Firebase
 
-class HistoricalStepViewController: UIViewController {
+class HistoricalStepViewController: UIViewController, ChartViewDelegate {
     
-    @IBOutlet weak var infoContainer: UIView!
+    @IBOutlet weak var stepInfoContainer: UIView!
     @IBOutlet weak var contentView: UIView!
-    @IBOutlet weak var barContainer: UIView!
+    @IBOutlet weak var stepBarContainer: UIView!
+    @IBOutlet weak var distLineContainer: UIView!
+    @IBOutlet weak var distInfoContainer: UIView!
+    @IBOutlet weak var scrollView: UIScrollView!
+    
+    lazy var lineChartView: LineChartView = {
+        let chart = LineChartView()
+        return chart
+    }()
+    let averageDistLabel = UILabel()
+    let totalDistLabel = UILabel()
+    let averageDist = UILabel()
+    let totalDist = UILabel()
     
     let averageLabel = UILabel()
     let totalLabel = UILabel()
@@ -26,17 +38,18 @@ class HistoricalStepViewController: UIViewController {
         super.viewDidLoad()
         navigationItem.title = "History"
         contentView.backgroundColor = UIColor.background
-        infoContainer.backgroundColor = .white
-        barContainer.backgroundColor = .white
-        contentView.addSubview(infoContainer)
-        contentView.addSubview(barContainer)
-        view.addSubview(contentView)
+        stepInfoContainer.backgroundColor = .white
+        stepBarContainer.backgroundColor = .white
+        distLineContainer.backgroundColor = .white
+        distInfoContainer.backgroundColor = .white
+    
         self.setUpNavbar()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         displayStepMetrics()
-        
+        displayDist()
+
         
 //        HealthKitManager().gettingStepCount(7) { steps, time in
 //            var color = [NSUIColor](repeating: NSUIColor(red: 255.0, green: 0, blue: 0, alpha: 1.0), count: steps.count)
@@ -77,7 +90,7 @@ class HistoricalStepViewController: UIViewController {
     }
     
     private func displayStepMetrics() {
-        let labelSv = UIStackView(frame: CGRect(x: infoContainer.left + 5, y: infoContainer.top - 5, width: 300, height: 35))
+        let labelSv = UIStackView(frame: CGRect(x: stepInfoContainer.left + 5, y: stepInfoContainer.top - 5, width: 300, height: 35))
         labelSv.axis = .horizontal
         labelSv.alignment = .center
         labelSv.spacing = 0
@@ -96,7 +109,7 @@ class HistoricalStepViewController: UIViewController {
         labelSv.addArrangedSubview(averageLabel)
         labelSv.addArrangedSubview(totalLabel)
                 
-        let metricSv = UIStackView(frame: CGRect(x: infoContainer.left + 5, y: infoContainer.top + 35, width: 300, height: 35))
+        let metricSv = UIStackView(frame: CGRect(x: stepInfoContainer.left + 5, y: stepInfoContainer.top + 35, width: 300, height: 35))
         metricSv.axis = .horizontal
         metricSv.alignment = .center
         metricSv.spacing = 0
@@ -106,7 +119,7 @@ class HistoricalStepViewController: UIViewController {
         // read from firebase and display historical step count in bar chart
         DatabaseManager.shared.getUserInfo { docSnapshot in
             for doc in docSnapshot {
-                if doc["historicalSteps"] != nil {
+                if doc["historicalSteps"] != nil && (doc["historicalSteps"] as? [Any]) != nil {
                     var historicalSteps = doc["historicalSteps"]! as! [Any]
                     historicalSteps = historicalSteps.sorted(by: {
                         ((($0 as! [String:Any])["date"] as! Timestamp).dateValue()) < ((($1 as! [String:Any])["date"] as! Timestamp).dateValue())
@@ -155,20 +168,20 @@ class HistoricalStepViewController: UIViewController {
         }
         
         
-        infoContainer.addSubview(labelSv)
-        infoContainer.addSubview(metricSv)
+        stepInfoContainer.addSubview(labelSv)
+        stepInfoContainer.addSubview(metricSv)
     }
     
     private func displaySteps(stepsArr: Array<Double>, timeArr: Array<String>, color: Array<NSUIColor>) {
         DispatchQueue.main.async {
-            self.barChart.frame = self.barContainer.bounds
-            self.barChart.setChartValues(xAxisValues: timeArr, values: stepsArr, color: color, label: "Steps")
+            self.barChart.frame = self.stepBarContainer.bounds
+            self.barChart.setChartValues(xAxisValues: timeArr, values: stepsArr, color: color, label: "Steps for past week")
             let legend = self.barChart.legend
 
-//            legend.horizontalAlignment = .right
-//            legend.verticalAlignment = .top
-//            legend.orientation = .vertical
-//            legend.drawInside = false
+            legend.horizontalAlignment = .center
+            legend.verticalAlignment = .top
+            legend.orientation = .horizontal
+            legend.drawInside = true
 //            legend.font = UIFont.systemFont(ofSize: 14)
 //            legend.textColor = UIColor.darkGray
 //            legend.formSize = 15
@@ -187,10 +200,90 @@ class HistoricalStepViewController: UIViewController {
             self.barChart.xAxis.drawAxisLineEnabled = false
             self.barChart.rightAxis.enabled = false
             self.barChart.leftAxis.enabled = false
+            self.barChart.isUserInteractionEnabled = false
 
-
-            self.barContainer.addSubview(self.barChart)
+            self.stepBarContainer.addSubview(self.barChart)
         }
+    }
+    
+    private func displayDist() {
+        let labelSv = UIStackView(frame: CGRect(x: distInfoContainer.left, y: 15, width: 300, height: 35))
+        labelSv.axis = .horizontal
+        labelSv.alignment = .center
+        labelSv.spacing = 0
+        labelSv.distribution = .fillEqually
+//        labelSv.backgroundColor = .black
+        
+        averageDistLabel.attributedText = NSMutableAttributedString().normal("Average")
+        totalDistLabel.attributedText = NSMutableAttributedString().normal("Total Distance")
+        
+        averageDistLabel.font = UIFont.systemFont(ofSize: 20)
+        totalDistLabel.font = UIFont.systemFont(ofSize: 20)
+        
+        averageDistLabel.textAlignment = .center
+        totalDistLabel.textAlignment = .center
+        
+        labelSv.addArrangedSubview(averageDistLabel)
+        labelSv.addArrangedSubview(totalDistLabel)
+                
+        let metricSv = UIStackView(frame: CGRect(x: distInfoContainer.left, y: 55, width: 300, height: 35))
+        metricSv.axis = .horizontal
+        metricSv.alignment = .center
+        metricSv.spacing = 0
+        metricSv.distribution = .fillEqually
+        
+        distInfoContainer.addSubview(labelSv)
+        distInfoContainer.addSubview(metricSv)
+        
+        HealthKitManager().gettingDistanceArr(7) { dist, time in
+            DispatchQueue.main.async {
+                self.lineChartView.frame = self.distLineContainer.bounds
+                let legend = self.lineChartView.legend
+
+                legend.horizontalAlignment = .center
+                legend.verticalAlignment = .top
+                legend.orientation = .horizontal
+                legend.drawInside = true
+                
+                var total = 0.0
+                var average = 0.0
+                for i in 0..<dist.count {
+                    total += dist[i]
+                }
+                total = total.truncate(places: 0)
+                average = Double(total / 7).truncate(places: 0)
+                
+                self.averageDist.attributedText = NSMutableAttributedString().bold(String(average))
+                self.totalDist.attributedText = NSMutableAttributedString().bold(String(total))
+                
+                self.averageDist.textAlignment = .center
+                self.totalDist.textAlignment = .center
+                
+                self.averageDist.font = UIFont.systemFont(ofSize: 20)
+                self.totalDist.font = UIFont.systemFont(ofSize: 20)
+                
+                self.averageDist.textColor = UIColor.lightGreen
+                self.totalDist.textColor = UIColor.lightGreen
+                
+                metricSv.addArrangedSubview(self.averageDist)
+                metricSv.addArrangedSubview(self.totalDist)
+                
+                var timeArr: Array<String> = Array(repeating: "", count: time.count)
+                for i in 0..<time.count {
+                    timeArr[i] = time[i].dayOfWeek()!
+                }
+                self.lineChartView.setChartValues(xAxisValues: timeArr, values: dist, label: "Distance for past week")
+                self.lineChartView.xAxis.drawGridLinesEnabled = false
+                self.lineChartView.xAxis.drawAxisLineEnabled = false
+                self.lineChartView.rightAxis.enabled = false
+                self.lineChartView.leftAxis.enabled = false
+                self.lineChartView.isUserInteractionEnabled = false
+                self.distLineContainer.addSubview(self.lineChartView)
+            }
+        }
+        
+       
+        
     }
     
     

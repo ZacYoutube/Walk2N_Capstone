@@ -58,7 +58,8 @@ class SignUpViewController: UIViewController {
         let btn = UIButton()
         btn.setTitle("Sign up", for: .normal)
         btn.layer.cornerRadius = 10
-        btn.backgroundColor = .systemBlue
+        btn.backgroundColor = .lightGreen
+        btn.setTitleColor(.lessDark, for: .normal)
         return btn
     }()
     
@@ -149,7 +150,7 @@ class SignUpViewController: UIViewController {
         AuthManager.shared.createNewUser(email: email!, password: pass!) { registered, uid in
             DispatchQueue.main.async {
                 if registered {
-                    var newUser = User(uid: uid, email: email, password: pass, firstName: nil, lastName: nil, balance: 0.0, boughtShoes: nil, currentShoe: nil, historicalSteps: nil, bonusEarnedToday: 0.0, stepGoalToday: nil, weight: nil, height: nil, age: nil, gender: nil, bonusHistory: [], bonusAwardedForReachingStepGoal: false, bonusEarnedDuringRealTimeRun: 0.0)
+                    var newUser = User(uid: uid, email: email, password: pass, firstName: nil, lastName: nil, balance: 1000.0, boughtShoes: nil, currentShoe: nil, historicalSteps: nil, bonusEarnedToday: 0.0, stepGoalToday: nil, weight: nil, height: nil, age: nil, gender: nil, bonusHistory: [], bonusAwardedForReachingStepGoal: false, bonusEarnedDuringRealTimeRun: 0.0)
                     DatabaseManager.shared.insertUser(user: newUser) { success in
                         if success {
                             print("success add to db")
@@ -162,6 +163,7 @@ class SignUpViewController: UIViewController {
                     self.dismiss(animated: true, completion: nil)
                 }
                 else{
+                    self.hideLoading()
                     print(registered)
                 }
             }

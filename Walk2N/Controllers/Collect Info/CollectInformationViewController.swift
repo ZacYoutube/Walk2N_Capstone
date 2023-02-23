@@ -92,6 +92,7 @@ class CollectInfoViewController: UIViewController, UINavigationBarDelegate, UITe
                 self.hideLoading()
                 self.dismiss(animated: true)
             } else {
+                self.hideLoading()
                 print("failed to save the information")
             }
         }

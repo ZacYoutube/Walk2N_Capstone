@@ -191,9 +191,9 @@ extension TrackRunViewController{
         DatabaseManager.shared.checkUserUpdates { data, update, added, deleted in
             if let user = data as? [String: Any] {
                 if added == true || deleted == true {
-                    if user["currentShoe"] is [String: Any] {
-                        let user = user["currentShoe"] as? [String: Any]
-                        self.currentShoe = Shoe(id: user?["id"] as? String, name: user?["name"] as? String, awardPerStep: user?["awardPerStep"] as? Double, imgUrl: user?["imgUrl"] as? String, price: user?["price"] as? Double, expirationDate: (user?["expirationDate"] as! Timestamp).dateValue())
+                    if user["currentShoe"] != nil &&  (user["currentShoe"] as? [String: Any]) != nil {
+                        let user = user["currentShoe"] as! [String: Any]
+                        self.currentShoe = Shoe(id: user["id"] as? String, name: user["name"] as? String, awardPerStep: user["awardPerStep"] as? Double, imgUrl: user["imgUrl"] as? String, price: user["price"] as? Double, expirationDate: (user["expirationDate"] as! Timestamp).dateValue())
                         self.toggleRun()
                     } else {
                         if self.runButton.title(for: .normal) == "START MOVE" {
