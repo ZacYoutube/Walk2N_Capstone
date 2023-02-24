@@ -27,6 +27,9 @@
 		D5631F9D29A6B842007E4678 /* GoalPredictManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5631F9C29A6B842007E4678 /* GoalPredictManager.swift */; };
 		D5631F9F29A70958007E4678 /* alert_predictor.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D5631F9E29A70958007E4678 /* alert_predictor.mlmodel */; };
 		D5631FA129A70C3B007E4678 /* AlertPredictManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5631FA029A70C3B007E4678 /* AlertPredictManager.swift */; };
+		D566373129A8251800DE1B21 /* RoundedWhiteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D566373029A8251800DE1B21 /* RoundedWhiteButton.swift */; };
+		D566373329A825B200DE1B21 /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D566373229A825B200DE1B21 /* MainMenuViewController.swift */; };
+		D566373529A847D400DE1B21 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = D566373429A847D400DE1B21 /* FirebaseStorage */; };
 		D597DF792996DFA100DF4D13 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D597DF782996DFA100DF4D13 /* Main.storyboard */; };
 		D597DF7B29976A4D00DF4D13 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D597DF7A29976A4D00DF4D13 /* CoreLocation.framework */; };
 		D597DF7E29976CCA00DF4D13 /* TrackRunViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597DF7D29976CCA00DF4D13 /* TrackRunViewController.swift */; };
@@ -71,6 +74,8 @@
 		D5631F9C29A6B842007E4678 /* GoalPredictManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalPredictManager.swift; sourceTree = "<group>"; };
 		D5631F9E29A70958007E4678 /* alert_predictor.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = alert_predictor.mlmodel; sourceTree = "<group>"; };
 		D5631FA029A70C3B007E4678 /* AlertPredictManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPredictManager.swift; sourceTree = "<group>"; };
+		D566373029A8251800DE1B21 /* RoundedWhiteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedWhiteButton.swift; sourceTree = "<group>"; };
+		D566373229A825B200DE1B21 /* MainMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
 		D597DF782996DFA100DF4D13 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../../../../Main.storyboard; sourceTree = "<group>"; };
 		D597DF7A29976A4D00DF4D13 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		D597DF7D29976CCA00DF4D13 /* TrackRunViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackRunViewController.swift; sourceTree = "<group>"; };
@@ -101,6 +106,7 @@
 				D5BE8C5A2994781800ABA0D4 /* FirebaseFirestoreSwift in Frameworks */,
 				D5A3C38E298B8B8900772D1B /* FirebaseDatabase in Frameworks */,
 				D512E9C12988AB27007B0D2F /* FirebaseAuth in Frameworks */,
+				D566373529A847D400DE1B21 /* FirebaseStorage in Frameworks */,
 				D512E9C32988AB27007B0D2F /* FirebaseFirestore in Frameworks */,
 				D5A3C3AD298CC6C600772D1B /* Charts in Frameworks */,
 			);
@@ -244,6 +250,8 @@
 			children = (
 				D512E9B82988A480007B0D2F /* LoginViewController.swift */,
 				D512E9B62988A468007B0D2F /* SignUpViewController.swift */,
+				D566373029A8251800DE1B21 /* RoundedWhiteButton.swift */,
+				D566373229A825B200DE1B21 /* MainMenuViewController.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -296,6 +304,7 @@
 				D5A3C38D298B8B8900772D1B /* FirebaseDatabase */,
 				D5A3C3AC298CC6C600772D1B /* Charts */,
 				D5BE8C592994781800ABA0D4 /* FirebaseFirestoreSwift */,
+				D566373429A847D400DE1B21 /* FirebaseStorage */,
 			);
 			productName = Walk2N;
 			productReference = D512E99F2988A33D007B0D2F /* Walk2N.app */;
@@ -370,6 +379,7 @@
 				D597DF7E29976CCA00DF4D13 /* TrackRunViewController.swift in Sources */,
 				D5631F9B29A6B799007E4678 /* goal_predictor.mlmodel in Sources */,
 				D597DF8429984B1300DF4D13 /* StepCounter.swift in Sources */,
+				D566373129A8251800DE1B21 /* RoundedWhiteButton.swift in Sources */,
 				D53A7FC52991EE8D000220B9 /* ShoeStoreViewController.swift in Sources */,
 				D5A3C37F298B1BC300772D1B /* HistoricalStepViewController.swift in Sources */,
 				D512E9B72988A468007B0D2F /* SignUpViewController.swift in Sources */,
@@ -380,6 +390,7 @@
 				D5A93D29299602BA00E12217 /* PopUpModalCollectionViewCell.swift in Sources */,
 				D597DF802997713F00DF4D13 /* Annotation.swift in Sources */,
 				D512E9CC2988E1C5007B0D2F /* Shoe.swift in Sources */,
+				D566373329A825B200DE1B21 /* MainMenuViewController.swift in Sources */,
 				D512E9CE2988E229007B0D2F /* User.swift in Sources */,
 				D597DF8929A2C0B500DF4D13 /* Bonus.swift in Sources */,
 				D512E9C52988C02A007B0D2F /* Constants.swift in Sources */,
@@ -639,6 +650,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D512E9BF2988AB27007B0D2F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
+		};
+		D566373429A847D400DE1B21 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D512E9BF2988AB27007B0D2F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
 		};
 		D5A3C38D298B8B8900772D1B /* FirebaseDatabase */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -43,13 +43,13 @@ class HistoricalStepViewController: UIViewController, ChartViewDelegate {
         distLineContainer.backgroundColor = .white
         distInfoContainer.backgroundColor = .white
     
-        self.setUpNavbar()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         displayStepMetrics()
         displayDist()
-
+        self.setUpNavbar()
         
 //        HealthKitManager().gettingStepCount(7) { steps, time in
 //            var color = [NSUIColor](repeating: NSUIColor(red: 255.0, green: 0, blue: 0, alpha: 1.0), count: steps.count)
@@ -250,11 +250,11 @@ class HistoricalStepViewController: UIViewController, ChartViewDelegate {
                 for i in 0..<dist.count {
                     total += dist[i]
                 }
-                total = total.truncate(places: 0)
-                average = Double(total / 7).truncate(places: 0)
+                total = (total / 1000).truncate(places: 1)
+                average = Double(total / 7).truncate(places: 1)
                 
-                self.averageDist.attributedText = NSMutableAttributedString().bold(String(average))
-                self.totalDist.attributedText = NSMutableAttributedString().bold(String(total))
+                self.averageDist.attributedText = NSMutableAttributedString().bold(String(average)).normal(String(" km"))
+                self.totalDist.attributedText = NSMutableAttributedString().bold(String(total)).normal(String(" km"))
                 
                 self.averageDist.textAlignment = .center
                 self.totalDist.textAlignment = .center
@@ -269,10 +269,15 @@ class HistoricalStepViewController: UIViewController, ChartViewDelegate {
                 metricSv.addArrangedSubview(self.totalDist)
                 
                 var timeArr: Array<String> = Array(repeating: "", count: time.count)
+                var distArr: Array<Double> = Array(repeating: 0.0, count: dist.count)
                 for i in 0..<time.count {
                     timeArr[i] = time[i].dayOfWeek()!
                 }
-                self.lineChartView.setChartValues(xAxisValues: timeArr, values: dist, label: "Distance for past week")
+                for i in 0..<dist.count {
+                    distArr[i] = (dist[i] / 1000).truncate(places: 1)
+                }
+                
+                self.lineChartView.setChartValues(xAxisValues: timeArr, values: distArr, label: "Distance for past week")
                 self.lineChartView.xAxis.drawGridLinesEnabled = false
                 self.lineChartView.xAxis.drawAxisLineEnabled = false
                 self.lineChartView.rightAxis.enabled = false

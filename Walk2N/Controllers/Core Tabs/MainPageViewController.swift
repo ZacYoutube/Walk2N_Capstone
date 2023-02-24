@@ -56,7 +56,6 @@ class MainPageViewController: UIViewController {
         bonusEarnedContainer.backgroundColor = .white
         currentShoeContainer.backgroundColor = .white
 //        goalPredictor.predict()
-        AlertPredictManager().predictAndSetupNotification()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -70,6 +69,7 @@ class MainPageViewController: UIViewController {
         loadBonusView()
         addShoe.addTarget(self, action: #selector(openModal), for: .touchUpInside)
         db.updateBonusAndHistoricalSteps()
+        AlertPredictManager().predictAndSetupNotification()
         
     }
     
@@ -292,14 +292,15 @@ class MainPageViewController: UIViewController {
         curShoeTitle.textAlignment = .center
         curShoeTitle.textColor = UIColor.rgb(red: 73, green: 81, blue: 88)
         
+        addShoe.setTitleColor(UIColor.lightGreen, for: .normal)
         addShoe.setTitle("My Shoes", for: .normal)
-        addShoe.backgroundColor =  UIColor.rgb(red: 139, green: 203, blue: 187)
-        addShoe.setTitleColor(UIColor.rgb(red: 73, green: 81, blue: 88), for: .normal)
-        addShoe.titleLabel?.font =  UIFont(name: "", size: 10)
+        addShoe.titleLabel?.font = UIFont.systemFont(ofSize: 18.0, weight: UIFont.Weight.bold)
+        addShoe.layer.cornerRadius = 8
+        
         addShoe.translatesAutoresizingMaskIntoConstraints = false
         addShoe.widthAnchor.constraint(equalToConstant: 140).isActive = true
         addShoe.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        addShoe.layer.cornerRadius = 8
+        
         
         curShoe.layer.cornerRadius = 10
         curShoe.layer.shadowColor = UIColor.black.cgColor

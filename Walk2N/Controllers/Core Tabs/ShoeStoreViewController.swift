@@ -16,7 +16,6 @@ class ShoeStoreViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setUpNavbar()
         navigationItem.title = "Store"
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: 180, height: 320)
@@ -28,6 +27,10 @@ class ShoeStoreViewController: UIViewController {
         collectionView.dataSource = self
         getShoes()
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.setUpNavbar()
     }
     
     private func getShoes() -> Void {

@@ -70,6 +70,18 @@ extension UIView {
             heightAnchor.constraint(equalToConstant: height).isActive = true
         }
     }
+    func addVerticalGradientLayer(topColor:UIColor, bottomColor:UIColor) {
+        let gradient = CAGradientLayer()
+        gradient.frame = self.bounds
+        gradient.colors = [
+            topColor.cgColor,
+            bottomColor.cgColor
+        ]
+        gradient.locations = [0.0, 1.0]
+        gradient.startPoint = CGPoint(x: 0, y: 0)
+        gradient.endPoint = CGPoint(x: 0, y: 1)
+        self.layer.insertSublayer(gradient, at: 0)
+    }
        
 }
 
@@ -102,11 +114,7 @@ extension UIViewController {
     func setUpNavbar() {
 
         let profile = UIButton(type: .custom)
-        var profileImage = UIImage(named: "profile.png")
-        profileImage = resizeImage(image: profileImage!, newWidth: 45).circleMasked
-        profile.setImage(profileImage, for: .normal)
-        profile.frame = CGRect(x: 0.0, y: 0.0, width: 30.0, height: 30.0)
-        profile.addTarget(self, action: #selector(navigateToProfile), for: .touchUpInside)
+        
         let barButtonItem = UIBarButtonItem(customView: profile)
         
         let containView = UIView(frame: CGRectMake(0, 0, 120, 40))
@@ -115,6 +123,22 @@ extension UIViewController {
             for doc in docSnapshot {
                 let balance =  (doc["balance"] as! Double).truncate(places: 2)
                 label.text = String(balance)
+                
+                if doc["profileImgUrl"] != nil && (doc["profileImgUrl"] as? String) != nil {
+                    if let url = URL(string: doc["profileImgUrl"] as! String) {
+                        URLSession.shared.dataTask(with: url) { (data, response, error) in
+                            guard let imageData = data else { return }
+                            DispatchQueue.main.async { [self] in
+                                var profileImage = UIImage(data: imageData)
+                                profileImage = resizeImage(image: profileImage!, newWidth: 45).circleMasked
+                                
+                                profile.setImage(profileImage, for: .normal)
+                                profile.frame = CGRect(x: 0.0, y: 0.0, width: 30.0, height: 30.0)
+                                profile.addTarget(self, action: #selector(navigateToProfile), for: .touchUpInside)
+                            }
+                        }.resume()
+                    }
+                }
             }
         }
         
@@ -200,7 +224,7 @@ extension UIImage {
             UIImage(cgImage: cgImage, scale: format.scale, orientation: imageOrientation)
                 .draw(in: .init(origin: .zero, size: breadthSize))
             UIBezierPath(ovalIn: breadthRect).lineWidth = 100
-            UIColor.gray.setStroke()
+            UIColor.black.setStroke()
             UIBezierPath(ovalIn: breadthRect).stroke()
         }
     }

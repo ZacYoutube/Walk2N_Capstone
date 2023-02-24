@@ -24,26 +24,13 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     private let profileImageView: UIImageView = {
         let iv = UIImageView()
-        iv.image = UIImage(named: "profile.png")
+//        iv.image = UIImage(named: "profile.png")
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
         iv.layer.borderWidth = 3
         iv.layer.borderColor = UIColor.lessDark.cgColor
         iv.layer.backgroundColor = UIColor.lightGreen.cgColor
-//        iv.addInitials(first: "S", second: "Y")
-        
-//        let initialLabel = UILabel()
-//        initialLabel.frame.size = CGSize(width: 50.0, height: 50.0)
-//        initialLabel.textColor = UIColor.lessDark
-//        initialLabel.text = String("S") + String("Y")
-//        initialLabel.textAlignment = NSTextAlignment.center
-//        initialLabel.backgroundColor = UIColor.lightGreen
-//        initialLabel.layer.cornerRadius = 50.0
-//
-//        UIGraphicsBeginImageContext(initialLabel.frame.size)
-//        initialLabel.layer.render(in: UIGraphicsGetCurrentContext()!)
-//        iv.image = UIGraphicsGetImageFromCurrentImageContext()
-//            UIGraphicsEndImageContext()
+
         return iv
     }()
     
@@ -105,6 +92,16 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 }
                 if doc["email"] != nil {
                     self.emailLabel.text = doc["email"] as? String
+                }
+                if doc["profileImgUrl"] != nil && (doc["profileImgUrl"] as? String) != nil {
+                    if let url = URL(string: doc["profileImgUrl"] as! String) {
+                        URLSession.shared.dataTask(with: url) { (data, response, error) in
+                            guard let imageData = data else { return }
+                            DispatchQueue.main.async { [self] in
+                                profileImageView.image = UIImage(data: imageData)
+                            }
+                        }.resume()
+                    }
                 }
             }
         }
@@ -246,9 +243,9 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             AuthManager().logout()
 
             // after logout, redirect to login
-            let loginViewController = LoginViewController()
-            loginViewController.modalPresentationStyle = .fullScreen
-            self.present(loginViewController, animated: true)
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let mainMenuViewController = storyboard.instantiateViewController(identifier: "MainMenuViewController")
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainMenuViewController)
         }))
         self.present(alert, animated: true)
     }

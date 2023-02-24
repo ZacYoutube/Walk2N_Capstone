@@ -24,6 +24,7 @@ public class DatabaseManager {
             } else {
                 for document in (snapshot?.documents)! {
                     if document.data()["email"] != nil {
+                        print("im here", document.data()["email"])
                         completion(false)
                     }
                 }
@@ -49,10 +50,11 @@ public class DatabaseManager {
             "stepGoalToday": user.stepGoalToday as Any,
             "boughtShoes": user.boughtShoes as Any,
             "currentShoe": user.currentShoe as Any,
-            "bonusHistory": user.bonusHistory as Any
+            "bonusHistory": user.bonusHistory as Any,
+            "profileImgUrl": user.profileImgUrl as Any
         ]
         ) {(err) in
-            if err != nil {
+            if err == nil {
                 completion(true)
             } else {
                 completion(false)
@@ -220,7 +222,6 @@ public class DatabaseManager {
                     }
                     
                     HealthKitManager().gettingStepCount(0) { steps, time in
-                        print("here", steps)
                         if steps.count > 0 {
                             let currentStep = steps[0]
                             

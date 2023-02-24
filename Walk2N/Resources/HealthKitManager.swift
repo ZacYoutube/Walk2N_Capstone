@@ -166,7 +166,6 @@ class HealthKitManager {
                         let date = stats.startDate
                         distanceArr.append(val)
                         distanceDate.append(date)
-                        print(val)
                     }
                 }
                 completion!(distanceArr, distanceDate)

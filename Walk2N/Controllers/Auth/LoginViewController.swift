@@ -8,51 +8,15 @@
 import UIKit
 import Firebase
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UITextFieldDelegate {
 
-    private var activityView: UIActivityIndicatorView?
+    var activityView:UIActivityIndicatorView!
+
+    @IBOutlet weak var emailField: UITextField!
+    @IBOutlet weak var passwordField: UITextField!
+    @IBOutlet weak var dismissButton: UIButton!
     
-    private let header: UIView = {
-        let header = UIView()
-        header.backgroundColor = UIColor.white.withAlphaComponent(0.5)
-        return header
-    }()
-    
-    private let emailTextField: UITextField = {
-        let field = UITextField()
-        field.placeholder = "Enter your email"
-        field.returnKeyType = .next
-        field.leftViewMode = .always
-        field.leftView = UIView(frame: CGRect(x:0, y:0, width: 10, height: 0))
-        field.autocapitalizationType = .none
-        field.autocorrectionType = .no
-        field.layer.cornerRadius = 10
-        field.backgroundColor = .secondarySystemBackground
-        return field
-    }()
-    
-    private let passwordTextField: UITextField = {
-        let field = UITextField()
-        field.isSecureTextEntry = true
-        field.placeholder = "Enter your password"
-        field.returnKeyType = .next
-        field.leftViewMode = .always
-        field.leftView = UIView(frame: CGRect(x:0, y:0, width: 10, height: 0))
-        field.autocapitalizationType = .none
-        field.autocorrectionType = .no
-        field.layer.cornerRadius = 10
-        field.backgroundColor = .secondarySystemBackground
-        return field
-    }()
-    
-    private let loginBtn: UIButton = {
-        let btn = UIButton()
-        btn.setTitle("Login", for: .normal)
-        btn.layer.cornerRadius = 10
-        btn.backgroundColor = .lightGreen
-        btn.setTitleColor(.lessDark, for: .normal)
-        return btn
-    }()
+    var continueButton:RoundedWhiteButton!
     
     private let createAccountBtn: UIButton = {
         let btn = UIButton()
@@ -70,42 +34,60 @@ class LoginViewController: UIViewController {
         return label
     }()
     
-    private func addSubView() {
-        view.addSubview(header)
-        view.addSubview(emailTextField)
-        view.addSubview(passwordTextField)
-        view.addSubview(loginBtn)
-        view.addSubview(createAccountBtn)
-        view.addSubview(errorLabel)
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        header.frame = CGRect(x: 0, y: view.safeAreaInsets.top, width: view.width, height: view.height / 3.0)
-        let logo = UIImageView(image: UIImage(named: "shoe"))
-        logo.frame = CGRectMake(100, 150, 150, 100)
-        
-        logo.center = CGPoint(x: header.width  / 2,
-                              y: header.height / 2)
-        errorLabel.center = CGPoint(x: view.width  / 2,
-                                    y: errorLabel.height / 2)
-        header.addSubview(logo)
-        
-        emailTextField.frame = CGRect(x: 25, y: header.btm, width: view.width - 50, height: 50)
-        passwordTextField.frame = CGRect(x: 25, y: emailTextField.btm + 20, width: view.width - 50, height: 50)
-        loginBtn.frame = CGRect(x: 25, y: passwordTextField.btm + 20, width: view.width - 50, height: 50)
-        createAccountBtn.frame = CGRect(x: 25, y: loginBtn.btm + 20, width: view.width - 50, height: 50)
-        errorLabel.frame = CGRect(x: 25, y: createAccountBtn.btm + 10, width: view.width - 50, height: 50)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        addSubView()
-        view.backgroundColor = .systemBackground
-        loginBtn.addTarget(self, action: #selector(login), for: .touchUpInside)
-        createAccountBtn.addTarget(self, action: #selector(signup), for: .touchUpInside)
+        view.backgroundColor = .white
+        continueButton = RoundedWhiteButton(frame: CGRect(x: 0, y: 0, width: 200, height: 50))
+        continueButton.setTitleColor(UIColor.lightGreen, for: .normal)
+        continueButton.setTitle("Continue", for: .normal)
+        continueButton.titleLabel?.font = UIFont.systemFont(ofSize: 18.0, weight: UIFont.Weight.bold)
+        continueButton.center = CGPoint(x: view.center.x, y: view.frame.height - continueButton.frame.height - 24)
+        continueButton.highlightedColor = UIColor(white: 1.0, alpha: 1.0)
+        continueButton.defaultColor = UIColor.white
+        continueButton.addTarget(self, action: #selector(login), for: .touchUpInside)
+        continueButton.alpha = 0.5
+        view.addSubview(continueButton)
+        setContinueButton(enabled: false)
+        
+        activityView = UIActivityIndicatorView(style: .gray)
+        activityView.color = UIColor.lightGreen
+        activityView.frame = CGRect(x: 0, y: 0, width: 50.0, height: 50.0)
+        activityView.center = continueButton.center
+        
+        view.addSubview(activityView!)
+        
+        emailField.delegate = self
+        passwordField.delegate = self
+        
+        emailField.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
+        passwordField.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
+        dismissButton.addTarget(self, action: #selector(dismiss), for: .touchUpInside)
+        
         self.hideKeyboardWhenTappedAround()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        emailField.becomeFirstResponder()
+        NotificationCenter.default.addObserver(self, selector:#selector(keyboardWillAppear), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        emailField.resignFirstResponder()
+        passwordField.resignFirstResponder()
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc func keyboardWillAppear(notification: NSNotification){
+        
+        let info = notification.userInfo!
+        let keyboardFrame: CGRect = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        
+        continueButton.center = CGPoint(x: view.center.x,
+                                        y: view.frame.height - keyboardFrame.height - 16.0 - continueButton.frame.height / 2)
+        activityView.center = continueButton.center
     }
     
     // show loading gif when in process
@@ -121,24 +103,62 @@ class LoginViewController: UIViewController {
         activityView?.stopAnimating()
     }
     
-    @objc private func login() {
-            
-        let email = emailTextField.text
-        let pw = passwordTextField.text
-
-        guard email!.isEmpty || pw!.isEmpty || pw!.count >= 8 else{
-            errorLabel.text = "Please fill in required field properly"
-            errorLabel.alpha = 1
-            return
+    @objc func textFieldChanged(_ target:UITextField) {
+        let email = emailField.text
+        let password = passwordField.text
+        let formFilled = email != nil && email != "" && password != nil && password != ""
+        setContinueButton(enabled: formFilled)
+    }
+    
+    @objc func dismiss(_ sender: Any) {
+        self.dismiss(animated: false, completion: nil)
+        print("tabbbbb")
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+                
+        switch textField {
+        case emailField:
+            emailField.resignFirstResponder()
+            passwordField.becomeFirstResponder()
+            break
+        case passwordField:
+            login()
+            break
+        default:
+            break
         }
+        return true
+    }
+
+    func setContinueButton(enabled:Bool) {
+        if enabled {
+            continueButton.alpha = 1.0
+            continueButton.isEnabled = true
+        } else {
+            continueButton.alpha = 0.5
+            continueButton.isEnabled = false
+        }
+    }
+    
+    @objc private func login() {
+
+        guard let email = emailField.text else { return }
+        guard let pw = passwordField.text else { return }
         
+        setContinueButton(enabled: false)
+        continueButton.setTitle("", for: .normal)
+        activityView!.startAnimating()
+
         self.showLoading()
-        
-        AuthManager.shared.login(email: email!, password: pw!){ success in
+
+        AuthManager.shared.login(email: email, password: pw){ success in
             DispatchQueue.main.async {
                 if success {
                     self.hideLoading()
-                    self.dismiss(animated: true, completion: nil)
+                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                    let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
+                    (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
                 }else{
                     self.errorLabel.text = "Failed to log in"
                     self.errorLabel.alpha = 1
@@ -146,16 +166,16 @@ class LoginViewController: UIViewController {
                     return
                 }
             }
-            
+
         }
-        
+
     }
     
-    @objc private func signup() {
-        let signUpViewController = SignUpViewController()
-        signUpViewController.title = "Sign up"
-        present(UINavigationController(rootViewController: signUpViewController), animated: true)
-    }
+//    @objc private func signup() {
+//        let signUpViewController = SignUpViewController()
+//        signUpViewController.title = "Sign up"
+//        present(UINavigationController(rootViewController: signUpViewController), animated: true)
+//    }
     
     
     /*

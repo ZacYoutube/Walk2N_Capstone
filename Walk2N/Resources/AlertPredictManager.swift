@@ -14,6 +14,9 @@ class AlertPredictManager {
     let db = DatabaseManager.shared
     
     let alertPredictor = alert_predictor()
+    
+    let dispatchGroup = DispatchGroup()
+    
     func getStepCountFor3Intervals(completion:@escaping (([Double]) -> Void)) {
         let calendar = Calendar.current
         let date0am = calendar.startOfDay(for: Date())
@@ -25,15 +28,18 @@ class AlertPredictManager {
         
         let timeIntervals = [[date0am, date6am], [date6am, date12pm], [date12pm, date4pm]]
         var resultArr: [Double] = []
-        
+                
         for i in 0..<timeIntervals.count {
+            dispatchGroup.enter()
             let startDate = timeIntervals[i][0]
             let endDate = timeIntervals[i][1]
             HealthKitManager().getStepCountBetweenTimestamps(startDate: startDate, endDate: endDate) { steps, err in
                 resultArr.append(steps)
-                if i == timeIntervals.count - 1 {
-                    completion(resultArr)
-                }
+                self.dispatchGroup.leave()
+            }
+            
+            dispatchGroup.notify(queue: .main) {
+                completion(resultArr)
             }
         }
     }
@@ -57,8 +63,10 @@ class AlertPredictManager {
                                 } else if result.goal_reached == "False" {
                                     content.body = "Stand up and walk more, \(stepGoalToday - stepCountSoFar) steps to go!"
                                 }
+                                content.sound = UNNotificationSound.default
+                                content.badge = 1
                                 
-                                let dateComponents = DateComponents(hour: 16, minute: 0) // Set the hour and minute to schedule the notification for.
+                                let dateComponents = DateComponents(hour: 16, minute: 00) // Set the hour and minute to schedule the notification for.
                                 let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
                                 let request = UNNotificationRequest(identifier: "reminder", content: content, trigger: trigger)
                                 
