@@ -41,7 +41,7 @@ class ProfileTableViewCell: UITableViewCell {
         titleLabels.font = UIFont.boldSystemFont(ofSize: 16.0)
         titleLabels.textColor = UIColor.rgb(red: 73, green: 81, blue: 88)
         textLabels.textColor = UIColor.rgb(red: 73, green: 81, blue: 88)
-
+        
         iv.image = setting.image
         if setting.arrow == true {
             accessoryType = .disclosureIndicator
@@ -71,9 +71,9 @@ class ProfileTableViewCell: UITableViewCell {
         let imgSize: CGFloat = s / 1.5
         iv.frame = CGRect(x: (s - imgSize)/2, y: (s - imgSize)/2, width: imgSize, height: imgSize)
         titleLabels.frame = CGRect(x: 25 + container.frame.size.width,
-                             y: 0,
-                             width: contentView.frame.size.width - 20 - container.frame.size.width,
-                             height: contentView.frame.size.height)
+                                   y: 0,
+                                   width: contentView.frame.size.width - 20 - container.frame.size.width,
+                                   height: contentView.frame.size.height)
         textLabels.frame = CGRect(x: titleLabels.frame.size.width - 60, y: 0, width: 100, height: contentView.frame.size.height)
     }
     
@@ -84,5 +84,5 @@ class ProfileTableViewCell: UITableViewCell {
         textLabels.text = nil
         container.backgroundColor = nil
     }
-
+    
 }

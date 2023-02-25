@@ -82,7 +82,7 @@ extension UIView {
         gradient.endPoint = CGPoint(x: 0, y: 1)
         self.layer.insertSublayer(gradient, at: 0)
     }
-       
+    
 }
 
 extension UIViewController {
@@ -108,69 +108,116 @@ extension UIViewController {
         UIGraphicsEndImageContext()
         
         return newImage!
-   }
+    }
     
     // shared navbar across different view controllers [ under development ]
-    func setUpNavbar() {
-
-        let profile = UIButton(type: .custom)
+    func setUpNavbar(text: String) {
         
-        let barButtonItem = UIBarButtonItem(customView: profile)
+        //        var alert = UIButton(type: .custom)
+        var balance = UIButton(type: .custom)
+        var alert = ButtonWithBadge()
+        
+        let alertButtonItem = UIBarButtonItem(customView: alert)
+        let balanceItem = UIBarButtonItem(customView: balance)
+        
+        
+        alert.setOnClickListener {
+            let alertView = AlertViewController()
+            alertView.title = "Notification History"
+            self.present(UINavigationController(rootViewController: alertView), animated: true)
+            alert.isRead = true
+        }
+        
+        var alertIcon = UIImage(named: "notify.png")!
+        alertIcon = resizeImage(image: alertIcon, newWidth: 30)
+        alert.setImage(alertIcon, for: .normal)
+        
+        var balanceIcon = UIImage(named: "coin.png")!
+        balanceIcon = resizeImage(image: balanceIcon, newWidth: 30)
+        balance.setImage(balanceIcon, for: .normal)
         
         let containView = UIView(frame: CGRectMake(0, 0, 120, 40))
-        let label = UILabel(frame: CGRectMake(0, 0, 80, 40))
+        let balanaceLabel = UILabel(frame: CGRectMake(0, 0, 80, 40))
         DatabaseManager.shared.getUserInfo { docSnapshot in
             for doc in docSnapshot {
-                let balance =  (doc["balance"] as! Double).truncate(places: 2)
-                label.text = String(balance)
+                let balanceNow =  (doc["balance"] as! Double).truncate(places: 2)
+                //                balanaceLabel.text = String(balanceNow)
                 
-                if doc["profileImgUrl"] != nil && (doc["profileImgUrl"] as? String) != nil {
-                    if let url = URL(string: doc["profileImgUrl"] as! String) {
-                        URLSession.shared.dataTask(with: url) { (data, response, error) in
-                            guard let imageData = data else { return }
-                            DispatchQueue.main.async { [self] in
-                                var profileImage = UIImage(data: imageData)
-                                profileImage = resizeImage(image: profileImage!, newWidth: 45).circleMasked
-                                
-                                profile.setImage(profileImage, for: .normal)
-                                profile.frame = CGRect(x: 0.0, y: 0.0, width: 30.0, height: 30.0)
-                                profile.addTarget(self, action: #selector(navigateToProfile), for: .touchUpInside)
-                            }
-                        }.resume()
+                let bl = UIAction(title: "Balance: \(String(balanceNow))", image: nil ) { (action) in
+                    print("Balance was tapped")
+                }
+                let menu = UIMenu(title: "Current Balance", options: .displayInline, children: [bl])
+                
+                balance.setOnClickListener {
+                    balance.menu = menu
+                    balance.showsMenuAsPrimaryAction = true
+                }
+                
+                if doc["alertHist"] != nil && (doc["alertHist"] as? [Any]) != nil {
+                    if (doc["alertHist"] as! [Any]).count > 0 {
+                        alert.isRead = false
                     }
                 }
+                
+                //                if doc["profileImgUrl"] != nil && (doc["profileImgUrl"] as? String) != nil {
+                //                    if let url = URL(string: doc["profileImgUrl"] as! String) {
+                //                        URLSession.shared.dataTask(with: url) { (data, response, error) in
+                //                            guard let imageData = data else { return }
+                //                            DispatchQueue.main.async { [self] in
+                //                                var profileImage = UIImage(data: imageData)
+                //                                profileImage = resizeImage(image: profileImage!, newWidth: 45).circleMasked
+                //
+                //                                profile.setImage(profileImage, for: .normal)
+                //                                profile.frame = CGRect(x: 0.0, y: 0.0, width: 30.0, height: 30.0)
+                //                                profile.addTarget(self, action: #selector(navigateToProfile), for: .touchUpInside)
+                //                            }
+                //                        }.resume()
+                //                    }
+                //                }
             }
         }
         
         DatabaseManager.shared.checkUserUpdates { data, update, added, deleted in
             if update == true {
                 let balance = (data["balance"] as! Double).truncate(places: 2)
-                label.text = String(balance)
+                balanaceLabel.text = String(balance)
             }
         }
         
-        label.textAlignment = NSTextAlignment.center
-        label.layer.borderWidth = 0.2
-        label.layer.borderColor = UIColor.lightGray.cgColor
-        label.layer.cornerRadius = 10
-//        label.center = containView.center
-
-        containView.addSubview(label)
-
+        let navigationLabel = UILabel()
+        navigationLabel.textColor = UIColor.lessDark
+        navigationLabel.text = text
+        navigationLabel.font = UIFont.boldSystemFont(ofSize: 25)
+        
+        balanaceLabel.textAlignment = NSTextAlignment.center
+        balanaceLabel.layer.borderWidth = 0.2
+        balanaceLabel.layer.borderColor = UIColor.lightGray.cgColor
+        balanaceLabel.layer.cornerRadius = 10
+        //        label.center = containView.center
+        
+        containView.addSubview(balanaceLabel)
+        
         let imageview = UIImageView(frame: CGRectMake(90, 10, 20, 20))
         imageview.image = UIImage(named: "zec.svg")
         imageview.contentMode = UIView.ContentMode.scaleAspectFill
         
         
         containView.addSubview(imageview)
-
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: containView)
         
-        self.navigationItem.leftBarButtonItem = barButtonItem
+        let space = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        space.width = 20
         
-        self.navigationController?.navigationBar.backgroundColor = .white
+        self.navigationItem.rightBarButtonItems = [alertButtonItem, space, balanceItem]
+        
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: navigationLabel)
+        
+        self.navigationController!.navigationBar.barTintColor = UIColor.white
+        
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for:.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.layoutIfNeeded()
     }
-
+    
     @objc func navigateToProfile(){
         self.tabBarController?.selectedIndex = 4
     }
@@ -241,6 +288,7 @@ extension UIColor {
     static let lessDark = UIColor.rgb(red: 73, green: 81, blue: 88)
     static let background = UIColor(red: 245/250, green: 245/250, blue: 245/250, alpha: 1)
     static let lightRed = UIColor.rgb(red: 241, green: 160, blue: 159)
+    static let background1 = UIColor(red: 247, green: 249, blue: 255, alpha: 255)
 }
 
 extension NSMutableAttributedString {
@@ -309,25 +357,25 @@ extension NSMutableAttributedString {
 // from online source in order to make barchart view work
 
 extension BarChartView {
-
+    
     private class BarChartFormatter: NSObject,AxisValueFormatter {
-
+        
         var values : [String]
         required init (values : [String]) {
             self.values = values
             super.init()
         }
-
-
+        
+        
         func stringForValue(_ value: Double, axis: AxisBase?) -> String {
             return values[Int(value)]
         }
     }
-
+    
     func setChartValues (xAxisValues : [String], values : [Double], color: [NSUIColor], label : String) {
-
+        
         var barChartDataEntries = [BarChartDataEntry]()
-
+        
         for i in 0..<values.count {
             let dataEntry = BarChartDataEntry(x: Double(i), y: values[i])
             barChartDataEntries.append(dataEntry)
@@ -335,53 +383,53 @@ extension BarChartView {
         let chartDataSet = BarChartDataSet(entries: barChartDataEntries, label: label)
         chartDataSet.colors = color
         let chartData = BarChartData(dataSet: chartDataSet)
-
+        
         let formatter = BarChartFormatter(values: xAxisValues)
         let xAxis = XAxis()
         xAxis.valueFormatter = formatter
         self.xAxis.valueFormatter = xAxis.valueFormatter
         self.xAxis.labelPosition = .bottom
-
+        
         self.data = chartData
         self.data?.notifyDataChanged()
         self.notifyDataSetChanged()
-//        self.xAxis.drawLimitLinesBehindDataEnabled = true
+        //        self.xAxis.drawLimitLinesBehindDataEnabled = true
         
         self.pinchZoomEnabled = false
         self.drawBarShadowEnabled = false
         self.drawBordersEnabled = false
         self.doubleTapToZoomEnabled = false
-//        self.drawGridBackgroundEnabled = true
+        //        self.drawGridBackgroundEnabled = true
         
-    
-
+        
+        
         self.animate(xAxisDuration: 1.0, yAxisDuration: 1.0, easingOption: .linear)
-
+        
     }
-
+    
 }
 
 
 extension LineChartView {
-
+    
     private class LineChartFormatter: NSObject,AxisValueFormatter {
-
+        
         var values : [String]
         required init (values : [String]) {
             self.values = values
             super.init()
         }
-
-
+        
+        
         func stringForValue(_ value: Double, axis: AxisBase?) -> String {
             return values[Int(value)]
         }
     }
-
+    
     func setChartValues (xAxisValues : [String], values : [Double], label : String) {
-
+        
         var lineChartDataEntries = [ChartDataEntry]()
-
+        
         for i in 0..<values.count {
             let dataEntry = BarChartDataEntry(x: Double(i), y: values[i])
             lineChartDataEntries.append(dataEntry)
@@ -397,30 +445,84 @@ extension LineChartView {
         chartDataSet.fill = ColorFill(color: .lightGreen)
         
         let chartData = LineChartData(dataSet: chartDataSet)
-
+        
         let formatter = LineChartFormatter(values: xAxisValues)
         let xAxis = XAxis()
         xAxis.valueFormatter = formatter
         self.xAxis.valueFormatter = xAxis.valueFormatter
         self.xAxis.labelPosition = .bottom
-
+        
         self.data = chartData
         self.data?.notifyDataChanged()
         self.notifyDataSetChanged()
-//        self.xAxis.drawLimitLinesBehindDataEnabled = true
+        //        self.xAxis.drawLimitLinesBehindDataEnabled = true
         
         self.pinchZoomEnabled = false
         self.drawBordersEnabled = false
         self.doubleTapToZoomEnabled = false
         self.drawGridBackgroundEnabled = false
         
-    
-
+        
+        
         self.animate(xAxisDuration: 1.0, yAxisDuration: 1.0, easingOption: .linear)
-
+        
     }
-
+    
 }
 
+class ClosureSleeve {
+    let closure: () -> ()
+    
+    init(attachTo: AnyObject, closure: @escaping () -> ()) {
+        self.closure = closure
+        objc_setAssociatedObject(attachTo, "[\(arc4random())]", self, .OBJC_ASSOCIATION_RETAIN)
+    }
+    
+    @objc func invoke() {
+        closure()
+    }
+}
+
+extension UIControl {
+    func setOnClickListener(for controlEvents: UIControl.Event = .primaryActionTriggered, action: @escaping () -> ()) {
+        let sleeve = ClosureSleeve(attachTo: self, closure: action)
+        addTarget(sleeve, action: #selector(ClosureSleeve.invoke), for: controlEvents)
+    }
+}
+
+class ButtonWithBadge: UIButton {
+    let badgeView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 3
+        view.backgroundColor = .red
+        return view
+    }()
+    var isRead: Bool = false {
+        didSet {
+            setBadge()
+        }
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setBadge()
+        addSubview(badgeView)
+        badgeView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            badgeView.rightAnchor.constraint(equalTo: rightAnchor, constant: 3),
+            badgeView.topAnchor.constraint(equalTo: topAnchor, constant: 3),
+            badgeView.heightAnchor.constraint(equalToConstant: badgeView.layer.cornerRadius*2),
+            badgeView.widthAnchor.constraint(equalToConstant: badgeView.layer.cornerRadius*2)
+        ])
+    }
+    
+    func setBadge() {
+        badgeView.isHidden = isRead
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
 
 

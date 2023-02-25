@@ -27,7 +27,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-
+        
         
         continueButton = RoundedWhiteButton(frame: CGRect(x: 0, y: 0, width: 200, height: 50))
         continueButton.setTitleColor(UIColor.lightGreen, for: .normal)
@@ -99,13 +99,13 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         guard let pass = passwordField.text else { return }
         guard let pass1 = retypedPasswordField.text else { return }
         guard let image = profileImageView.image else { return }
-
+        
         AuthManager.shared.createNewUser(email: email, password: pass) { registered, uid in
             DispatchQueue.main.async {
                 if registered {
                     self.uploadProfileImage(image) { url in
                         if url != nil {
-                            var newUser = User(uid: uid, email: email, password: pass, firstName: nil, lastName: nil, balance: 1000.0, boughtShoes: nil, currentShoe: nil, historicalSteps: nil, bonusEarnedToday: 0.0, stepGoalToday: nil, weight: nil, height: nil, age: nil, gender: nil, bonusHistory: [], bonusAwardedForReachingStepGoal: false, bonusEarnedDuringRealTimeRun: 0.0, profileImgUrl: url!.absoluteString)
+                            var newUser = User(uid: uid, email: email, password: pass, firstName: nil, lastName: nil, balance: 1000.0, boughtShoes: nil, currentShoe: nil, historicalSteps: nil, bonusEarnedToday: 0.0, stepGoalToday: nil, weight: nil, height: nil, age: nil, gender: nil, bonusHistory: [], bonusAwardedForReachingStepGoal: false, bonusEarnedDuringRealTimeRun: 0.0, profileImgUrl: url!.absoluteString, alertHist: [])
                             DatabaseManager.shared.insertUser(user: newUser) { success in
                                 print("inside insert", success)
                                 if success {
@@ -148,8 +148,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
-         // Resigns the target textField and assigns the next textField in the form.
-
+        // Resigns the target textField and assigns the next textField in the form.
+        
         switch textField {
         case passwordField:
             passwordField.resignFirstResponder()
@@ -179,7 +179,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     }
     
     func uploadProfileImage(_ image:UIImage, completion: @escaping ((_ url:URL?)->())) {
-//        guard let uid = Auth.auth().currentUser?.uid else { return }
+        //        guard let uid = Auth.auth().currentUser?.uid else { return }
         let storageRef = Storage.storage().reference().child("user/\(UUID().uuidString)")
         
         guard let imageData = image.jpegData(compressionQuality: 0.75) else { return }
@@ -196,16 +196,16 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                     } else {
                         completion(nil)
                     }
-                  }
+                }
             } else {
                 completion(nil)
             }
         }
     }
-
-        }
-        
     
+}
+
+
 extension SignUpViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -216,7 +216,7 @@ extension SignUpViewController: UIImagePickerControllerDelegate, UINavigationCon
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any])
     {
         let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
-
+        
         if picker.sourceType == .photoLibrary || picker.sourceType == .camera
         {
             let img: UIImage = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.editedImage)] as! UIImage
@@ -224,12 +224,12 @@ extension SignUpViewController: UIImagePickerControllerDelegate, UINavigationCon
             picker.dismiss(animated: true, completion: nil)
         }
     }
-
+    
     // from stackoverflow https://stackoverflow.com/questions/50928934/swift-4-2-cannot-convert-value-of-type-uiimagepickercontroller-infokey-type
     fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
-    return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})}
+        return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})}
     fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
-    return input.rawValue}
+        return input.rawValue}
     
     
 }

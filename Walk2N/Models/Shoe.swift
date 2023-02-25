@@ -25,14 +25,14 @@ public class Shoe: Codable {
     }
     
     var firestoreData: [String: Any] {
-            return [
-                "id": id as Any,
-                "name": name as Any,
-                "awardPerStep": awardPerStep as Any,
-                "imgUrl": imgUrl as Any,
-                "price": price as Any,
-                "expirationDate": expirationDate as Any,
-                "boughtDate": Date()
-            ]
+        return [
+            "id": id as Any,
+            "name": name as Any,
+            "awardPerStep": awardPerStep as Any,
+            "imgUrl": imgUrl as Any,
+            "price": price as Any,
+            "expirationDate": expirationDate as Any,
+            "boughtDate": Date()
+        ]
     }
 }

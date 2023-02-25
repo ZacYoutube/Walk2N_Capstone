@@ -36,54 +36,54 @@ class HistoricalStepViewController: UIViewController, ChartViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "History"
+        //        navigationItem.title = "History"
         contentView.backgroundColor = UIColor.background
         stepInfoContainer.backgroundColor = .white
         stepBarContainer.backgroundColor = .white
         distLineContainer.backgroundColor = .white
         distInfoContainer.backgroundColor = .white
-    
+        
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         displayStepMetrics()
         displayDist()
-        self.setUpNavbar()
+        self.setUpNavbar(text: "History")
         
-//        HealthKitManager().gettingStepCount(7) { steps, time in
-//            var color = [NSUIColor](repeating: NSUIColor(red: 255.0, green: 0, blue: 0, alpha: 1.0), count: steps.count)
-//            for i in 0..<steps.count{
-//                // 1000 is the step goal: we can update it based on the ML model output
-//                if steps[i] >= 1000 {
-//                        color[i] = NSUIColor(red: 46/255.0, green: 204/255.0, blue: 113/255.0, alpha: 1.0)
-//                }
-//            }
-//            var timeArr: Array<String> = Array(repeating: "", count: time.count)
-//            for i in 0..<time.count {
-//                timeArr[i] = time[i].dayOfWeek()!
-//             }
-//            self.displaySteps(stepsArr: steps, timeArr: timeArr, color: color)
-//            var average: Double = 0.0
-//            var total: Double = 0.0
-//            for i in 0..<steps.count{
-//                total += steps[i]
-//            }
-//
-//            average = Double(floor(Double(total) / Double(steps.count)))
-//
-//            if average.isNaN {
-//                average = 0.0
-//            }
-//
-//            // keep updating on the main thread
-//            DispatchQueue.main.async {
-//                self.averageSteps.text = String(average)
-//                self.totalSteps.text = String(total)
-//            }
-//        }
+        //        HealthKitManager().gettingStepCount(7) { steps, time in
+        //            var color = [NSUIColor](repeating: NSUIColor(red: 255.0, green: 0, blue: 0, alpha: 1.0), count: steps.count)
+        //            for i in 0..<steps.count{
+        //                // 1000 is the step goal: we can update it based on the ML model output
+        //                if steps[i] >= 1000 {
+        //                        color[i] = NSUIColor(red: 46/255.0, green: 204/255.0, blue: 113/255.0, alpha: 1.0)
+        //                }
+        //            }
+        //            var timeArr: Array<String> = Array(repeating: "", count: time.count)
+        //            for i in 0..<time.count {
+        //                timeArr[i] = time[i].dayOfWeek()!
+        //             }
+        //            self.displaySteps(stepsArr: steps, timeArr: timeArr, color: color)
+        //            var average: Double = 0.0
+        //            var total: Double = 0.0
+        //            for i in 0..<steps.count{
+        //                total += steps[i]
+        //            }
+        //
+        //            average = Double(floor(Double(total) / Double(steps.count)))
+        //
+        //            if average.isNaN {
+        //                average = 0.0
+        //            }
+        //
+        //            // keep updating on the main thread
+        //            DispatchQueue.main.async {
+        //                self.averageSteps.text = String(average)
+        //                self.totalSteps.text = String(total)
+        //            }
+        //        }
     }
-
+    
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -95,7 +95,7 @@ class HistoricalStepViewController: UIViewController, ChartViewDelegate {
         labelSv.alignment = .center
         labelSv.spacing = 0
         labelSv.distribution = .fillEqually
-//        labelSv.backgroundColor = .black
+        //        labelSv.backgroundColor = .black
         
         averageLabel.attributedText = NSMutableAttributedString().normal("Average")
         totalLabel.attributedText = NSMutableAttributedString().normal("Total Steps")
@@ -108,13 +108,13 @@ class HistoricalStepViewController: UIViewController, ChartViewDelegate {
         
         labelSv.addArrangedSubview(averageLabel)
         labelSv.addArrangedSubview(totalLabel)
-                
+        
         let metricSv = UIStackView(frame: CGRect(x: stepInfoContainer.left + 5, y: stepInfoContainer.top + 35, width: 300, height: 35))
         metricSv.axis = .horizontal
         metricSv.alignment = .center
         metricSv.spacing = 0
         metricSv.distribution = .fillEqually
-//        metricSv.backgroundColor = .black
+        //        metricSv.backgroundColor = .black
         
         // read from firebase and display historical step count in bar chart
         DatabaseManager.shared.getUserInfo { docSnapshot in
@@ -177,31 +177,31 @@ class HistoricalStepViewController: UIViewController, ChartViewDelegate {
             self.barChart.frame = self.stepBarContainer.bounds
             self.barChart.setChartValues(xAxisValues: timeArr, values: stepsArr, color: color, label: "Steps for past week")
             let legend = self.barChart.legend
-
+            
             legend.horizontalAlignment = .center
             legend.verticalAlignment = .top
             legend.orientation = .horizontal
             legend.drawInside = true
-//            legend.font = UIFont.systemFont(ofSize: 14)
-//            legend.textColor = UIColor.darkGray
-//            legend.formSize = 15
-//            legend.formToTextSpace = 5
-//            legend.xEntrySpace = 10
-
-//            let greenEntry = LegendEntry(label: "Green", form: .square, formSize: 15, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: UIColor.green)
-//            let redEntry = LegendEntry(label: "Red", form: .square, formSize: 15, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: UIColor.red)
-//
-//            legend.setCustom(entries: [greenEntry, redEntry])
-
-//            self.barChart.legendRenderer = LegendRenderer(viewPortHandler: self.barChart.viewPortHandler, legend: legend)
-
+            //            legend.font = UIFont.systemFont(ofSize: 14)
+            //            legend.textColor = UIColor.darkGray
+            //            legend.formSize = 15
+            //            legend.formToTextSpace = 5
+            //            legend.xEntrySpace = 10
+            
+            //            let greenEntry = LegendEntry(label: "Green", form: .square, formSize: 15, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: UIColor.green)
+            //            let redEntry = LegendEntry(label: "Red", form: .square, formSize: 15, formLineWidth: 0, formLineDashPhase: 0, formLineDashLengths: nil, formColor: UIColor.red)
+            //
+            //            legend.setCustom(entries: [greenEntry, redEntry])
+            
+            //            self.barChart.legendRenderer = LegendRenderer(viewPortHandler: self.barChart.viewPortHandler, legend: legend)
+            
             self.barChart.chartDescription.enabled = false
             self.barChart.xAxis.drawGridLinesEnabled = false
             self.barChart.xAxis.drawAxisLineEnabled = false
             self.barChart.rightAxis.enabled = false
             self.barChart.leftAxis.enabled = false
             self.barChart.isUserInteractionEnabled = false
-
+            
             self.stepBarContainer.addSubview(self.barChart)
         }
     }
@@ -212,7 +212,7 @@ class HistoricalStepViewController: UIViewController, ChartViewDelegate {
         labelSv.alignment = .center
         labelSv.spacing = 0
         labelSv.distribution = .fillEqually
-//        labelSv.backgroundColor = .black
+        //        labelSv.backgroundColor = .black
         
         averageDistLabel.attributedText = NSMutableAttributedString().normal("Average")
         totalDistLabel.attributedText = NSMutableAttributedString().normal("Total Distance")
@@ -225,7 +225,7 @@ class HistoricalStepViewController: UIViewController, ChartViewDelegate {
         
         labelSv.addArrangedSubview(averageDistLabel)
         labelSv.addArrangedSubview(totalDistLabel)
-                
+        
         let metricSv = UIStackView(frame: CGRect(x: distInfoContainer.left, y: 55, width: 300, height: 35))
         metricSv.axis = .horizontal
         metricSv.alignment = .center
@@ -239,7 +239,7 @@ class HistoricalStepViewController: UIViewController, ChartViewDelegate {
             DispatchQueue.main.async {
                 self.lineChartView.frame = self.distLineContainer.bounds
                 let legend = self.lineChartView.legend
-
+                
                 legend.horizontalAlignment = .center
                 legend.verticalAlignment = .top
                 legend.orientation = .horizontal
@@ -287,23 +287,23 @@ class HistoricalStepViewController: UIViewController, ChartViewDelegate {
             }
         }
         
-       
+        
         
     }
     
     
     
-
+    
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }
 
 

@@ -51,6 +51,10 @@
 		D5A93D29299602BA00E12217 /* PopUpModalCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A93D27299602BA00E12217 /* PopUpModalCollectionViewCell.swift */; };
 		D5A93D2A299602BA00E12217 /* PopUpModalCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D5A93D28299602BA00E12217 /* PopUpModalCollectionViewCell.xib */; };
 		D5BE8C5A2994781800ABA0D4 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D5BE8C592994781800ABA0D4 /* FirebaseFirestoreSwift */; };
+		D5CA906929A95F1E00C53B7B /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CA906829A95F1E00C53B7B /* Alert.swift */; };
+		D5CA908029A9751F00C53B7B /* AlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CA907F29A9751F00C53B7B /* AlertViewController.swift */; };
+		D5CA908329A9753800C53B7B /* AlertCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CA908129A9753800C53B7B /* AlertCollectionViewCell.swift */; };
+		D5CA908429A9753800C53B7B /* AlertCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D5CA908229A9753800C53B7B /* AlertCollectionViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -95,6 +99,10 @@
 		D5A93D252996014200E12217 /* PopUpModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpModalViewController.swift; sourceTree = "<group>"; };
 		D5A93D27299602BA00E12217 /* PopUpModalCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpModalCollectionViewCell.swift; sourceTree = "<group>"; };
 		D5A93D28299602BA00E12217 /* PopUpModalCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopUpModalCollectionViewCell.xib; sourceTree = "<group>"; };
+		D5CA906829A95F1E00C53B7B /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
+		D5CA907F29A9751F00C53B7B /* AlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewController.swift; sourceTree = "<group>"; };
+		D5CA908129A9753800C53B7B /* AlertCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertCollectionViewCell.swift; sourceTree = "<group>"; };
+		D5CA908229A9753800C53B7B /* AlertCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlertCollectionViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,6 +178,7 @@
 				D512E9CD2988E229007B0D2F /* User.swift */,
 				D512E9CF2988E67E007B0D2F /* HistoricalStep.swift */,
 				D597DF8829A2C0B500DF4D13 /* Bonus.swift */,
+				D5CA906829A95F1E00C53B7B /* Alert.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -278,6 +287,9 @@
 				D5A93D252996014200E12217 /* PopUpModalViewController.swift */,
 				D5A93D27299602BA00E12217 /* PopUpModalCollectionViewCell.swift */,
 				D5A93D28299602BA00E12217 /* PopUpModalCollectionViewCell.xib */,
+				D5CA907F29A9751F00C53B7B /* AlertViewController.swift */,
+				D5CA908129A9753800C53B7B /* AlertCollectionViewCell.swift */,
+				D5CA908229A9753800C53B7B /* AlertCollectionViewCell.xib */,
 			);
 			path = Modal;
 			sourceTree = "<group>";
@@ -337,6 +349,7 @@
 			packageReferences = (
 				D512E9BF2988AB27007B0D2F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				D5A3C3AB298CC6C600772D1B /* XCRemoteSwiftPackageReference "Charts" */,
+				D5CA907429A96F2000C53B7B /* XCRemoteSwiftPackageReference "iOSDropDown" */,
 			);
 			productRefGroup = D512E9A02988A33D007B0D2F /* Products */;
 			projectDirPath = "";
@@ -353,6 +366,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D5A93D2A299602BA00E12217 /* PopUpModalCollectionViewCell.xib in Resources */,
+				D5CA908429A9753800C53B7B /* AlertCollectionViewCell.xib in Resources */,
 				D512E9AF2988A33E007B0D2F /* LaunchScreen.storyboard in Resources */,
 				D53A7FC32991EDBA000220B9 /* ShoeListCollectionViewCell.xib in Resources */,
 				D597DF792996DFA100DF4D13 /* Main.storyboard in Resources */,
@@ -375,6 +389,7 @@
 				D5631FA129A70C3B007E4678 /* AlertPredictManager.swift in Sources */,
 				D512E9A32988A33D007B0D2F /* AppDelegate.swift in Sources */,
 				D5A3C387298B30D000772D1B /* DatabaseManager.swift in Sources */,
+				D5CA908029A9751F00C53B7B /* AlertViewController.swift in Sources */,
 				D5A3C38B298B35E500772D1B /* UIExtension.swift in Sources */,
 				D597DF7E29976CCA00DF4D13 /* TrackRunViewController.swift in Sources */,
 				D5631F9B29A6B799007E4678 /* goal_predictor.mlmodel in Sources */,
@@ -396,8 +411,10 @@
 				D512E9C52988C02A007B0D2F /* Constants.swift in Sources */,
 				D512E9A52988A33D007B0D2F /* SceneDelegate.swift in Sources */,
 				D5A93D262996014200E12217 /* PopUpModalViewController.swift in Sources */,
+				D5CA908329A9753800C53B7B /* AlertCollectionViewCell.swift in Sources */,
 				D5A3C391298C12B600772D1B /* CollectInformationViewController.swift in Sources */,
 				D597DF87299EF53D00DF4D13 /* ProfileTableViewCell.swift in Sources */,
+				D5CA906929A95F1E00C53B7B /* Alert.swift in Sources */,
 				D512E9D02988E67E007B0D2F /* HistoricalStep.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -636,6 +653,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 4.1.0;
+			};
+		};
+		D5CA907429A96F2000C53B7B /* XCRemoteSwiftPackageReference "iOSDropDown" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jriosdev/iOSDropDown.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

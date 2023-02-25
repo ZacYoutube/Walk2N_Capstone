@@ -30,7 +30,7 @@ public class AuthManager {
     }
     
     public func login(email: String, password: String, completion:@escaping ((Bool) -> Void)) {
-
+        
         Auth.auth().signIn(withEmail: email, password: password){ authData, err in
             if authData != nil, err == nil {
                 completion(true)

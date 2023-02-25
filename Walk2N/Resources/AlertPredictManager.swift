@@ -28,7 +28,7 @@ class AlertPredictManager {
         
         let timeIntervals = [[date0am, date6am], [date6am, date12pm], [date12pm, date4pm]]
         var resultArr: [Double] = []
-                
+        
         for i in 0..<timeIntervals.count {
             dispatchGroup.enter()
             let startDate = timeIntervals[i][0]
@@ -54,7 +54,7 @@ class AlertPredictManager {
                             do {
                                 let result = try self.alertPredictor.prediction(sum_steps_0_to_6: stepsArr[0], sum_steps_6_to_12: stepsArr[1], sum_steps_12_to_16: stepsArr[2], step_goal: stepGoalToday)
                                 let stepCountSoFar = stepsArr[0] + stepsArr[1] + stepsArr[2]
-                                let center = UNUserNotificationCenter.current()
+                                _ = UNUserNotificationCenter.current()
                                 let content = UNMutableNotificationContent()
                                 content.title = "Walk2N"
                                 

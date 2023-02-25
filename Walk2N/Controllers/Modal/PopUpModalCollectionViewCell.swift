@@ -8,7 +8,7 @@
 import UIKit
 
 class PopUpModalCollectionViewCell: UICollectionViewCell {
-
+    
     @IBOutlet var shoeImage: UIImageView!
     @IBOutlet var shoeName: UILabel!
     @IBOutlet var shoeDurability: UILabel!
@@ -65,7 +65,7 @@ class PopUpModalCollectionViewCell: UICollectionViewCell {
         let alert = UIAlertController(title: "Confirmation", message: "Remove this shoe?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "Remove", style: .default, handler: { action in
-        let db = DatabaseManager.shared
+            let db = DatabaseManager.shared
             db.getUserInfo { docSnapshot in
                 for doc in docSnapshot {
                     if (doc["boughtShoes"] as? [Any]) != nil {
@@ -106,7 +106,7 @@ class PopUpModalCollectionViewCell: UICollectionViewCell {
                         self.wearBtn.setTitle("Unwore", for: .normal)
                         self.wearBtn.removeTarget(self, action: #selector(self.wear), for: .allEvents)
                         self.wearBtn.addTarget(self, action: #selector(self.unwear), for: .touchUpInside)
-                    } 
+                    }
                 }
             }
         }
@@ -128,7 +128,7 @@ class PopUpModalCollectionViewCell: UICollectionViewCell {
         
         
         getTopMostViewController()?.present(alert, animated: true, completion: nil)
-
+        
     }
     
     @objc private func unwear() {
@@ -147,32 +147,32 @@ class PopUpModalCollectionViewCell: UICollectionViewCell {
         
         
         getTopMostViewController()?.present(alert, animated: true, completion: nil)
-
+        
     }
     
     func getTopMostViewController() -> UIViewController? {
         var topMostViewController = UIApplication.shared.keyWindow?.rootViewController
-
+        
         while let presentedViewController = topMostViewController?.presentedViewController {
             topMostViewController = presentedViewController
         }
-
+        
         return topMostViewController
     }
-
+    
     private func retrieveImage(url: String){
         if let url = URL(string: url) {
             URLSession.shared.dataTask(with: url) { (data, response, error) in
-              guard let imageData = data else { return }
+                guard let imageData = data else { return }
                 DispatchQueue.main.async { [self] in
-                shoeImage.image = UIImage(data: imageData)
-              }
+                    shoeImage.image = UIImage(data: imageData)
+                }
             }.resume()
-          }
+        }
     }
     
     static func nib() -> UINib {
         return UINib(nibName: "PopUpModalCollectionViewCell", bundle: nil)
     }
-
+    
 }

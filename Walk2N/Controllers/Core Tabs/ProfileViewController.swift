@@ -24,13 +24,13 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     private let profileImageView: UIImageView = {
         let iv = UIImageView()
-//        iv.image = UIImage(named: "profile.png")
+        //        iv.image = UIImage(named: "profile.png")
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
         iv.layer.borderWidth = 3
         iv.layer.borderColor = UIColor.lessDark.cgColor
         iv.layer.backgroundColor = UIColor.lightGreen.cgColor
-
+        
         return iv
     }()
     
@@ -161,64 +161,64 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         
         
-//        db.checkUserUpdates { data, update, addition, deletion in
-//            DispatchQueue.main.async {
-//                if update == true {
-//                    if data["balance"] != nil {
-//                        let balance = String(describing: (data["balance"] as! Double).truncate(places: 2))
-//                        let setting = setting(title: "Balance", image: UIImage(named: "balance.png")!, text: balance, arrow: false, handler: {})
-//                        self.settingOptions[0] = setting
-//                    }
-//                    if data["age"] != nil {
-//                        let age = String(describing: Int(data["age"] as! Double))
-//                        let setting = setting(title: "Age", image: UIImage(named: "age.png")!, text: "\(age)", arrow: false, handler: {})
-//                        self.settingOptions[1] = setting
-//                    }
-//                    if data["height"] != nil {
-//                        let height = String(describing: (data["height"] as! Double))
-//                        let setting = setting(title: "Height", image: UIImage(named: "height.png")!, text: "\(height) cm", arrow: false, handler: {})
-//                        self.settingOptions[2] = setting
-//                    }
-//                    if data["weight"] != nil {
-//                        let weight = String(describing: (data["weight"] as! Double).truncate(places: 2))
-//                        let setting = setting(title: "Weight", image: UIImage(named: "weight.png")!, text: "\(weight) kg", arrow: false, handler: {})
-//                        self.settingOptions[3] = setting
-//                    }
-//                    if data["historicalSteps"] != nil {
-//                        let historicalSteps = data["historicalSteps"] as! [Any]
-//                        var count = 0
-//                        if historicalSteps.count > 7 {
-//                            for i in historicalSteps.count - 7...historicalSteps.count {
-//                                let stepData = historicalSteps[i] as! [String: Any]
-//                                count += stepData["stepCount"] as! Int
-//                            }
-//                        } else {
-//                            for i in 0..<historicalSteps.count {
-//                                let stepData = historicalSteps[i] as! [String: Any]
-//                                count += stepData["stepCount"] as! Int
-//                            }
-//                        }
-//                        self.settingOptions[4] = (setting(title: "Steps (past week)", image: UIImage(named: "steps.png")!, text: "\(count)", arrow: false, handler: {}))
-//                    }
-//                }
-//
-//                self.tableView.reloadData()
-//            }
-//        }
+        //        db.checkUserUpdates { data, update, addition, deletion in
+        //            DispatchQueue.main.async {
+        //                if update == true {
+        //                    if data["balance"] != nil {
+        //                        let balance = String(describing: (data["balance"] as! Double).truncate(places: 2))
+        //                        let setting = setting(title: "Balance", image: UIImage(named: "balance.png")!, text: balance, arrow: false, handler: {})
+        //                        self.settingOptions[0] = setting
+        //                    }
+        //                    if data["age"] != nil {
+        //                        let age = String(describing: Int(data["age"] as! Double))
+        //                        let setting = setting(title: "Age", image: UIImage(named: "age.png")!, text: "\(age)", arrow: false, handler: {})
+        //                        self.settingOptions[1] = setting
+        //                    }
+        //                    if data["height"] != nil {
+        //                        let height = String(describing: (data["height"] as! Double))
+        //                        let setting = setting(title: "Height", image: UIImage(named: "height.png")!, text: "\(height) cm", arrow: false, handler: {})
+        //                        self.settingOptions[2] = setting
+        //                    }
+        //                    if data["weight"] != nil {
+        //                        let weight = String(describing: (data["weight"] as! Double).truncate(places: 2))
+        //                        let setting = setting(title: "Weight", image: UIImage(named: "weight.png")!, text: "\(weight) kg", arrow: false, handler: {})
+        //                        self.settingOptions[3] = setting
+        //                    }
+        //                    if data["historicalSteps"] != nil {
+        //                        let historicalSteps = data["historicalSteps"] as! [Any]
+        //                        var count = 0
+        //                        if historicalSteps.count > 7 {
+        //                            for i in historicalSteps.count - 7...historicalSteps.count {
+        //                                let stepData = historicalSteps[i] as! [String: Any]
+        //                                count += stepData["stepCount"] as! Int
+        //                            }
+        //                        } else {
+        //                            for i in 0..<historicalSteps.count {
+        //                                let stepData = historicalSteps[i] as! [String: Any]
+        //                                count += stepData["stepCount"] as! Int
+        //                            }
+        //                        }
+        //                        self.settingOptions[4] = (setting(title: "Steps (past week)", image: UIImage(named: "steps.png")!, text: "\(count)", arrow: false, handler: {}))
+        //                    }
+        //                }
+        //
+        //                self.tableView.reloadData()
+        //            }
+        //        }
         
         let hk = HealthKitManager()
         
-//        hk.gettingStepCount(7) { steps, dates in
-//            DispatchQueue.main.async {
-//                var sum = 0
-//                for i in 0..<steps.count {
-//                    sum += Int(steps[i])
-//                }
-//                self.settingOptions[4] = (setting(title: "Steps (past week)", image: UIImage(named: "steps.png")!, text: "\(sum)", arrow: false, handler: {}))
-//
-//                self.tableView.reloadData()
-//            }
-//        }
+        //        hk.gettingStepCount(7) { steps, dates in
+        //            DispatchQueue.main.async {
+        //                var sum = 0
+        //                for i in 0..<steps.count {
+        //                    sum += Int(steps[i])
+        //                }
+        //                self.settingOptions[4] = (setting(title: "Steps (past week)", image: UIImage(named: "steps.png")!, text: "\(sum)", arrow: false, handler: {}))
+        //
+        //                self.tableView.reloadData()
+        //            }
+        //        }
         
         hk.gettingDistance(7) { dist in
             DispatchQueue.main.async {
@@ -241,7 +241,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in
             AuthManager().logout()
-
+            
             // after logout, redirect to login
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let mainMenuViewController = storyboard.instantiateViewController(identifier: "MainMenuViewController")
@@ -281,5 +281,5 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         cell.backgroundColor = UIColor.clear
     }
-
+    
 }

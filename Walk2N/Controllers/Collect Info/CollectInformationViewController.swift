@@ -9,7 +9,7 @@ import UIKit
 
 // aim to prompt to ask user to input their age, weight, and height...
 class CollectInfoViewController: UIViewController, UINavigationBarDelegate, UITextFieldDelegate {
-   
+    
     private var activityView: UIActivityIndicatorView?
     @IBOutlet weak var firstNameTextField: UITextField!
     @IBOutlet weak var lastNameTextField: UITextField!
@@ -22,11 +22,11 @@ class CollectInfoViewController: UIViewController, UINavigationBarDelegate, UITe
     var genderPickerView = UIPickerView()
     var heightPickerView = UIPickerView()
     var agePickerView = UIPickerView()
-
+    
     let gender = ["Male", "Female"]
     let height = (120...200).map { String($0) + " cm" }
     let age = (12...100).map{ String($0) }
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.isNavigationBarHidden = false
@@ -98,7 +98,7 @@ class CollectInfoViewController: UIViewController, UINavigationBarDelegate, UITe
         }
         
     }
-
+    
 }
 
 

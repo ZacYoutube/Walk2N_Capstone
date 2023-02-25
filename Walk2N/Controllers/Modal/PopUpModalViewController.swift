@@ -9,7 +9,7 @@ import UIKit
 import Firebase
 
 class PopUpModalViewController: UIViewController {
-
+    
     @IBOutlet var collectionView: UICollectionView!
     
     var dataSource : [Shoe] = []
@@ -31,10 +31,10 @@ class PopUpModalViewController: UIViewController {
         view.addSubview(collectionView)
         getBoughtShoes()
     }
-
+    
     private func getBoughtShoes() -> Void {
         let db = DatabaseManager.shared
-
+        
         db.checkUserUpdates { data, update, added, deleted in
             if update == true || added == true || deleted == true {
                 if data["boughtShoes"] != nil {
@@ -54,7 +54,7 @@ class PopUpModalViewController: UIViewController {
                         }
                         self.collectionView.reloadData()
                     }
-                   
+                    
                 }
             }
         }

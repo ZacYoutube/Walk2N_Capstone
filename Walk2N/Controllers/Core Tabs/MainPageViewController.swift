@@ -7,6 +7,7 @@
 
 import UIKit
 import Firebase
+import iOSDropDown
 
 class MainPageViewController: UIViewController {
     
@@ -27,7 +28,7 @@ class MainPageViewController: UIViewController {
     var endStep: Double = 0
     var startPercent: Double = 0.0
     var endPercent: Double = 0.0
-    let duration: Double = 1
+    let duration: Double = 2
     let animateStart = Date()
     var curShoe = UIImageView()
     let goalIconIv = UIImageView()
@@ -48,18 +49,18 @@ class MainPageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Home"
+        //        navigationItem.title = "Home"
         authorizeHealthKit()
         contentView.backgroundColor = UIColor.background
         progressCircleContainer.backgroundColor = .white
         stepGoalContainer.backgroundColor = .white
         bonusEarnedContainer.backgroundColor = .white
         currentShoeContainer.backgroundColor = .white
-//        goalPredictor.predict()
+        //        goalPredictor.predict()
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
-        self.setUpNavbar()
+        self.setUpNavbar(text: "Home")
         checkAuth()
         checkUserInfo()
         checkStepGoal()
@@ -88,7 +89,7 @@ class MainPageViewController: UIViewController {
         scrollView.contentSize = contentRect.size
     }
     
-
+    
     @objc private func openModal() {
         let popup = PopUpModalViewController()
         popup.title = "Choose a shoe to earn!"
@@ -104,7 +105,7 @@ class MainPageViewController: UIViewController {
             }
         }
     }
-
+    
     private func loadCircularProgress () {
         let circularPath = UIBezierPath(arcCenter: CGPoint(x: self.progressCircleContainer.center.x - 20, y: self.progressCircleContainer.center.y + 45), radius: 140, startAngle: CGFloat.pi, endAngle: 2 * CGFloat.pi, clockwise: true)
         
@@ -176,7 +177,7 @@ class MainPageViewController: UIViewController {
                         }
                     }
                 }
-    
+                
                 
                 self.progressCircleContainer.addSubview(self.titleText)
                 self.progressCircleContainer.addSubview(self.stepText)
@@ -211,7 +212,7 @@ class MainPageViewController: UIViewController {
         goalIconIv.heightAnchor.constraint(equalToConstant: 60).isActive = true
         goalIconIv.widthAnchor.constraint(equalToConstant: 60).isActive = true
         
-//        goalText.text = "Today's Step Goal: \(Int(getStepGoalToday()))"
+        //        goalText.text = "Today's Step Goal: \(Int(getStepGoalToday()))"
         db.getUserInfo { docSnapshot in
             for doc in docSnapshot {
                 if doc["stepGoalToday"] != nil && (doc["stepGoalToday"] as? Double) != nil{
@@ -237,7 +238,7 @@ class MainPageViewController: UIViewController {
         stackView.distribution = .equalCentering
         stackView.layoutMargins = UIEdgeInsets(top: 0, left: 25, bottom: 0, right: 25)
         stackView.isLayoutMarginsRelativeArrangement = true
-
+        
         let bonusIcon = UIImage(named: "bonusEarned.png")
         bonusIconIv.image = bonusIcon
         bonusIconIv.layer.cornerRadius = 10
@@ -255,7 +256,7 @@ class MainPageViewController: UIViewController {
             for doc in docSnapshot {
                 if doc["bonusEarnedToday"] != nil && (doc["bonusEarnedToday"] as? Double) != nil{
                     let bonusEarnedToday = (doc["bonusEarnedToday"] as! Double).truncate(places: 2)
-//                    self.bonusText.text = "Tokens Earned Today: \(bonusEarnedToday)"
+                    //                    self.bonusText.text = "Tokens Earned Today: \(bonusEarnedToday)"
                     self.bonusText.attributedText = NSMutableAttributedString().normal("Tokens Earned Today: ").bold("\(bonusEarnedToday)")
                 }
             }
@@ -288,7 +289,7 @@ class MainPageViewController: UIViewController {
         
         stackView.layoutMargins = UIEdgeInsets(top: 30, left: 20, bottom: 30, right: 20)
         stackView.isLayoutMarginsRelativeArrangement = true
-
+        
         curShoeTitle.textAlignment = .center
         curShoeTitle.textColor = UIColor.rgb(red: 73, green: 81, blue: 88)
         
@@ -309,7 +310,7 @@ class MainPageViewController: UIViewController {
         curShoe.layer.shadowRadius = 4
         
         curShoe.translatesAutoresizingMaskIntoConstraints = false
-                
+        
         db.checkUserUpdates { data, update, added, deleted in
             if added == true || deleted == true || update == true {
                 if data["currentShoe"] as? [String: Any] != nil {
@@ -317,18 +318,18 @@ class MainPageViewController: UIViewController {
                     self.curShoeTitle.attributedText = NSMutableAttributedString().normal("Current Shoe: ").bold("\(currentShoe!["name"] as! String)")
                     if let url = URL(string: currentShoe!["imgUrl"] as! String) {
                         URLSession.shared.dataTask(with: url) { (data, response, error) in
-                          guard let imageData = data else { return }
+                            guard let imageData = data else { return }
                             DispatchQueue.main.async { [self] in
                                 self.curShoe.image = UIImage(data: imageData)
                                 self.curShoe.layer.borderColor = nil
                                 self.curShoe.layer.borderWidth = 0
                                 self.curShoe.heightAnchor.constraint(equalToConstant: 100).isActive = true
                                 self.curShoe.widthAnchor.constraint(equalToConstant: 200).isActive = true
-                          }
+                            }
                         }.resume()
-                      }
+                    }
                 } else {
-//                    self.curShoe.image = UIImage(named: "emptyShoe")
+                    //                    self.curShoe.image = UIImage(named: "emptyShoe")
                     self.curShoe.layer.borderColor = UIColor.lessDark.cgColor
                     self.curShoe.layer.masksToBounds = true
                     self.curShoe.layer.cornerRadius = 8
@@ -341,15 +342,15 @@ class MainPageViewController: UIViewController {
             }
         }
         
-//        curShoe.layer.borderColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0).cgColor
-//        curShoe.layer.masksToBounds = true
-//        curShoe.layer.cornerRadius = 10
-//        curShoe.contentMode = .scaleToFill
-//        curShoe.layer.borderWidth = 2
+        //        curShoe.layer.borderColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0).cgColor
+        //        curShoe.layer.masksToBounds = true
+        //        curShoe.layer.cornerRadius = 10
+        //        curShoe.contentMode = .scaleToFill
+        //        curShoe.layer.borderWidth = 2
         
-//        self.currentShoeContainer.addSubview(curShoeTitle)
-//        self.currentShoeContainer.addSubview(addShoe)
-//        self.currentShoeContainer.addSubview(curShoe)
+        //        self.currentShoeContainer.addSubview(curShoeTitle)
+        //        self.currentShoeContainer.addSubview(addShoe)
+        //        self.currentShoeContainer.addSubview(curShoe)
         stackView.addArrangedSubview(curShoeTitle)
         stackView.addArrangedSubview(curShoe)
         stackView.addArrangedSubview(addShoe)
@@ -399,9 +400,9 @@ class MainPageViewController: UIViewController {
         }
     }
     
-//    private func getStepGoalToday() -> Double {
-//
-//    }
+    //    private func getStepGoalToday() -> Double {
+    //
+    //    }
     
     private func checkUserInfo() {
         // check whether user has input their weight height gender and age
@@ -459,15 +460,15 @@ class MainPageViewController: UIViewController {
         helper(target: 2)
     }
     
-
+    
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }

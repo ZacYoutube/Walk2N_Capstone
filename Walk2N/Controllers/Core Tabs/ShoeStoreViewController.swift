@@ -16,7 +16,7 @@ class ShoeStoreViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Store"
+        //        navigationItem.title = "Store"
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: 180, height: 320)
         collectionView.backgroundColor = UIColor(red: 245/250, green: 245/250, blue: 245/250, alpha: 1)
@@ -30,7 +30,7 @@ class ShoeStoreViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.setUpNavbar()
+        self.setUpNavbar(text: "Store")
     }
     
     private func getShoes() -> Void {
@@ -42,7 +42,7 @@ class ShoeStoreViewController: UIViewController {
             self.collectionView.reloadData()
         }
     }
-
+    
 }
 
 extension ShoeStoreViewController: UICollectionViewDelegate {
@@ -65,9 +65,9 @@ extension ShoeStoreViewController: UICollectionViewDataSource {
 }
 
 extension ShoeStoreViewController: UICollectionViewDelegateFlowLayout {
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        return CGSize(width: 180, height: 300)
-//    }
+    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    //        return CGSize(width: 180, height: 300)
+    //    }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 10
     }

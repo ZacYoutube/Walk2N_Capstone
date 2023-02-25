@@ -27,15 +27,15 @@ public class HistoricalStep {
     }
     
     var firestoreData: [String: Any] {
-            return [
-                "id": id as Any,
-                "uid": uid as Any,
-                "stepCount": stepCount as Any,
-                "date": date as Any,
-                "reachedGoal": reachedGoal as Any,
-                "wearShoe": wearShoe as Any,
-                "stepGoal": stepGoal as Any
-            ]
+        return [
+            "id": id as Any,
+            "uid": uid as Any,
+            "stepCount": stepCount as Any,
+            "date": date as Any,
+            "reachedGoal": reachedGoal as Any,
+            "wearShoe": wearShoe as Any,
+            "stepGoal": stepGoal as Any
+        ]
     }
-   
+    
 }

@@ -24,7 +24,6 @@ public class DatabaseManager {
             } else {
                 for document in (snapshot?.documents)! {
                     if document.data()["email"] != nil {
-                        print("im here", document.data()["email"])
                         completion(false)
                     }
                 }
@@ -51,7 +50,8 @@ public class DatabaseManager {
             "boughtShoes": user.boughtShoes as Any,
             "currentShoe": user.currentShoe as Any,
             "bonusHistory": user.bonusHistory as Any,
-            "profileImgUrl": user.profileImgUrl as Any
+            "profileImgUrl": user.profileImgUrl as Any,
+            "alertHist": user.alertHist as Any
         ]
         ) {(err) in
             if err == nil {
@@ -99,7 +99,7 @@ public class DatabaseManager {
             }
         }
     }
-
+    
     // function to update firestore array type document (push and pop)
     public func updateArrayData(fieldName: String, fieldVal: [String: Any], pop: Bool, _ completion:@escaping(_ bool: Bool) -> Void){
         let uid = Auth.auth().currentUser?.uid
@@ -226,7 +226,7 @@ public class DatabaseManager {
                             let currentStep = steps[0]
                             
                             if wearShoe == true && newestSteps < currentStep {
-
+                                
                                 // do the formula here:
                                 bonusEarned = (currentStep - newestSteps) * awardPerStep!
                                 // need to delete duplicate earning from map run
@@ -276,13 +276,13 @@ public class DatabaseManager {
                         }
                     }
                     
-                
+                    
                     
                 }
                 else {
                     self.addStepToDB(6)
                 }
-
+                
             }
         }
     }
@@ -308,82 +308,82 @@ public class DatabaseManager {
         }
     }
     
-//    func updateHistoricalSteps() {
-//        let db = DatabaseManager.shared
-//
-//        db.getUserInfo { docSnapshot in
-//            for doc in docSnapshot {
-//                // check whether there's historical step data available, if not, push the past week's step data
-//                if doc["historicalSteps"] != nil {
-//                    var historicalSteps = doc["historicalSteps"] as! [Any]
-//                    historicalSteps = historicalSteps.sorted(by: {
-//                        ((($0 as! [String:Any])["date"] as! Timestamp).dateValue()) < ((($1 as! [String:Any])["date"] as! Timestamp).dateValue())
-//                    })
-//                    let newestStep = historicalSteps[historicalSteps.count - 1] as! [String: Any]
-//                    let newestStepDate = (newestStep["date"] as! Timestamp).dateValue()
-//                    let today = Date()
-//                    let diffInDays = Calendar.current.dateComponents([.day], from: newestStepDate, to: today).day!
-//
-//                    // if there is step data in the database check if these are up to date, and push the most recent data into the db
-//                    if diffInDays > 0 {
-//                        self.addStepToDB(diffInDays - 1)
-//                    } else {
-//                        // if it is the same day, check if steps are the same, if not, update the same day step count
-//                        HealthKitManager().gettingStepCount(0) { stepArr, timeArr in
-//                            if stepArr.count > 0 {
-//                                let stepToday = stepArr[0]
-//                                let stepCount = newestStep["stepCount"] as! Double
-//
-//                                if stepToday != stepCount {
-//                                    var newestHistoricalArray = []
-//                                    for i in 0..<historicalSteps.count {
-//                                        if (historicalSteps[i] as! [String: Any])["id"] as! String == newestStep["id"] as! String {
-//                                            let elem = historicalSteps[i] as! [String: Any]
-//                                            let reachedGoal = stepToday >= 1000
-//                                            let wearShoe = doc["currentShoe"] as? [String: Any]? == nil ? false: true
-//                                            let newElem = HistoricalStep(id: (elem["id"] as! String), uid: (elem["uid"] as! String), stepCount: Int(stepToday), date: (elem["date"] as! Timestamp).dateValue(), reachedGoal: reachedGoal, wearShoe: wearShoe, stepGoal: (elem["stepGoal"] as! Double))
-//                                            newestHistoricalArray.append(newElem.firestoreData)
-//                                        } else {
-//                                            newestHistoricalArray.append(historicalSteps[i])
-//                                        }
-//                                    }
-//                                    db.updateUserInfo(fieldToUpdate: ["historicalSteps"], fieldValues: [newestHistoricalArray]) { bool in }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//                else {
-//                    self.addStepToDB(6)
-//                }
-//            }
-//        }
-//    }
-
+    //    func updateHistoricalSteps() {
+    //        let db = DatabaseManager.shared
+    //
+    //        db.getUserInfo { docSnapshot in
+    //            for doc in docSnapshot {
+    //                // check whether there's historical step data available, if not, push the past week's step data
+    //                if doc["historicalSteps"] != nil {
+    //                    var historicalSteps = doc["historicalSteps"] as! [Any]
+    //                    historicalSteps = historicalSteps.sorted(by: {
+    //                        ((($0 as! [String:Any])["date"] as! Timestamp).dateValue()) < ((($1 as! [String:Any])["date"] as! Timestamp).dateValue())
+    //                    })
+    //                    let newestStep = historicalSteps[historicalSteps.count - 1] as! [String: Any]
+    //                    let newestStepDate = (newestStep["date"] as! Timestamp).dateValue()
+    //                    let today = Date()
+    //                    let diffInDays = Calendar.current.dateComponents([.day], from: newestStepDate, to: today).day!
+    //
+    //                    // if there is step data in the database check if these are up to date, and push the most recent data into the db
+    //                    if diffInDays > 0 {
+    //                        self.addStepToDB(diffInDays - 1)
+    //                    } else {
+    //                        // if it is the same day, check if steps are the same, if not, update the same day step count
+    //                        HealthKitManager().gettingStepCount(0) { stepArr, timeArr in
+    //                            if stepArr.count > 0 {
+    //                                let stepToday = stepArr[0]
+    //                                let stepCount = newestStep["stepCount"] as! Double
+    //
+    //                                if stepToday != stepCount {
+    //                                    var newestHistoricalArray = []
+    //                                    for i in 0..<historicalSteps.count {
+    //                                        if (historicalSteps[i] as! [String: Any])["id"] as! String == newestStep["id"] as! String {
+    //                                            let elem = historicalSteps[i] as! [String: Any]
+    //                                            let reachedGoal = stepToday >= 1000
+    //                                            let wearShoe = doc["currentShoe"] as? [String: Any]? == nil ? false: true
+    //                                            let newElem = HistoricalStep(id: (elem["id"] as! String), uid: (elem["uid"] as! String), stepCount: Int(stepToday), date: (elem["date"] as! Timestamp).dateValue(), reachedGoal: reachedGoal, wearShoe: wearShoe, stepGoal: (elem["stepGoal"] as! Double))
+    //                                            newestHistoricalArray.append(newElem.firestoreData)
+    //                                        } else {
+    //                                            newestHistoricalArray.append(historicalSteps[i])
+    //                                        }
+    //                                    }
+    //                                    db.updateUserInfo(fieldToUpdate: ["historicalSteps"], fieldValues: [newestHistoricalArray]) { bool in }
+    //                                }
+    //                            }
+    //                        }
+    //                    }
+    //                }
+    //                else {
+    //                    self.addStepToDB(6)
+    //                }
+    //            }
+    //        }
+    //    }
+    
     private func addStepToDB(_ n: Int) {
         if (Auth.auth().currentUser != nil) {
             DatabaseManager().updateUserInfo(fieldToUpdate: ["bonusEarnedToday", "bonusEarnedDuringRealTimeRun", "bonusAwardedForReachingStepGoal"], fieldValues: [0, 0, false]) { bool in }
             print("triggered")
-
+            
             HealthKitManager().gettingStepCount(n) { stepArr, timeArr in
                 print("triggered", stepArr, timeArr)
                 
-//                if stepArr.count == 0 {
-//                    DatabaseManager.shared.getUserInfo { docSnapshot in
-//                        for doc in docSnapshot {
-//                            if doc["currentShoe"] as? [String: Any] != nil {
-//                                stepToday = HistoricalStep(id: UUID().uuidString, uid: Auth.auth().currentUser?.uid, stepCount: Int(step), date: time, reachedGoal: reachedGoal, wearShoe: true, stepGoal: stepGoalToday)
-//                                self.updateDBWithStep(stepData: stepToday!)
-//                            } else {
-//                                stepToday = HistoricalStep(id: UUID().uuidString, uid: Auth.auth().currentUser?.uid, stepCount: Int(step), date: time, reachedGoal: reachedGoal, wearShoe: false, stepGoal: stepGoalToday)
-//                                self.updateDBWithStep(stepData: stepToday!)
-//                            }
-//                        }
-//                    }
-//                }
-
+                //                if stepArr.count == 0 {
+                //                    DatabaseManager.shared.getUserInfo { docSnapshot in
+                //                        for doc in docSnapshot {
+                //                            if doc["currentShoe"] as? [String: Any] != nil {
+                //                                stepToday = HistoricalStep(id: UUID().uuidString, uid: Auth.auth().currentUser?.uid, stepCount: Int(step), date: time, reachedGoal: reachedGoal, wearShoe: true, stepGoal: stepGoalToday)
+                //                                self.updateDBWithStep(stepData: stepToday!)
+                //                            } else {
+                //                                stepToday = HistoricalStep(id: UUID().uuidString, uid: Auth.auth().currentUser?.uid, stepCount: Int(step), date: time, reachedGoal: reachedGoal, wearShoe: false, stepGoal: stepGoalToday)
+                //                                self.updateDBWithStep(stepData: stepToday!)
+                //                            }
+                //                        }
+                //                    }
+                //                }
+                
                 for (step, time) in zip(stepArr, timeArr) {
-//                    let stepGoalToday = 1000.0
+                    //                    let stepGoalToday = 1000.0
                     var reachedGoal = false
                     var stepGoalToday = 0.0
                     
@@ -395,7 +395,7 @@ public class DatabaseManager {
                                 if step >= stepGoalToday {
                                     reachedGoal = true
                                 }
-                            } 
+                            }
                             if doc["currentShoe"] as? [String: Any] != nil {
                                 stepToday = HistoricalStep(id: UUID().uuidString, uid: Auth.auth().currentUser?.uid, stepCount: Int(step), date: time, reachedGoal: reachedGoal, wearShoe: true, stepGoal: stepGoalToday)
                                 self.updateDBWithStep(stepData: stepToday!)

@@ -7,21 +7,18 @@
 
 import Foundation
 
-public class Bonus: Codable {
-    var id: String?
-    var amount: Double?
+public class Alert: Codable {
+    var message: String?
     var date: Date?
     
-    init(id: String?, amount: Double?, date: Date?) {
-        self.id = id
-        self.amount = amount
+    init(message: String?, date: Date?) {
+        self.message = message
         self.date = date
     }
     
     var firestoreData: [String: Any] {
         return [
-            "id": id as Any,
-            "amount": amount as Any,
+            "message": message as Any,
             "date": date as Any
         ]
     }

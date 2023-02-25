@@ -23,7 +23,7 @@ class TrackRunViewController: UIViewController {
     let locationManager = CLLocationManager()
     let regionInMeters: Double = 500
     var locationAccess = false
-        
+    
     var locationsPassed = [CLLocation]()
     var isRunning = false
     var route: MKPolyline?
@@ -36,13 +36,13 @@ class TrackRunViewController: UIViewController {
     var currentShoe: Shoe? = nil
     
     var currency: Double? = 0.0
-
-//    var timer : Timer?
-        
+    
+    //    var timer : Timer?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setUpNavbar()
-        navigationItem.title = "Map"
+        self.setUpNavbar(text: "Map")
+        //        navigationItem.title = "Map"
         mapView.delegate = self
         reset()
         setup()
@@ -57,7 +57,7 @@ class TrackRunViewController: UIViewController {
         stepsLabel.textColor = .systemRed
         checkLocationServices()
     }
-
+    
     func addLocationsToArray(_ locations: [CLLocation]) {
         for location in locations {
             if !locationsPassed.contains(location) {
@@ -65,7 +65,7 @@ class TrackRunViewController: UIViewController {
             }
         }
     }
-
+    
     func calculateAndDisplayDistance() {
         var totalDistance = 0.0
         if locationsPassed.count > 0 {
@@ -183,9 +183,9 @@ class TrackRunViewController: UIViewController {
 }
 
 extension TrackRunViewController{
-//    @IBAction func locationButtonTapped(_ sender: Any) {
-//        centerViewOnUserLocation()
-//    }
+    //    @IBAction func locationButtonTapped(_ sender: Any) {
+    //        centerViewOnUserLocation()
+    //    }
     
     @IBAction func runButtonTapped(_ sender: Any) {
         DatabaseManager.shared.checkUserUpdates { data, update, added, deleted in
@@ -350,11 +350,11 @@ extension TrackRunViewController: CLLocationManagerDelegate {
             self.locationManagerDidChangeAuthorization(self.locationManager)
         } else {
             self.disableAllButtons()
-
+            
             self.errorView.isHidden = false
             self.errorView.text = "Please enable Location Services"
         }
-
+        
     }
     
     func setupLocationManager() {
