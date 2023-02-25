@@ -116,6 +116,7 @@ extension UIViewController {
         //        var alert = UIButton(type: .custom)
         var balance = UIButton(type: .custom)
         var alert = ButtonWithBadge()
+        alert.isRead = true
         
         let alertButtonItem = UIBarButtonItem(customView: alert)
         let balanceItem = UIBarButtonItem(customView: balance)
@@ -522,6 +523,14 @@ class ButtonWithBadge: UIButton {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension NSLayoutConstraint {
+
+    override public var description: String {
+        let id = identifier ?? ""
+        return "id: \(id), constant: \(constant)" //you may print whatever you want here
     }
 }
 

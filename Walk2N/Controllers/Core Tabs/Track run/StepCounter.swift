@@ -40,4 +40,16 @@ class StepCounter {
     func endTracking() {
         self.pedometer.stopUpdates()
     }
+    
+//    func updateStepsRealtime(startTime: Date, completion:@escaping ((Double) -> Void)) {
+//        if CMPedometer.isStepCountingAvailable() {
+//            self.pedometer.startUpdates(from: startTime) { data, err in
+//                if err == nil {
+//                    if let res = data {
+//                        completion(Double(res.numberOfSteps))
+//                    }
+//                }
+//            }
+//        }
+//    }
 }

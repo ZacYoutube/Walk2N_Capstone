@@ -27,7 +27,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // change the root view controller to your specific view controller
         window.rootViewController = vc
         
-        UIView.transition(with: window, duration: 1.5, options: [.transitionFlipFromRight], animations: nil, completion: nil)
+        UIView.transition(with: window, duration: 1, options: [.transitionCrossDissolve], animations: nil, completion: nil)
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {

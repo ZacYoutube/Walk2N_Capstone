@@ -87,6 +87,19 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         NotificationCenter.default.removeObserver(self)
     }
     
+    // show loading gif when in process
+    func showLoading() {
+        activityView = UIActivityIndicatorView(style: .large)
+        activityView?.center = self.view.center
+        self.view.addSubview(activityView!)
+        activityView?.startAnimating()
+    }
+    
+    // dismiss loading gif
+    func hideLoading(){
+        activityView?.stopAnimating()
+    }
+    
     
     @objc func openImagePicker(_ sender:Any) {
         // Open Image Picker
@@ -100,6 +113,10 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         guard let pass1 = retypedPasswordField.text else { return }
         guard let image = profileImageView.image else { return }
         
+        activityView!.startAnimating()
+        
+        self.showLoading()
+
         AuthManager.shared.createNewUser(email: email, password: pass) { registered, uid in
             DispatchQueue.main.async {
                 if registered {
@@ -107,19 +124,22 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                         if url != nil {
                             var newUser = User(uid: uid, email: email, password: pass, firstName: nil, lastName: nil, balance: 1000.0, boughtShoes: nil, currentShoe: nil, historicalSteps: nil, bonusEarnedToday: 0.0, stepGoalToday: nil, weight: nil, height: nil, age: nil, gender: nil, bonusHistory: [], bonusAwardedForReachingStepGoal: false, bonusEarnedDuringRealTimeRun: 0.0, profileImgUrl: url!.absoluteString, alertHist: [])
                             DatabaseManager.shared.insertUser(user: newUser) { success in
-                                print("inside insert", success)
                                 if success {
-                                    print("successfully add to db")
+                                    self.hideLoading()
                                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
                                     let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
                                     (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
                                 }else{
+                                    self.hideLoading()
+
                                 }
                             }
                         }
                     }
                 }
                 else{
+                    self.hideLoading()
+
                     print(registered)
                 }
             }

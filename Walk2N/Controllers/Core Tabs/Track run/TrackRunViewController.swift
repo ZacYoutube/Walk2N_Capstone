@@ -10,6 +10,7 @@ import MapKit
 import CoreLocation
 import MessageUI
 import Firebase
+import CoreMotion
 
 class TrackRunViewController: UIViewController {
     
@@ -19,11 +20,15 @@ class TrackRunViewController: UIViewController {
     @IBOutlet weak var errorView: UILabel!
     @IBOutlet weak var stepsLabel: UILabel!
     @IBOutlet weak var sv: UIStackView!
+    @IBOutlet weak var statusView: UIView!
+    @IBOutlet weak var stopRunButton: UIButton!
+    @IBOutlet weak var timeLabel: UILabel!
+    @IBOutlet weak var stepLabel: UILabel!
     
     let locationManager = CLLocationManager()
     let regionInMeters: Double = 500
     var locationAccess = false
-    
+        
     var locationsPassed = [CLLocation]()
     var isRunning = false
     var route: MKPolyline?
@@ -36,13 +41,13 @@ class TrackRunViewController: UIViewController {
     var currentShoe: Shoe? = nil
     
     var currency: Double? = 0.0
-    
-    //    var timer : Timer?
-    
+    var timer: Timer = Timer()
+    var count: Int = 0
+    var counting: Bool = false
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setUpNavbar(text: "Map")
-        //        navigationItem.title = "Map"
         mapView.delegate = self
         reset()
         setup()
@@ -51,10 +56,29 @@ class TrackRunViewController: UIViewController {
     func setup() {
         runButton.setTitleColor(.lessDark, for: .normal)
         runButton.setTitle("START MOVE", for: .normal)
+        
         distanceLabel.isHidden = true
         stepsLabel.isHidden = true
+        statusView.isHidden = true
+            
+        statusView.backgroundColor = UIColor.background
+        timeLabel.textColor = UIColor.lessDark
+        timeLabel.text = formatTimerStr(hour: 0, min: 0, sec: 0)
+        stepLabel.text = "Steps: 0"
+        stepLabel.textColor = UIColor.lessDark
+        stopRunButton.setTitleColor(.lessDark, for: .normal)
         distanceLabel.textColor = .systemRed
         stepsLabel.textColor = .systemRed
+        
+        stopRunButton.setTitle("End", for: .normal)
+        stopRunButton.setTitleColor(.lessDark, for: .normal)
+        stopRunButton.backgroundColor = .lightGreen
+        stopRunButton.layer.cornerRadius = 8
+        
+        stopRunButton.setOnClickListener {
+            self.stopRun()
+        }
+        
         checkLocationServices()
     }
     
@@ -103,6 +127,10 @@ class TrackRunViewController: UIViewController {
         distanceLabel.isHidden = true
         stepsLabel.isHidden = true
         sv.isHidden = true
+        runButton.isHidden = true
+        statusView.isHidden = false
+        
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerCounter), userInfo: nil, repeats: true)
         
         distanceLabel.text = ""
         stepsLabel.text = ""
@@ -111,19 +139,41 @@ class TrackRunViewController: UIViewController {
         locationManager.startUpdatingLocation()
         
         startRunTime = Date()
+        
+        if CMPedometer.isStepCountingAvailable() {
+            self.stepCounter.pedometer.startUpdates(from: self.startRunTime!) { data, err in
+                if err == nil {
+                    if let res = data {
+                        DispatchQueue.main.sync {
+                            self.stepLabel.text = "Steps: \(res.numberOfSteps)"
+                        }
+                    }
+                }
+            }
+        }
+
     }
     
     
     func stopRun() {
         isRunning = false
         
+        count = 0
+        timeLabel.text = formatTimerStr(hour: 0, min: 0, sec: 0)
+        timer.invalidate()
+        
+        stepCounter.endTracking()
+        
         distanceLabel.isHidden = false
         stepsLabel.isHidden = false
         distanceLabel.textColor = .lessDark
         stepsLabel.textColor = .lessDark
         
+        statusView.isHidden = true
+        runButton.isHidden = false
+        
         sv.isHidden = false
-        sv.backgroundColor = .lightGreen
+        sv.backgroundColor = .white
         sv.layer.cornerRadius = 8
         
         locationManager.allowsBackgroundLocationUpdates = false
@@ -132,6 +182,27 @@ class TrackRunViewController: UIViewController {
         
         endRunTime = Date()
         calculateBonus()
+    }
+    
+    @objc func timerCounter() -> Void {
+        count += 1
+        let time = secondsToHoursAndMinutes(seconds: count)
+        let timeStr = formatTimerStr(hour: time.0, min: time.1, sec: time.2)
+        timeLabel.text = timeStr
+    }
+    
+    func secondsToHoursAndMinutes(seconds: Int) -> (Int, Int, Int) {
+        return ((seconds/3600), ((seconds%3600)/60), ((seconds%3600)%60))
+    }
+    
+    func formatTimerStr(hour: Int, min: Int, sec: Int) -> String {
+        var timeStr = "Time: "
+        timeStr += String(format: "%02d", hour)
+        timeStr += " : "
+        timeStr += String(format: "%02d", min)
+        timeStr += " : "
+        timeStr += String(format: "%02d", sec)
+        return timeStr
     }
     
     private func calculateBonus() {
@@ -200,9 +271,9 @@ extension TrackRunViewController{
                             let alert = UIAlertController(title: "Confirmation", message: "You will not receive any bonus if you don't wear a shoe. Are you sure?", preferredStyle: .alert)
                             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                             alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in
-                                self.runButton.setTitle("STOP MOVE", for: .normal)
+//                                self.runButton.setTitle("STOP MOVE", for: .normal)
                                 self.startRun()
-                                self.runButton.setTitleColor(.red, for: .normal)
+//                                self.runButton.setTitleColor(.red, for: .normal)
                             }))
                             self.present(alert, animated: true)
                         } else {
@@ -218,14 +289,23 @@ extension TrackRunViewController{
     }
     
     private func toggleRun() {
-        if self.runButton.title(for: .normal) == "START MOVE" {
-            self.runButton.setTitle("STOP MOVE", for: .normal)
-            self.startRun()
-            self.runButton.setTitleColor(.red, for: .normal)
-        } else {
-            self.runButton.setTitle("START MOVE", for: .normal)
+//        if self.runButton.title(for: .normal) == "START MOVE" {
+//            self.runButton.setTitle("STOP MOVE", for: .normal)
+//            self.startRun()
+//            self.runButton.setTitleColor(.red, for: .normal)
+//        } else {
+//            self.runButton.setTitle("START MOVE", for: .normal)
+//            self.stopRun()
+//            self.runButton.setTitleColor(UIColor.lessDark, for: .normal)
+//        }
+        if self.runButton.isHidden == true {
+            self.runButton.isHidden = false
             self.stopRun()
-            self.runButton.setTitleColor(UIColor.lessDark, for: .normal)
+            self.statusView.isHidden = true
+        } else {
+            self.runButton.isHidden = true
+            self.startRun()
+            self.statusView.isHidden = false
         }
     }
 }
