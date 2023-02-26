@@ -68,7 +68,7 @@ class MainPageViewController: UIViewController {
         loadStepGoalView()
         loadBonusView()
         addShoe.addTarget(self, action: #selector(openModal), for: .touchUpInside)
-        db.updateBonusAndHistoricalSteps()
+        UpdateManager().updateBonusAndHistoricalSteps()
         AlertPredictManager().predictAndSetupNotification()
         
     }
@@ -211,6 +211,8 @@ class MainPageViewController: UIViewController {
         goalIconIv.heightAnchor.constraint(equalToConstant: 60).isActive = true
         goalIconIv.widthAnchor.constraint(equalToConstant: 60).isActive = true
         
+        goalText.text = "Today's Step Goal: 0"
+        
         //        goalText.text = "Today's Step Goal: \(Int(getStepGoalToday()))"
         db.getUserInfo { docSnapshot in
             for doc in docSnapshot {
@@ -260,6 +262,8 @@ class MainPageViewController: UIViewController {
                 }
             }
         }
+        
+        bonusText.text = "Tokens Earned Today: 0"
         
         db.checkUserUpdates { data, update, addition, deletion in
             if update == true {
@@ -340,16 +344,7 @@ class MainPageViewController: UIViewController {
                 }
             }
         }
-        
-        //        curShoe.layer.borderColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0).cgColor
-        //        curShoe.layer.masksToBounds = true
-        //        curShoe.layer.cornerRadius = 10
-        //        curShoe.contentMode = .scaleToFill
-        //        curShoe.layer.borderWidth = 2
-        
-        //        self.currentShoeContainer.addSubview(curShoeTitle)
-        //        self.currentShoeContainer.addSubview(addShoe)
-        //        self.currentShoeContainer.addSubview(curShoe)
+       
         stackView.addArrangedSubview(curShoeTitle)
         stackView.addArrangedSubview(curShoe)
         stackView.addArrangedSubview(addShoe)

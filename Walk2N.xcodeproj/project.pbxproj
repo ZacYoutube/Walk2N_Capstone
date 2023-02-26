@@ -55,6 +55,7 @@
 		D5CA908029A9751F00C53B7B /* AlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CA907F29A9751F00C53B7B /* AlertViewController.swift */; };
 		D5CA908329A9753800C53B7B /* AlertCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CA908129A9753800C53B7B /* AlertCollectionViewCell.swift */; };
 		D5CA908429A9753800C53B7B /* AlertCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D5CA908229A9753800C53B7B /* AlertCollectionViewCell.xib */; };
+		D5CA908629ABEEA100C53B7B /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CA908529ABEEA100C53B7B /* UpdateManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -103,6 +104,7 @@
 		D5CA907F29A9751F00C53B7B /* AlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewController.swift; sourceTree = "<group>"; };
 		D5CA908129A9753800C53B7B /* AlertCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertCollectionViewCell.swift; sourceTree = "<group>"; };
 		D5CA908229A9753800C53B7B /* AlertCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlertCollectionViewCell.xib; sourceTree = "<group>"; };
+		D5CA908529ABEEA100C53B7B /* UpdateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -219,6 +221,7 @@
 				D5A3C38A298B35E500772D1B /* UIExtension.swift */,
 				D5631F9C29A6B842007E4678 /* GoalPredictManager.swift */,
 				D5631FA029A70C3B007E4678 /* AlertPredictManager.swift */,
+				D5CA908529ABEEA100C53B7B /* UpdateManager.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -390,6 +393,7 @@
 				D512E9A32988A33D007B0D2F /* AppDelegate.swift in Sources */,
 				D5A3C387298B30D000772D1B /* DatabaseManager.swift in Sources */,
 				D5CA908029A9751F00C53B7B /* AlertViewController.swift in Sources */,
+				D5CA908629ABEEA100C53B7B /* UpdateManager.swift in Sources */,
 				D5A3C38B298B35E500772D1B /* UIExtension.swift in Sources */,
 				D597DF7E29976CCA00DF4D13 /* TrackRunViewController.swift in Sources */,
 				D5631F9B29A6B799007E4678 /* goal_predictor.mlmodel in Sources */,

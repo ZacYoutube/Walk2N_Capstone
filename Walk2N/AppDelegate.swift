@@ -84,7 +84,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             let calendar = Calendar.current
             //            let components = calendar.dateComponents([.day], from: lastDate, to: currentDate)
             //            if let days = components.day, days >= 1 {
-            if DatabaseManager.shared.isSameDay(date1: currentDate, date2: lastDate) == false {
+            if UpdateManager().isSameDay(date1: currentDate, date2: lastDate) == false {
                 GoalPredictManager.shared.predict()
                 userDefaults.set(currentDate, forKey: "lastDate")
             }

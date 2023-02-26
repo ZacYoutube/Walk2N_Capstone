@@ -78,6 +78,12 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        settingOptions[0] = setting(title: "Balance", image: UIImage(named: "balance.png")!, text: "loading...", arrow: false, handler: {})
+        settingOptions[1] = setting(title: "Age", image: UIImage(named: "balance.png")!, text: "loading...", arrow: false, handler: {})
+        settingOptions[2] = setting(title: "Height", image: UIImage(named: "balance.png")!, text: "loading...", arrow: false, handler: {})
+        settingOptions[3] = setting(title: "Weight", image: UIImage(named: "balance.png")!, text: "loading...", arrow: false, handler: {})
+        settingOptions[4] = setting(title: "Steps (past week)", image: UIImage(named: "balance.png")!, text: "loading...", arrow: false, handler: {})
+        settingOptions[5] = setting(title: "Distance (past week)", image: UIImage(named: "balance.png")!, text: "loading...", arrow: false, handler: {})
     }
     
     override func viewWillAppear(_ animated: Bool) {
