@@ -15,7 +15,6 @@ class MainMenuViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addVerticalGradientLayer(topColor: UIColor.white, bottomColor: UIColor.lightGreen)
         // Do any additional setup after loading the view.
     }
     

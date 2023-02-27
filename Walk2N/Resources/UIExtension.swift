@@ -287,9 +287,13 @@ extension UIColor {
     
     static let lightGreen = UIColor.rgb(red: 139, green: 203, blue: 187)
     static let lessDark = UIColor.rgb(red: 73, green: 81, blue: 88)
-    static let background = UIColor(red: 245/250, green: 245/250, blue: 245/250, alpha: 1)
+    static let background1 = UIColor(red: 245/250, green: 245/250, blue: 245/250, alpha: 1)
+//    static let lightRed = UIColor.rgb(red: 241, green: 160, blue: 159)
+//    static let background1 = UIColor(red: 247, green: 249, blue: 255, alpha: 255)
+    
+    static let background = UIColor.rgb(red: 246, green: 246, blue: 246)
     static let lightRed = UIColor.rgb(red: 241, green: 160, blue: 159)
-    static let background1 = UIColor(red: 247, green: 249, blue: 255, alpha: 255)
+//    static let background1 = UIColor(red: 247, green: 249, blue: 255, alpha: 255)
 }
 
 extension NSMutableAttributedString {
@@ -526,12 +530,6 @@ class ButtonWithBadge: UIButton {
     }
 }
 
-extension NSLayoutConstraint {
 
-    override public var description: String {
-        let id = identifier ?? ""
-        return "id: \(id), constant: \(constant)" //you may print whatever you want here
-    }
-}
 
 

@@ -18,8 +18,9 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var dismissButton: UIButton!
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var tapToChangeProfileButton: UIButton!
+    @IBOutlet weak var signupBtn: UIButton!
+    @IBOutlet weak var errorLabel: UILabel!
     
-    var continueButton:RoundedWhiteButton!
     var activityView:UIActivityIndicatorView!
     
     var imagePicker:UIImagePickerController!
@@ -28,23 +29,15 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        
-        continueButton = RoundedWhiteButton(frame: CGRect(x: 0, y: 0, width: 200, height: 50))
-        continueButton.setTitleColor(UIColor.lightGreen, for: .normal)
-        continueButton.setTitle("Continue", for: .normal)
-        continueButton.titleLabel?.font = UIFont.systemFont(ofSize: 18.0, weight: UIFont.Weight.bold)
-        continueButton.center = CGPoint(x: view.center.x, y: view.frame.height - continueButton.frame.height - 24)
-        continueButton.highlightedColor = UIColor(white: 1.0, alpha: 1.0)
-        continueButton.defaultColor = UIColor.white
-        continueButton.addTarget(self, action: #selector(signup), for: .touchUpInside)
-        
-        view.addSubview(continueButton)
         setContinueButton(enabled: false)
+        
+        errorLabel.isHidden = true
         
         activityView = UIActivityIndicatorView(style: .gray)
         activityView.color = UIColor.lightGreen
         activityView.frame = CGRect(x: 0, y: 0, width: 50.0, height: 50.0)
-        activityView.center = continueButton.center
+        
+        signupBtn.addTarget(self, action: #selector(signup), for: .touchUpInside)
         
         view.addSubview(activityView)
         
@@ -74,8 +67,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         retypedPasswordField.becomeFirstResponder()
-        NotificationCenter.default.addObserver(self, selector:#selector(keyboardWillAppear), name: UIResponder.keyboardWillShowNotification, object: nil)
-        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -107,14 +98,11 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func signup() {
-        
         guard let email = emailField.text else { return }
         guard let pass = passwordField.text else { return }
         guard let pass1 = retypedPasswordField.text else { return }
         guard let image = profileImageView.image else { return }
-        
-        activityView!.startAnimating()
-        
+                
         self.showLoading()
 
         AuthManager.shared.createNewUser(email: email, password: pass) { registered, uid in
@@ -130,6 +118,9 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                                     let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
                                     (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
                                 }else{
+                                    self.errorLabel.isHidden = false
+                                    self.errorLabel.textColor = .red
+                                    self.errorLabel.text = "Failed to sign up"
                                     self.hideLoading()
 
                                 }
@@ -145,16 +136,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             }
         }
     }
-    @objc func keyboardWillAppear(notification: NSNotification){
-        
-        let info = notification.userInfo!
-        let keyboardFrame: CGRect = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-        
-        continueButton.center = CGPoint(x: view.center.x,
-                                        y: view.frame.height - keyboardFrame.height - 16.0 - continueButton.frame.height / 2)
-        activityView.center = continueButton.center
-    }
-    
     
     @objc func textFieldChanged(_ target:UITextField) {
         let email = emailField.text
@@ -167,9 +148,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
         // Resigns the target textField and assigns the next textField in the form.
-        
         switch textField {
         case passwordField:
             passwordField.resignFirstResponder()
@@ -190,11 +169,11 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     func setContinueButton(enabled:Bool) {
         if enabled {
-            continueButton.alpha = 1.0
-            continueButton.isEnabled = true
+            signupBtn.alpha = 1.0
+            signupBtn.isEnabled = true
         } else {
-            continueButton.alpha = 0.5
-            continueButton.isEnabled = false
+            signupBtn.alpha = 0.5
+            signupBtn.isEnabled = false
         }
     }
     

@@ -95,7 +95,7 @@ class UpdateManager {
                         }
                         // meaning no data is recorded yet
                         else {
-                            if diffInDays > 0 || steps[steps.count - 1] == 0.0 {
+                            if diffInDays > 0 {
                                 // reset everything
                                 let wearShoe = (doc["currentShoe"] as? [String: Any]) != nil ? true : false
                                 let stepToday = HistoricalStep(id: UUID().uuidString, uid: Auth.auth().currentUser?.uid, stepCount: Int(0), date: Date(), reachedGoal: false, wearShoe: wearShoe, stepGoal: 0)
