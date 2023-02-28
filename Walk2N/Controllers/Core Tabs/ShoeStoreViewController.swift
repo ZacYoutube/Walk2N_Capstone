@@ -19,7 +19,7 @@ class ShoeStoreViewController: UIViewController {
         //        navigationItem.title = "Store"
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: 180, height: 320)
-        collectionView.backgroundColor = UIColor(red: 245/250, green: 245/250, blue: 245/250, alpha: 1)
+        collectionView.backgroundColor = UIColor.background
         collectionView.contentInset = UIEdgeInsets(top: 10, left: 10, bottom: 20, right: 10)
         collectionView.collectionViewLayout = layout
         collectionView.register(ShoeListCollectionViewCell.nib(), forCellWithReuseIdentifier: ShoeListCollectionViewCell.identifier)

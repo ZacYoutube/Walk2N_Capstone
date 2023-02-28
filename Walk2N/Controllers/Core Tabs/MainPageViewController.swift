@@ -155,25 +155,23 @@ class MainPageViewController: UIViewController {
                 self.endStep = curStep
                 self.animateText(target: 1)
 
-                self.db.getUserInfo { docSnapshot in
-                    for doc in docSnapshot {
-                        if doc["historicalSteps"] != nil && (doc["historicalSteps"] as? [Any]) != nil {
-                            var historicalSteps = doc["historicalSteps"] as! [Any]
-                            historicalSteps = historicalSteps.sorted(by: {
-                                ((($0 as! [String:Any])["date"] as! Timestamp).dateValue()) < ((($1 as! [String:Any])["date"] as! Timestamp).dateValue())
-                            })
-                            let reachedGoal = (historicalSteps[historicalSteps.count - 1] as! [String: Any])["reachedGoal"] as! Bool
-                            if reachedGoal == true {
-                                self.percentText.text = "Done!"
-                                self.percentText.font = UIFont(name: "Futura", size: 13)
-                            } else {
-                                self.animateText(target: 2)
-                            }
+                self.db.checkUserUpdates { data, update, add, delete in
+                    if data["historicalSteps"] != nil && (data["historicalSteps"] as? [Any]) != nil {
+                        var historicalSteps = data["historicalSteps"] as! [Any]
+                        historicalSteps = historicalSteps.sorted(by: {
+                            ((($0 as! [String:Any])["date"] as! Timestamp).dateValue()) < ((($1 as! [String:Any])["date"] as! Timestamp).dateValue())
+                        })
+                        let reachedGoal = (historicalSteps[historicalSteps.count - 1] as! [String: Any])["reachedGoal"] as! Bool
+                        if reachedGoal == true {
+                            self.percentText.text = "Done!"
+                            self.percentText.font = UIFont(name: "Futura", size: 13)
+                        } else {
+                            self.animateText(target: 2)
                         }
-                        if doc["stepGoalToday"] != nil && (doc["stepGoalToday"] as? Double) != nil{
-                            let steps = doc["stepGoalToday"] as! Double
-                            self.goalText.attributedText = NSMutableAttributedString().normal("Today's Step Goal: ").bold("\(Int(steps))")
-                        }
+                    }
+                    if data["stepGoalToday"] != nil && (data["stepGoalToday"] as? Double) != nil{
+                        let steps = data["stepGoalToday"] as! Double
+                        self.goalText.attributedText = NSMutableAttributedString().normal("Today's Step Goal: ").bold("\(Int(steps))")
                     }
                 }
 

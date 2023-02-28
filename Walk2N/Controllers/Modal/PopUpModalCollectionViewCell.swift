@@ -48,6 +48,10 @@ class PopUpModalCollectionViewCell: UICollectionViewCell {
 //        removeBtn.tintColor = .lessDark
         removeBtn.tintColor = .white
         
+        wearBtn.titleLabel?.font = .systemFont(ofSize: 12)
+        removeBtn.titleLabel?.font = .systemFont(ofSize: 12)
+
+        
         wearBtn.layer.cornerRadius = 8
         removeBtn.layer.cornerRadius = 8
         
@@ -98,14 +102,14 @@ class PopUpModalCollectionViewCell: UICollectionViewCell {
         db.checkUserUpdates { data, update, added, deleted in
             if update == true || added == true || deleted == true {
                 
-                self.wearBtn.setTitle("Wear", for: .normal)
+                self.wearBtn.setTitle("Equip", for: .normal)
                 self.wearBtn.removeTarget(self, action: #selector(self.unwear), for: .allEvents)
                 self.wearBtn.addTarget(self, action: #selector(self.wear), for: .touchUpInside)
                 
                 if data["currentShoe"] as? [String: Any] != nil {
                     let currentShoe = data["currentShoe"] as! [String: Any]
                     if self.shoe?.id! == (currentShoe["id"] as! String) {
-                        self.wearBtn.setTitle("Unwore", for: .normal)
+                        self.wearBtn.setTitle("Unequip", for: .normal)
                         self.wearBtn.removeTarget(self, action: #selector(self.wear), for: .allEvents)
                         self.wearBtn.addTarget(self, action: #selector(self.unwear), for: .touchUpInside)
                     }
@@ -116,9 +120,9 @@ class PopUpModalCollectionViewCell: UICollectionViewCell {
     
     @objc private func wear() {
         let db = DatabaseManager.shared
-        let alert = UIAlertController(title: "Confirmation", message: "Wear this shoe?", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Confirmation", message: "Equip this shoe?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "Wear", style: .default, handler: { action in
+        alert.addAction(UIAlertAction(title: "Equip", style: .default, handler: { action in
             db.updateUserInfo(fieldToUpdate: ["currentShoe"], fieldValues: [self.shoe?.firestoreData as Any]) { success in
                 if success {
                     print("successfully worn the shoe")
@@ -135,9 +139,9 @@ class PopUpModalCollectionViewCell: UICollectionViewCell {
     
     @objc private func unwear() {
         let db = DatabaseManager.shared
-        let alert = UIAlertController(title: "Confirmation", message: "Unwore this shoe?", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Confirmation", message: "Unequip this shoe?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "Unwore", style: .default, handler: { action in
+        alert.addAction(UIAlertAction(title: "Unequip", style: .default, handler: { action in
             db.updateUserInfo(fieldToUpdate: ["currentShoe"], fieldValues: [nil]) { success in
                 if success {
                     print("successfully Unworn the shoe")
