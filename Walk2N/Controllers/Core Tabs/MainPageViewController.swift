@@ -17,11 +17,11 @@ class MainPageViewController: UIViewController {
     @IBOutlet weak var currentShoeName: UILabel!
     @IBOutlet weak var currentShoeAwardPerStep: UILabel!
     @IBOutlet weak var currentShoeExpdate: UILabel!
-    @IBOutlet weak var nameSv: UIStackView!
     @IBOutlet weak var chooseChoe: UIButton!
+    @IBOutlet weak var shoeNameContainer: UIView!
+    @IBOutlet weak var shoeAwardContainer: UIView!
+    @IBOutlet weak var shoeExpContainer: UIView!
 
-    @IBOutlet weak var expDateSv: UIStackView!
-    @IBOutlet weak var awardSv: UIStackView!
     //    @IBOutlet weak var stepGoalContainer: UIView!
 //    @IBOutlet weak var bonusEarnedContainer: UIView!
 //    @IBOutlet weak var currentShoeContainer: UIView!
@@ -87,10 +87,10 @@ class MainPageViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        goalText.text = ""
-        bonusText.text = ""
-        goalIconIv.image = nil
-        bonusIconIv.image = nil
+//        goalText.text = ""
+//        bonusText.text = ""
+//        goalIconIv.image = nil
+//        bonusIconIv.image = nil
     }
     
     override func viewDidLayoutSubviews() {
@@ -345,13 +345,14 @@ class MainPageViewController: UIViewController {
     private func loadCurrentShoe() {
 
         currentShoeContainerView.backgroundColor = UIColor.background1
-//        currentShoeName.backgroundColor = UIColor.background1
-//        currentShoeExpdate.backgroundColor = UIColor.background1
-//        currentShoeAwardPerStep.backgroundColor = UIColor.background1
         
-        nameSv.backgroundColor = UIColor.background1
-        expDateSv.backgroundColor = UIColor.background1
-        awardSv.backgroundColor = UIColor.background1
+        shoeNameContainer.backgroundColor = UIColor.background1
+        shoeAwardContainer.backgroundColor = UIColor.background1
+        shoeExpContainer.backgroundColor = UIColor.background1
+        
+        shoeNameContainer.layer.cornerRadius = 8
+        shoeAwardContainer.layer.cornerRadius = 8
+        shoeExpContainer.layer.cornerRadius = 8
         
         currentShoeImg.layer.cornerRadius = 8
         currentShoeImg.layer.shadowColor = UIColor.black.cgColor
@@ -362,13 +363,12 @@ class MainPageViewController: UIViewController {
         currentShoeName.textColor = UIColor.rgb(red: 73, green: 81, blue: 88)
         currentShoeAwardPerStep.textColor = UIColor.rgb(red: 73, green: 81, blue: 88)
         currentShoeExpdate.textColor = UIColor.rgb(red: 73, green: 81, blue: 88)
-        
 
         db.checkUserUpdates { data, update, added, deleted in
             if added == true || deleted == true || update == true {
                 if data["currentShoe"] as? [String: Any] != nil {
                     let currentShoe = data["currentShoe"] as? [String: Any]
-//                    self.curShoeTitle.attributedText = NSMutableAttributedString().normal("Current Shoe: ").bold("\(currentShoe!["name"] as! String)")
+                    self.curShoeTitle.attributedText = NSMutableAttributedString().normal("Current Shoe: ").bold("\(currentShoe!["name"] as! String)")
                     if let url = URL(string: currentShoe!["imgUrl"] as! String) {
                         URLSession.shared.dataTask(with: url) { (data, response, error) in
                             guard let imageData = data else { return }
@@ -394,17 +394,10 @@ class MainPageViewController: UIViewController {
                 } else {
                     self.currentShoeImg.image = nil
                     
-                    self.currentShoeName.attributedText = NSMutableAttributedString().normal("NA")
-                    self.currentShoeAwardPerStep.attributedText = NSMutableAttributedString().normal("NA")
-                    self.currentShoeExpdate.attributedText = NSMutableAttributedString().normal("NA")
+                    self.currentShoeName.attributedText = NSMutableAttributedString().bold("NA")
+                    self.currentShoeAwardPerStep.attributedText = NSMutableAttributedString().bold("NA")
+                    self.currentShoeExpdate.attributedText = NSMutableAttributedString().bold("NA")
                     self.chooseChoe.setTitle("Choose shoe", for: .normal)
-
-                    //                    self.curShoe.image = UIImage(named: "emptyShoe")
-//                    self.currentShoeImg.layer.borderColor = UIColor.lessDark.cgColor
-//                    self.currentShoeImg.layer.masksToBounds = true
-//                    self.currentShoeImg.layer.cornerRadius = 8
-//                    self.currentShoeImg.layer.borderWidth = 2
-//                    self.curShoe.contentMode = .scaleToFill
                     
                 }
             }

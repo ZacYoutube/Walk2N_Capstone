@@ -34,7 +34,8 @@ class ShoeListCollectionViewCell: UICollectionViewCell {
         shoeName.text = String(shoe.name!)
         
         shoeAction.backgroundColor = UIColor.rgb(red: 139, green: 203, blue: 187)
-        shoeAction.setTitleColor(UIColor.rgb(red: 73, green: 81, blue: 88), for: .normal)
+//        shoeAction.setTitleColor(UIColor.rgb(red: 73, green: 81, blue: 88), for: .normal)
+        shoeAction.setTitleColor(.white, for: .normal)
         shoeAction.layer.cornerRadius = 8
         
         shoePrice.textColor = UIColor.rgb(red: 73, green: 81, blue: 88)

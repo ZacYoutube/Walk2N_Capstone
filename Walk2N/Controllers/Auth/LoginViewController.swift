@@ -99,10 +99,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         if enabled {
             loginBtn.isEnabled = true
             loginBtn.alpha = 1
+            loginBtn.layer.borderColor = nil
+            loginBtn.backgroundColor = UIColor.rgb(red: 40, green: 104, blue: 71)
+            loginBtn.setTitleColor(.white, for: .normal)
         } else {
-            loginBtn.alpha = 0.7
             loginBtn.setTitleColor(.black, for: .normal)
             loginBtn.isEnabled = false
+            loginBtn.backgroundColor = nil
+            loginBtn.layer.borderColor = UIColor.lightGray.cgColor
+            loginBtn.layer.borderWidth = 1
         }
     }
     

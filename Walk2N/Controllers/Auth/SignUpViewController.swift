@@ -169,11 +169,17 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     
     func setContinueButton(enabled:Bool) {
         if enabled {
-            signupBtn.alpha = 1.0
             signupBtn.isEnabled = true
+            signupBtn.alpha = 1
+            signupBtn.layer.borderColor = nil
+            signupBtn.backgroundColor = UIColor.rgb(red: 40, green: 104, blue: 71)
+            signupBtn.setTitleColor(.white, for: .normal)
         } else {
-            signupBtn.alpha = 0.5
+            signupBtn.setTitleColor(.black, for: .normal)
             signupBtn.isEnabled = false
+            signupBtn.backgroundColor = nil
+            signupBtn.layer.borderColor = UIColor.lightGray.cgColor
+            signupBtn.layer.borderWidth = 1
         }
     }
     

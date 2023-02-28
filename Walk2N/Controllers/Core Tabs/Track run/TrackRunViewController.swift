@@ -54,7 +54,7 @@ class TrackRunViewController: UIViewController {
     }
     
     func setup() {
-        runButton.setTitleColor(.lessDark, for: .normal)
+        runButton.setTitleColor(.white, for: .normal)
         runButton.setTitle("START MOVE", for: .normal)
         
         distanceLabel.isHidden = true
@@ -66,12 +66,13 @@ class TrackRunViewController: UIViewController {
         timeLabel.text = formatTimerStr(hour: 0, min: 0, sec: 0)
         stepLabel.text = "Steps: 0"
         stepLabel.textColor = UIColor.lessDark
-        stopRunButton.setTitleColor(.lessDark, for: .normal)
+        
+        stopRunButton.setTitleColor(.white, for: .normal)
+        stopRunButton.tintColor = .white
         distanceLabel.textColor = .systemRed
         stepsLabel.textColor = .systemRed
         
         stopRunButton.setTitle("End", for: .normal)
-        stopRunButton.setTitleColor(.lessDark, for: .normal)
         stopRunButton.backgroundColor = .lightGreen
         stopRunButton.layer.cornerRadius = 8
         

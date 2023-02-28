@@ -42,9 +42,11 @@ class PopUpModalCollectionViewCell: UICollectionViewCell {
         removeBtn.addTarget(self, action: #selector(remove), for: .touchUpInside)
         
         wearBtn.backgroundColor = UIColor.lightGreen
-        wearBtn.setTitleColor(UIColor.lessDark, for: .normal)
+//        wearBtn.setTitleColor(UIColor.lessDark, for: .normal)
+        wearBtn.setTitleColor(.white, for: .normal)
         removeBtn.backgroundColor = UIColor.lightGreen
-        removeBtn.tintColor = .lessDark
+//        removeBtn.tintColor = .lessDark
+        removeBtn.tintColor = .white
         
         wearBtn.layer.cornerRadius = 8
         removeBtn.layer.cornerRadius = 8
