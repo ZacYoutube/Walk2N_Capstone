@@ -45,6 +45,7 @@ class ShoeListCollectionViewCell: UICollectionViewCell {
         
         retrieveImage(url: shoe.imgUrl!)
         shoeAction.addTarget(self, action: #selector(buyShoes), for: .touchUpInside)
+        shoeAction.titleLabel?.font = .systemFont(ofSize: 12)
         self.shoe = shoe
         showBtn()
         
@@ -68,6 +69,7 @@ class ShoeListCollectionViewCell: UICollectionViewCell {
             if added == true || deleted == true || update == true {
                 
                 self.shoeAction.setTitle("Buy", for: .normal)
+                self.shoeAction.setTitleColor(.white, for: .normal)
                 self.shoeAction.isEnabled = true
                 
                 if data["boughtShoes"] != nil {
@@ -76,7 +78,8 @@ class ShoeListCollectionViewCell: UICollectionViewCell {
                         for i in 0..<boughtShoes!.count {
                             if (boughtShoes![i] as! [String:Any])["id"] as! String == self.shoe!.id! {
                                 self.shoeAction.isEnabled = false
-                                self.shoeAction.setTitle("Already Bought", for: .normal)
+                                self.shoeAction.setTitle("Bought", for: .normal)
+                                self.shoeAction.setTitleColor(.lessDark, for: .normal)
                                 self.shoeAction.backgroundColor = nil
                             }
                         }

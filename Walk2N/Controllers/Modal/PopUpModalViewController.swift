@@ -22,7 +22,7 @@ class PopUpModalViewController: UIViewController {
         layout.itemSize = CGSize(width: 180, height: 300)
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(PopUpModalCollectionViewCell.nib(),forCellWithReuseIdentifier: PopUpModalCollectionViewCell.identifier)
-        collectionView.backgroundColor = UIColor(red: 245/250, green: 245/250, blue: 245/250, alpha: 1)
+        collectionView.backgroundColor = .background
         collectionView.contentInset = UIEdgeInsets(top: 10, left: 10, bottom: 20, right: 10)
         collectionView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         collectionView.translatesAutoresizingMaskIntoConstraints = false

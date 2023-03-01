@@ -66,6 +66,7 @@ class MainPageViewController: UIViewController {
         contentView.backgroundColor = UIColor.background
         styleView(view: [stepCountContainer, progressCircularViewContainer])
         chooseChoe.addTarget(self, action: #selector(openModal), for: .touchUpInside)
+        chooseChoe.titleLabel?.font = .systemFont(ofSize: 15)
 //        styleView(view: [progressCircleContainer, stepGoalContainer, bonusEarnedContainer, currentShoeContainer])
     }
     
