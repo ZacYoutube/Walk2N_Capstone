@@ -226,6 +226,16 @@ extension UIViewController {
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
+    
+    func changeRootViewController(_ vc: UIViewController, animated: Bool = true) {
+//        guard let window = self.window else {
+//            return
+//        }
+        
+        // change the root view controller to your specific view controller
+        UIApplication.shared.keyWindow?.rootViewController = vc
+        UIView.transition(with:  UIApplication.shared.keyWindow!, duration: 1, options: [.transitionCrossDissolve], animations: nil, completion: nil)
+    }
 }
 
 

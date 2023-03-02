@@ -116,7 +116,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                                     self.hideLoading()
                                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
                                     let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
-                                    (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
+//                                    (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
+                                    self.changeRootViewController(mainTabBarController)
                                 }else{
                                     self.errorLabel.isHidden = false
                                     self.errorLabel.textColor = .red

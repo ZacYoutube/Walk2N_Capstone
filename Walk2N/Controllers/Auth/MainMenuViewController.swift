@@ -24,7 +24,8 @@ class MainMenuViewController: UIViewController {
         if let _ = Auth.auth().currentUser {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
-            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
+//            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
+            changeRootViewController(mainTabBarController)
         }
     }
     

@@ -251,7 +251,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             // after logout, redirect to login
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let mainMenuViewController = storyboard.instantiateViewController(identifier: "MainMenuViewController")
-            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainMenuViewController)
+            self.changeRootViewController(mainMenuViewController)
+//            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainMenuViewController)
         }))
         self.present(alert, animated: true)
     }
