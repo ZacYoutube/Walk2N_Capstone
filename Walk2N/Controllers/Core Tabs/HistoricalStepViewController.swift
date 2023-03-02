@@ -18,6 +18,9 @@ class HistoricalStepViewController: UIViewController, ChartViewDelegate {
     @IBOutlet weak var distLineContainer: UIView!
     @IBOutlet weak var distInfoContainer: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var goalInfoBarContainer: UIView!
+    @IBOutlet weak var goalInfoInfoContainer: UIView!
+    @IBOutlet weak var goalText: UILabel!
     
     lazy var lineChartView: LineChartView = {
         let chart = LineChartView()
@@ -33,6 +36,7 @@ class HistoricalStepViewController: UIViewController, ChartViewDelegate {
     let averageSteps = UILabel()
     let totalSteps = UILabel()
     let barChart = BarChartView()
+    let goalChart = BarChartView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,12 +47,17 @@ class HistoricalStepViewController: UIViewController, ChartViewDelegate {
         distLineContainer.backgroundColor = .white
         distInfoContainer.backgroundColor = .white
         
+        goalInfoBarContainer.layer.cornerRadius = 8
+        goalInfoBarContainer.layer.masksToBounds = true
+        goalInfoInfoContainer.layer.cornerRadius = 8
+        
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         displayStepMetrics()
         displayDist()
+        displayGoal()
         self.setUpNavbar(text: "History")
         
         //        HealthKitManager().gettingStepCount(7) { steps, time in
@@ -286,9 +295,60 @@ class HistoricalStepViewController: UIViewController, ChartViewDelegate {
                 self.distLineContainer.addSubview(self.lineChartView)
             }
         }
-        
-        
-        
+    }
+    
+    private func displayGoal() {
+        DatabaseManager.shared.getUserInfo { docSnapshot in
+            for doc in docSnapshot {
+                if doc["historicalSteps"] != nil && (doc["historicalSteps"] as? [Any]) != nil {
+                    DispatchQueue.main.async {
+                        var historicalSteps = doc["historicalSteps"] as! [Any]
+                        historicalSteps = historicalSteps.sorted(by: {
+                            ((($0 as! [String:Any])["date"] as! Timestamp).dateValue()) < ((($1 as! [String:Any])["date"] as! Timestamp).dateValue())
+                        })
+                        if historicalSteps.count > 7 {
+                            historicalSteps = Array(historicalSteps[historicalSteps.count - 8...historicalSteps.count - 1])
+                        }
+                        var color = [NSUIColor](repeating: UIColor.rgb(red: 146, green: 139, blue: 203), count: historicalSteps.count)
+                        var timeArr: Array<String> = Array(repeating: "", count: historicalSteps.count)
+                        var stepsArr: Array<Double> = Array(repeating: 0.0, count: historicalSteps.count)
+                        for i in 0..<historicalSteps.count {
+                            timeArr[i] = (((historicalSteps[i] as! [String:Any])["date"] as! Timestamp).dateValue()).dayOfWeek()!
+                            stepsArr[i] = (historicalSteps[i] as! [String:Any])["stepGoal"] as! Double
+                        }
+                        
+                        self.goalChart.frame = self.goalInfoBarContainer.bounds
+                        let legend = self.goalChart.legend
+                        
+                        legend.horizontalAlignment = .center
+                        legend.verticalAlignment = .top
+                        legend.orientation = .horizontal
+                        legend.drawInside = true
+                        
+                        self.goalChart.setChartValues(xAxisValues: timeArr, values: stepsArr, color: color, label: "Goal")
+                        self.goalChart.chartDescription.enabled = false
+                        self.goalChart.xAxis.drawGridLinesEnabled = false
+                        self.goalChart.xAxis.drawAxisLineEnabled = false
+                        self.goalChart.rightAxis.enabled = false
+                        self.goalChart.leftAxis.enabled = false
+                        self.goalChart.isUserInteractionEnabled = false
+                        
+                        self.goalInfoBarContainer.addSubview(self.goalChart)
+                        
+                        var sum:Double = 0
+                        
+                        for i in 0..<stepsArr.count {
+                            sum += stepsArr[i]
+                        }
+                        
+                        let avg = (sum / Double(stepsArr.count)).truncate(places: 0)
+                        
+                        self.goalText.attributedText = NSMutableAttributedString().normal("Average steps goal past week: ").bold("\(avg)")
+                        
+                    }
+                }
+            }
+        }
     }
     
     

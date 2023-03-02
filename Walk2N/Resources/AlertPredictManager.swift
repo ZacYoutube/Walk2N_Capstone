@@ -66,7 +66,7 @@ class AlertPredictManager {
                                 content.sound = UNNotificationSound.default
                                 content.badge = 1
                                 
-                                let dateComponents = DateComponents(hour: 20, minute: 10) // Set the hour and minute to schedule the notification for.
+                                let dateComponents = DateComponents(hour: 16, minute: 00) // Set the hour and minute to schedule the notification for.
                                 let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
                                 let request = UNNotificationRequest(identifier: "reminder", content: content, trigger: trigger)
                                 
