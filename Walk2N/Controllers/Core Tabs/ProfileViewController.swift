@@ -40,9 +40,9 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                     
         tableView.register(ProfileTableViewCell.self, forCellReuseIdentifier: ProfileTableViewCell.identifier)
         
-        settingModels[0] = section(title: "Personal Information", setting: [setting](repeating: setting(title: nil, image: nil, text: nil, arrow: nil, background: nil, handler: {}), count: 3))
+        settingModels[0] = section(title: "Personal Information", setting: [setting](repeating: setting(title: nil, image: nil, text: nil, arrow: nil, background: nil, handler: {}), count: 4))
         settingModels[1] = section(title: "Activity level", setting: [setting](repeating: setting(title: nil, image: nil, text: nil, arrow: nil, background: nil, handler: {}), count: 2))
-        settingModels[2] = section(title: "Others", setting: [setting](repeating: setting(title: nil, image: nil, text: nil, arrow: nil, background: nil, handler: {}), count: 3))
+        settingModels[2] = section(title: "Others", setting: [setting](repeating: setting(title: nil, image: nil, text: nil, arrow: nil, background: nil, handler: {}), count: 2))
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -98,19 +98,23 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             for doc in docSnapshot {
                 if doc["balance"] != nil && (doc["balance"] as? Double) != nil {
                     let balance = String(describing: (doc["balance"] as! Double).truncate(places: 2))
-                    self.settingModels[2].setting![0] = (setting(title: "Balance", image: UIImage(named: "balance.png")!, text: balance, arrow: false, background: UIColor.rgb(red: 146, green: 139, blue: 203), handler: {}))
+                    self.settingModels[2].setting![0] = (setting(title: "Balance", image: UIImage(named: "balance.png")!, text: balance, arrow: false, background: .lightGreen, handler: {}))
                 }
                 if doc["age"] != nil && (doc["age"] as? Double) != nil {
                     let age = String(describing: Int(doc["age"] as! Double))
-                    self.settingModels[0].setting![0] = (setting(title: "Age", image: UIImage(named: "age.png")!, text: "\(age)", arrow: false, background: .lessDark, handler: {}))
+                    self.settingModels[0].setting![0] = (setting(title: "Age", image: UIImage(named: "age.png")!, text: "\(age)", arrow: false, background: .lightGreen, handler: {}))
                 }
                 if doc["height"] != nil && (doc["height"] as? Double) != nil{
                     let height = String(describing: (doc["height"] as! Double))
-                    self.settingModels[0].setting![1] = (setting(title: "Height", image: UIImage(named: "height.png")!, text: "\(height) cm", arrow: false, background: .lessDark, handler: {}))
+                    self.settingModels[0].setting![1] = (setting(title: "Height", image: UIImage(named: "height.png")!, text: "\(height) cm", arrow: false, background: .lightGreen, handler: {}))
                 }
                 if doc["weight"] != nil && (doc["weight"] as? Double) != nil{
                     let weight = String(describing: (doc["weight"] as! Double))
-                    self.settingModels[0].setting![2] = (setting(title: "Weight", image: UIImage(named: "weight.png")!, text: "\(weight) kg", arrow: false, background: .lessDark, handler: {}))
+                    self.settingModels[0].setting![2] = (setting(title: "Weight", image: UIImage(named: "weight.png")!, text: "\(weight) kg", arrow: false, background: .lightGreen, handler: {}))
+                }
+                if doc["gender"] != nil && (doc["gender"] as? String) != nil{
+                    let gender = String(describing: (doc["gender"] as! String))
+                    self.settingModels[0].setting![3] = (setting(title: "Sex", image: UIImage(named: "gender.png")!, text: "\(gender)", arrow: false, background: .lightGreen, handler: {}))
                 }
                 if doc["historicalSteps"] != nil && (doc["historicalSteps"] as? [Any]) != nil{
                     let historicalSteps = doc["historicalSteps"] as! [Any]
@@ -140,8 +144,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             DispatchQueue.main.async {
                 let distance = String(describing: (dist).truncate(places: 2))
                 self.settingModels[1].setting![1] = (setting(title: "Distance (past week)", image: UIImage(named: "dist.png")!, text: "\(distance) km", arrow: false, background: .lightGreen, handler: {}))
-                self.settingModels[2].setting![1] = (setting(title: "Privacy", image: UIImage(named: "privacy.png")!, text: "", arrow: true, background:  UIColor.rgb(red: 146, green: 139, blue: 203), handler: {}))
-                self.settingModels[2].setting![2] = (setting(title: "Log out", image: UIImage(named: "logout.png")!, text: "", arrow: false, background:  UIColor.rgb(red: 146, green: 139, blue: 203)) {
+//                self.settingModels[2].setting![1] = (setting(title: "Privacy", image: UIImage(named: "privacy.png")!, text: "", arrow: true, background:  UIColor.rgb(red: 146, green: 139, blue: 203), handler: {}))
+                self.settingModels[2].setting![1] = (setting(title: "Log out", image: UIImage(named: "logout.png")!, text: "", arrow: true, background: .lightGreen) {
                     self.logout()
                 })
                 
