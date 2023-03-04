@@ -15,8 +15,8 @@ class ProfileUserInfo: UIView {
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
         iv.translatesAutoresizingMaskIntoConstraints = false
-        iv.layer.borderWidth = 1
-        iv.layer.borderColor = UIColor.lessDark.cgColor
+//        iv.layer.borderWidth = 1
+//        iv.layer.borderColor = UIColor.lessDark.cgColor
         return iv
     }()
     
