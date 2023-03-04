@@ -50,7 +50,7 @@
 		D5A93D262996014200E12217 /* PopUpModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A93D252996014200E12217 /* PopUpModalViewController.swift */; };
 		D5A93D29299602BA00E12217 /* PopUpModalCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A93D27299602BA00E12217 /* PopUpModalCollectionViewCell.swift */; };
 		D5A93D2A299602BA00E12217 /* PopUpModalCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D5A93D28299602BA00E12217 /* PopUpModalCollectionViewCell.xib */; };
-		D5AD2B3B29B31CE0005CB1EB /* UserInfoHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AD2B3A29B31CE0005CB1EB /* UserInfoHeader.swift */; };
+		D5AD2B3B29B31CE0005CB1EB /* ProfileUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AD2B3A29B31CE0005CB1EB /* ProfileUserInfo.swift */; };
 		D5BE8C5A2994781800ABA0D4 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D5BE8C592994781800ABA0D4 /* FirebaseFirestoreSwift */; };
 		D5CA906929A95F1E00C53B7B /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CA906829A95F1E00C53B7B /* Alert.swift */; };
 		D5CA908029A9751F00C53B7B /* AlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CA907F29A9751F00C53B7B /* AlertViewController.swift */; };
@@ -101,7 +101,8 @@
 		D5A93D252996014200E12217 /* PopUpModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpModalViewController.swift; sourceTree = "<group>"; };
 		D5A93D27299602BA00E12217 /* PopUpModalCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpModalCollectionViewCell.swift; sourceTree = "<group>"; };
 		D5A93D28299602BA00E12217 /* PopUpModalCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopUpModalCollectionViewCell.xib; sourceTree = "<group>"; };
-		D5AD2B3A29B31CE0005CB1EB /* UserInfoHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoHeader.swift; sourceTree = "<group>"; };
+		D5AD2B3A29B31CE0005CB1EB /* ProfileUserInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileUserInfo.swift; sourceTree = "<group>"; };
+		D5AD2B3E29B3EFC4005CB1EB /* walk2N.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = walk2N.playground; sourceTree = "<group>"; };
 		D5CA906829A95F1E00C53B7B /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		D5CA907F29A9751F00C53B7B /* AlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewController.swift; sourceTree = "<group>"; };
 		D5CA908129A9753800C53B7B /* AlertCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -147,8 +148,8 @@
 		D512E9A12988A33D007B0D2F /* Walk2N */ = {
 			isa = PBXGroup;
 			children = (
-				D5631F9E29A70958007E4678 /* alert_predictor.mlmodel */,
-				D5631F9A29A6B799007E4678 /* goal_predictor.mlmodel */,
+				D5AD2B3F29B3EFCE005CB1EB /* ML models */,
+				D5AD2B3D29B3EFB8005CB1EB /* Playground */,
 				D5A3C396298C8F8E00772D1B /* Walk2N.entitlements */,
 				D5A3C36E298B19EF00772D1B /* Resources */,
 				D512E9CA2988E1B5007B0D2F /* Models */,
@@ -206,12 +207,13 @@
 			path = "Track run";
 			sourceTree = "<group>";
 		};
-		D597DF85299EF50A00DF4D13 /* Profile Table Cell */ = {
+		D597DF85299EF50A00DF4D13 /* Profile component */ = {
 			isa = PBXGroup;
 			children = (
+				D5AD2B3A29B31CE0005CB1EB /* ProfileUserInfo.swift */,
 				D597DF86299EF53D00DF4D13 /* ProfileTableViewCell.swift */,
 			);
-			path = "Profile Table Cell";
+			path = "Profile component";
 			sourceTree = "<group>";
 		};
 		D5A3C36E298B19EF00772D1B /* Resources */ = {
@@ -248,8 +250,7 @@
 		D5A3C382298B1BF100772D1B /* Core Tabs */ = {
 			isa = PBXGroup;
 			children = (
-				D5AD2B3929B31CD3005CB1EB /* Profile header */,
-				D597DF85299EF50A00DF4D13 /* Profile Table Cell */,
+				D597DF85299EF50A00DF4D13 /* Profile component */,
 				D597DF7C29976C6100DF4D13 /* Track run */,
 				D53A7FBF2991EC69000220B9 /* Shoe Collection View Cell */,
 				D5A3C37C298B1BA700772D1B /* MainPageViewController.swift */,
@@ -287,12 +288,21 @@
 			path = "Collect Info";
 			sourceTree = "<group>";
 		};
-		D5AD2B3929B31CD3005CB1EB /* Profile header */ = {
+		D5AD2B3D29B3EFB8005CB1EB /* Playground */ = {
 			isa = PBXGroup;
 			children = (
-				D5AD2B3A29B31CE0005CB1EB /* UserInfoHeader.swift */,
+				D5AD2B3E29B3EFC4005CB1EB /* walk2N.playground */,
 			);
-			path = "Profile header";
+			path = Playground;
+			sourceTree = "<group>";
+		};
+		D5AD2B3F29B3EFCE005CB1EB /* ML models */ = {
+			isa = PBXGroup;
+			children = (
+				D5631F9A29A6B799007E4678 /* goal_predictor.mlmodel */,
+				D5631F9E29A70958007E4678 /* alert_predictor.mlmodel */,
+			);
+			path = "ML models";
 			sourceTree = "<group>";
 		};
 		D5BE8C5B2995E17700ABA0D4 /* Modal */ = {
@@ -427,7 +437,7 @@
 				D512E9A52988A33D007B0D2F /* SceneDelegate.swift in Sources */,
 				D5A93D262996014200E12217 /* PopUpModalViewController.swift in Sources */,
 				D5CA908329A9753800C53B7B /* AlertCollectionViewCell.swift in Sources */,
-				D5AD2B3B29B31CE0005CB1EB /* UserInfoHeader.swift in Sources */,
+				D5AD2B3B29B31CE0005CB1EB /* ProfileUserInfo.swift in Sources */,
 				D5A3C391298C12B600772D1B /* CollectInformationViewController.swift in Sources */,
 				D597DF87299EF53D00DF4D13 /* ProfileTableViewCell.swift in Sources */,
 				D5CA906929A95F1E00C53B7B /* Alert.swift in Sources */,

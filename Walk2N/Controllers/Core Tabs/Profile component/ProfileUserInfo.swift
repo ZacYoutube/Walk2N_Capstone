@@ -8,7 +8,7 @@
 
 import UIKit
 
-class UserInfoHeader: UIView {
+class ProfileUserInfo: UIView {
         
     let profileImageView: UIImageView = {
         let iv = UIImageView()

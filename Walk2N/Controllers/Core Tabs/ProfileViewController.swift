@@ -26,7 +26,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     let db = DatabaseManager.shared
     
-    var userInfoHeader: UserInfoHeader!
+    var userInfoHeader: ProfileUserInfo!
     
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var tableView: UITableView!
@@ -49,7 +49,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.setUpNavbar(text: "Profile")
 
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 90)
-        userInfoHeader = UserInfoHeader(frame: frame)
+        userInfoHeader = ProfileUserInfo(frame: frame)
         
         tableView.tableHeaderView = userInfoHeader
         tableView.tableHeaderView?.backgroundColor = UIColor.white
