@@ -16,7 +16,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="400" height="106"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="alert" translatesAutoresizingMaskIntoConstraints="NO" id="6fM-Nj-GEF">
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="notify" translatesAutoresizingMaskIntoConstraints="NO" id="6fM-Nj-GEF">
                         <rect key="frame" x="10" y="28" width="50" height="50"/>
                         <color key="tintColor" red="0.96841150522232056" green="0.86823866063804223" blue="0.17819915824212285" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
@@ -61,6 +61,6 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="alert" width="48" height="48"/>
+        <image name="notify" width="50" height="50"/>
     </resources>
 </document>

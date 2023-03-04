@@ -56,6 +56,7 @@ class TrackRunViewController: UIViewController {
     func setup() {
         runButton.setTitleColor(.white, for: .normal)
         runButton.setTitle("START MOVE", for: .normal)
+        runButton.titleLabel?.font = .systemFont(ofSize: 14)
         
         distanceLabel.isHidden = true
         stepsLabel.isHidden = true

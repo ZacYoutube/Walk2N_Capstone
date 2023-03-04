@@ -8,11 +8,17 @@
 import UIKit
 import Firebase
 
+struct section {
+    let title: String?
+    var setting: [setting]?
+}
+
 struct setting {
     let title: String?
     let image: UIImage?
     let text: String?
     let arrow: Bool?
+    let background: UIColor?
     let handler: (() -> Void)
 }
 
@@ -20,91 +26,49 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     let db = DatabaseManager.shared
     
-    var settingOptions = [setting](repeating: setting(title: nil, image: nil, text: nil, arrow: false, handler: {}), count: 9)
+    var userInfoHeader: UserInfoHeader!
     
-    private let profileImageView: UIImageView = {
-        let iv = UIImageView()
-        //        iv.image = UIImage(named: "profile.png")
-        iv.contentMode = .scaleAspectFill
-        iv.clipsToBounds = true
-        iv.layer.borderWidth = 3
-        iv.layer.borderColor = UIColor.lessDark.cgColor
-        iv.layer.backgroundColor = UIColor.lightGreen.cgColor
-        
-        return iv
-    }()
+    @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var tableView: UITableView!
     
-    private let nameLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.font = UIFont.boldSystemFont(ofSize: 36)
-        label.textColor = .lessDark
-        return label
-    }()
-    
-    private let emailLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 18)
-        label.textColor = .lessDark
-        return label
-    }()
-    
-    lazy var containerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        
-        view.addSubview(profileImageView)
-        profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        profileImageView.anchor(top: view.topAnchor, paddingTop: 88, width: 120, height: 120)
-        profileImageView.layer.cornerRadius = 120 / 2
-        
-        view.addSubview(nameLabel)
-        nameLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        nameLabel.anchor(top: profileImageView.bottomAnchor, paddingTop: 12)
-        
-        view.addSubview(emailLabel)
-        emailLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        emailLabel.anchor(top: nameLabel.bottomAnchor, paddingTop: 4)
-        
-        return view
-    }()
-    
-    private let tableView: UITableView = {
-        let table = UITableView(frame: .zero, style: .grouped)
-        table.register(ProfileTableViewCell.self, forCellReuseIdentifier: ProfileTableViewCell.identifier)
-        return table
-    }()
+    var settingModels = [section](repeating: section(title: "", setting: nil), count: 3)
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        settingOptions[0] = setting(title: "Balance", image: UIImage(named: "balance.png")!, text: "loading...", arrow: false, handler: {})
-        settingOptions[1] = setting(title: "Age", image: UIImage(named: "balance.png")!, text: "loading...", arrow: false, handler: {})
-        settingOptions[2] = setting(title: "Height", image: UIImage(named: "balance.png")!, text: "loading...", arrow: false, handler: {})
-        settingOptions[3] = setting(title: "Weight", image: UIImage(named: "balance.png")!, text: "loading...", arrow: false, handler: {})
-        settingOptions[4] = setting(title: "Steps (past week)", image: UIImage(named: "balance.png")!, text: "loading...", arrow: false, handler: {})
-        settingOptions[5] = setting(title: "Distance (past week)", image: UIImage(named: "balance.png")!, text: "loading...", arrow: false, handler: {})
+        view.backgroundColor = .white
+        containerView.backgroundColor = .background
+                    
+        tableView.register(ProfileTableViewCell.self, forCellReuseIdentifier: ProfileTableViewCell.identifier)
+        
+        settingModels[0] = section(title: "Personal Information", setting: [setting](repeating: setting(title: nil, image: nil, text: nil, arrow: nil, background: nil, handler: {}), count: 3))
+        settingModels[1] = section(title: "Activity level", setting: [setting](repeating: setting(title: nil, image: nil, text: nil, arrow: nil, background: nil, handler: {}), count: 2))
+        settingModels[2] = section(title: "Others", setting: [setting](repeating: setting(title: nil, image: nil, text: nil, arrow: nil, background: nil, handler: {}), count: 3))
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        view.backgroundColor = .white
-        view.addSubview(containerView)
-        containerView.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 300)
+        self.setUpNavbar(text: "Profile")
+
+        let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 90)
+        userInfoHeader = UserInfoHeader(frame: frame)
+        
+        tableView.tableHeaderView = userInfoHeader
+        tableView.tableHeaderView?.backgroundColor = UIColor.white
+        tableView.tableHeaderView?.layer.cornerRadius = 8
         
         db.getUserInfo { docSnapshot in
             for doc in docSnapshot {
                 if doc["firstName"] != nil && doc["lastName"] != nil {
-                    self.nameLabel.text = "\(doc["firstName"] as? String ?? "") \(doc["lastName"] as? String ?? "")"
+                    self.userInfoHeader.nameLabel.text = "\(doc["firstName"] as? String ?? "") \(doc["lastName"] as? String ?? "")"
                 }
                 if doc["email"] != nil {
-                    self.emailLabel.text = doc["email"] as? String
+                    self.userInfoHeader.emailLabel.text = doc["email"] as? String
                 }
                 if doc["profileImgUrl"] != nil && (doc["profileImgUrl"] as? String) != nil {
                     if let url = URL(string: doc["profileImgUrl"] as! String) {
                         URLSession.shared.dataTask(with: url) { (data, response, error) in
                             guard let imageData = data else { return }
                             DispatchQueue.main.async { [self] in
-                                profileImageView.image = UIImage(data: imageData)
+                                self.userInfoHeader.profileImageView.image = UIImage(data: imageData)
                             }
                         }.resume()
                     }
@@ -112,13 +76,15 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
         
-        view.addSubview(tableView)
+        containerView.center = view.center
+        
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.anchor(top: containerView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, height: view.height - 300 - (self.tabBarController?.tabBar.frame.size.height)!)
-        tableView.contentInset = UIEdgeInsets(top: -35, left: 0, bottom: -37, right: 0);
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
-        tableView.backgroundColor = UIColor.white
+        tableView.backgroundColor = UIColor.background
+        containerView.addSubview(tableView)
+        
+        view.addSubview(containerView)
         configure()
     }
     
@@ -132,19 +98,19 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             for doc in docSnapshot {
                 if doc["balance"] != nil && (doc["balance"] as? Double) != nil {
                     let balance = String(describing: (doc["balance"] as! Double).truncate(places: 2))
-                    self.settingOptions[0] = (setting(title: "Balance", image: UIImage(named: "balance.png")!, text: balance, arrow: false, handler: {}))
+                    self.settingModels[2].setting![0] = (setting(title: "Balance", image: UIImage(named: "balance.png")!, text: balance, arrow: false, background: UIColor.rgb(red: 146, green: 139, blue: 203), handler: {}))
                 }
                 if doc["age"] != nil && (doc["age"] as? Double) != nil {
                     let age = String(describing: Int(doc["age"] as! Double))
-                    self.settingOptions[1] = (setting(title: "Age", image: UIImage(named: "age.png")!, text: "\(age)", arrow: false, handler: {}))
+                    self.settingModels[0].setting![0] = (setting(title: "Age", image: UIImage(named: "age.png")!, text: "\(age)", arrow: false, background: .lessDark, handler: {}))
                 }
                 if doc["height"] != nil && (doc["height"] as? Double) != nil{
                     let height = String(describing: (doc["height"] as! Double))
-                    self.settingOptions[2] = (setting(title: "Height", image: UIImage(named: "height.png")!, text: "\(height) cm", arrow: false, handler: {}))
+                    self.settingModels[0].setting![1] = (setting(title: "Height", image: UIImage(named: "height.png")!, text: "\(height) cm", arrow: false, background: .lessDark, handler: {}))
                 }
                 if doc["weight"] != nil && (doc["weight"] as? Double) != nil{
                     let weight = String(describing: (doc["weight"] as! Double))
-                    self.settingOptions[3] = (setting(title: "Weight", image: UIImage(named: "weight.png")!, text: "\(weight) kg", arrow: false, handler: {}))
+                    self.settingModels[0].setting![2] = (setting(title: "Weight", image: UIImage(named: "weight.png")!, text: "\(weight) kg", arrow: false, background: .lessDark, handler: {}))
                 }
                 if doc["historicalSteps"] != nil && (doc["historicalSteps"] as? [Any]) != nil{
                     let historicalSteps = doc["historicalSteps"] as! [Any]
@@ -160,79 +126,22 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                             count += stepData["stepCount"] as! Int
                         }
                     }
-                    self.settingOptions[4] = (setting(title: "Steps (past week)", image: UIImage(named: "steps.png")!, text: "\(count)", arrow: false, handler: {}))
+                    
+                    self.settingModels[1].setting![0] = (setting(title: "Steps (past week)", image: UIImage(named: "steps.png")!, text: "\(count)", arrow: false, background: .lightGreen, handler: {}))
                 }
                 self.tableView.reloadData()
             }
         }
         
         
-        //        db.checkUserUpdates { data, update, addition, deletion in
-        //            DispatchQueue.main.async {
-        //                if update == true {
-        //                    if data["balance"] != nil {
-        //                        let balance = String(describing: (data["balance"] as! Double).truncate(places: 2))
-        //                        let setting = setting(title: "Balance", image: UIImage(named: "balance.png")!, text: balance, arrow: false, handler: {})
-        //                        self.settingOptions[0] = setting
-        //                    }
-        //                    if data["age"] != nil {
-        //                        let age = String(describing: Int(data["age"] as! Double))
-        //                        let setting = setting(title: "Age", image: UIImage(named: "age.png")!, text: "\(age)", arrow: false, handler: {})
-        //                        self.settingOptions[1] = setting
-        //                    }
-        //                    if data["height"] != nil {
-        //                        let height = String(describing: (data["height"] as! Double))
-        //                        let setting = setting(title: "Height", image: UIImage(named: "height.png")!, text: "\(height) cm", arrow: false, handler: {})
-        //                        self.settingOptions[2] = setting
-        //                    }
-        //                    if data["weight"] != nil {
-        //                        let weight = String(describing: (data["weight"] as! Double).truncate(places: 2))
-        //                        let setting = setting(title: "Weight", image: UIImage(named: "weight.png")!, text: "\(weight) kg", arrow: false, handler: {})
-        //                        self.settingOptions[3] = setting
-        //                    }
-        //                    if data["historicalSteps"] != nil {
-        //                        let historicalSteps = data["historicalSteps"] as! [Any]
-        //                        var count = 0
-        //                        if historicalSteps.count > 7 {
-        //                            for i in historicalSteps.count - 7...historicalSteps.count {
-        //                                let stepData = historicalSteps[i] as! [String: Any]
-        //                                count += stepData["stepCount"] as! Int
-        //                            }
-        //                        } else {
-        //                            for i in 0..<historicalSteps.count {
-        //                                let stepData = historicalSteps[i] as! [String: Any]
-        //                                count += stepData["stepCount"] as! Int
-        //                            }
-        //                        }
-        //                        self.settingOptions[4] = (setting(title: "Steps (past week)", image: UIImage(named: "steps.png")!, text: "\(count)", arrow: false, handler: {}))
-        //                    }
-        //                }
-        //
-        //                self.tableView.reloadData()
-        //            }
-        //        }
-        
         let hk = HealthKitManager()
-        
-        //        hk.gettingStepCount(7) { steps, dates in
-        //            DispatchQueue.main.async {
-        //                var sum = 0
-        //                for i in 0..<steps.count {
-        //                    sum += Int(steps[i])
-        //                }
-        //                self.settingOptions[4] = (setting(title: "Steps (past week)", image: UIImage(named: "steps.png")!, text: "\(sum)", arrow: false, handler: {}))
-        //
-        //                self.tableView.reloadData()
-        //            }
-        //        }
         
         hk.gettingDistance(7) { dist in
             DispatchQueue.main.async {
                 let distance = String(describing: (dist).truncate(places: 2))
-                self.settingOptions[5] = (setting(title: "Distance (past week)", image: UIImage(named: "dist.png")!, text: "\(distance) km", arrow: false, handler: {}))
-                self.settingOptions[6] = (setting(title: "Terms of use", image: UIImage(named: "terms.png")!, text: "", arrow: true, handler: {}))
-                self.settingOptions[7] = (setting(title: "Privacy", image: UIImage(named: "privacy.png")!, text: "", arrow: true, handler: {}))
-                self.settingOptions[8] = (setting(title: "Log out", image: UIImage(named: "logout.png")!, text: "", arrow: false) {
+                self.settingModels[1].setting![1] = (setting(title: "Distance (past week)", image: UIImage(named: "dist.png")!, text: "\(distance) km", arrow: false, background: .lightGreen, handler: {}))
+                self.settingModels[2].setting![1] = (setting(title: "Privacy", image: UIImage(named: "privacy.png")!, text: "", arrow: true, background:  UIColor.rgb(red: 146, green: 139, blue: 203), handler: {}))
+                self.settingModels[2].setting![2] = (setting(title: "Log out", image: UIImage(named: "logout.png")!, text: "", arrow: false, background:  UIColor.rgb(red: 146, green: 139, blue: 203)) {
                     self.logout()
                 })
                 
@@ -252,17 +161,16 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let mainMenuViewController = storyboard.instantiateViewController(identifier: "MainMenuViewController")
             self.changeRootViewController(mainMenuViewController)
-//            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainMenuViewController)
         }))
         self.present(alert, animated: true)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return settingOptions.count
+        return settingModels[section].setting!.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let setting = settingOptions[indexPath.row]
+        let setting = settingModels[indexPath.section].setting![indexPath.row]
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: ProfileTableViewCell.identifier,
             for: indexPath
@@ -270,14 +178,13 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             return UITableViewCell()
         }
         cell.configure(with: setting)
-        cell.separatorInset = UIEdgeInsets.zero
-        cell.layoutMargins = UIEdgeInsets.zero
+        cell.backgroundColor = .white
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let setting = settingOptions[indexPath.row]
+        let setting = settingModels[indexPath.section].setting![indexPath.row]
         setting.handler()
     }
     
@@ -286,7 +193,75 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let cornerRadius : CGFloat = 10.0
         cell.backgroundColor = UIColor.clear
+        let layer: CAShapeLayer = CAShapeLayer()
+        let pathRef:CGMutablePath = CGMutablePath()
+        let bounds: CGRect = cell.bounds.insetBy(dx:0,dy:0)
+        var addLine: Bool = false
+        
+        if (indexPath.row == 0 && indexPath.row == tableView.numberOfRows(inSection: indexPath.section)-1) {
+            pathRef.addRoundedRect(in: bounds, cornerWidth: cornerRadius, cornerHeight: cornerRadius)
+            // CGPathAddRoundedRect(pathRef, nil, bounds, cornerRadius, cornerRadius)
+        } else if (indexPath.row == 0) {
+            
+            pathRef.move(to: CGPoint(x: bounds.minX, y: bounds.maxY))
+            pathRef.addArc(tangent1End: CGPoint(x: bounds.minX, y: bounds.minY), tangent2End: CGPoint(x: bounds.midX, y: bounds.midY), radius: cornerRadius)
+            pathRef.addArc(tangent1End: CGPoint(x: bounds.maxX, y: bounds.minY), tangent2End: CGPoint(x: bounds.maxX, y: bounds.midY), radius: cornerRadius)
+            pathRef.addLine(to:CGPoint(x: bounds.maxX, y: bounds.maxY) )
+            
+            addLine = true
+        } else if (indexPath.row == tableView.numberOfRows(inSection: indexPath.section)-1) {
+            
+            
+            pathRef.move(to: CGPoint(x: bounds.minX, y: bounds.minY), transform: CGAffineTransform())
+            //                    CGPathMoveToPoint(pathRef, nil, CGRectGetMinX(bounds), CGRectGetMaxY(bounds))
+            pathRef.addArc(tangent1End: CGPoint(x: bounds.minX, y: bounds.maxY), tangent2End: CGPoint(x: bounds.midX, y: bounds.maxY), radius: cornerRadius)
+            pathRef.addArc(tangent1End: CGPoint(x: bounds.maxX, y: bounds.maxY), tangent2End: CGPoint(x: bounds.maxX, y: bounds.midY), radius: cornerRadius)
+            pathRef.addLine(to:CGPoint(x: bounds.maxX, y: bounds.minY) )
+            
+            
+        } else {
+            pathRef.addRect(bounds)
+            
+            addLine = true
+        }
+        
+        layer.path = pathRef
+        layer.fillColor = UIColor(red: 255/255.0, green: 255/255.0, blue: 255/255.0, alpha: 0.8).cgColor
+        
+        if (addLine == true) {
+            let lineLayer: CALayer = CALayer()
+            let lineHeight: CGFloat = (1.0 / UIScreen.main.scale)
+            lineLayer.frame = CGRect(x:bounds.minX + 10 , y:bounds.size.height-lineHeight, width:bounds.size.width-10, height:lineHeight)
+            lineLayer.backgroundColor = tableView.separatorColor?.cgColor
+            layer.addSublayer(lineLayer)
+        }
+        let testView: UIView = UIView(frame: bounds)
+        testView.layer.insertSublayer(layer, at: 0)
+        testView.backgroundColor = UIColor.clear
+        cell.backgroundView = testView
     }
+    
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        if let headerView = view as? UITableViewHeaderFooterView {
+            headerView.textLabel?.textColor = .lightGray
+            headerView.textLabel?.text = headerView.textLabel?.text?.uppercased()
+            headerView.textLabel?.font = .systemFont(ofSize: 12)
+        }
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return settingModels.count
+    }
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let section = settingModels[section]
+        return section.title
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 20
+    }
+    
     
 }

@@ -38,11 +38,16 @@ class ProfileTableViewCell: UITableViewCell {
     public func configure(with setting: setting) {
         titleLabels.text = setting.title
         textLabels.text = setting.text
-        titleLabels.font = UIFont.boldSystemFont(ofSize: 16.0)
-        titleLabels.textColor = UIColor.rgb(red: 73, green: 81, blue: 88)
-        textLabels.textColor = UIColor.rgb(red: 73, green: 81, blue: 88)
+        titleLabels.font = UIFont.boldSystemFont(ofSize: 14.0)
+        textLabels.font = UIFont.systemFont(ofSize: 13)
+        titleLabels.textColor = .lessDark
+        textLabels.textColor = .lessDark
+        container.backgroundColor = setting.background
         
-        iv.image = setting.image
+        let img = setting.image?.withRenderingMode(.alwaysTemplate)
+        iv.image = img
+        iv.tintColor = UIColor.white
+        
         if setting.arrow == true {
             accessoryType = .disclosureIndicator
         } else {
@@ -66,15 +71,16 @@ class ProfileTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        let s: CGFloat = contentView.frame.size.height - 12
+        
+        let s: CGFloat = contentView.frame.size.height - 15
         container.frame = CGRect(x: 15, y: 6, width: s, height: s)
-        let imgSize: CGFloat = s / 1.5
+        let imgSize: CGFloat = s / 2
         iv.frame = CGRect(x: (s - imgSize)/2, y: (s - imgSize)/2, width: imgSize, height: imgSize)
         titleLabels.frame = CGRect(x: 25 + container.frame.size.width,
                                    y: 0,
-                                   width: contentView.frame.size.width - 20 - container.frame.size.width,
+                                   width: contentView.frame.size.width - 100 - container.frame.size.width,
                                    height: contentView.frame.size.height)
-        textLabels.frame = CGRect(x: titleLabels.frame.size.width - 60, y: 0, width: 100, height: contentView.frame.size.height)
+        textLabels.frame = CGRect(x: contentView.frame.size.width - 60 - container.frame.size.width, y: 0, width: 80, height: contentView.frame.size.height)
     }
     
     override func prepareForReuse() {

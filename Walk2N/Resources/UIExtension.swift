@@ -302,7 +302,10 @@ extension UIColor {
 //    static let background1 = UIColor(red: 247, green: 249, blue: 255, alpha: 255)
     
     static let background = UIColor.rgb(red: 246, green: 246, blue: 246)
+//    static let background = UIColor.rgb(red: 242, green: 242, blue: 246)
     static let lightRed = UIColor.rgb(red: 241, green: 160, blue: 159)
+    static let darkRed = UIColor.rgb(red: 139, green: 0, blue: 0)
+    static let darkGreen = UIColor.rgb(red: 40, green: 104, blue: 71)
 //    static let background1 = UIColor(red: 247, green: 249, blue: 255, alpha: 255)
 }
 

@@ -71,6 +71,7 @@ class ShoeListCollectionViewCell: UICollectionViewCell {
                 self.shoeAction.setTitle("Buy", for: .normal)
                 self.shoeAction.setTitleColor(.white, for: .normal)
                 self.shoeAction.isEnabled = true
+                self.shoeAction.backgroundColor = UIColor.rgb(red: 139, green: 203, blue: 187)
                 
                 if data["boughtShoes"] != nil {
                     let boughtShoes = data["boughtShoes"] as? [Any]
