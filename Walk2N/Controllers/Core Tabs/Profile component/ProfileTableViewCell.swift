@@ -39,7 +39,7 @@ class ProfileTableViewCell: UITableViewCell {
         titleLabels.text = setting.title
         textLabels.text = setting.text
         titleLabels.font = UIFont.boldSystemFont(ofSize: 14.0)
-        textLabels.font = UIFont.systemFont(ofSize: 13)
+        textLabels.font = UIFont.systemFont(ofSize: 14)
         titleLabels.textColor = .lessDark
         textLabels.textColor = .lessDark
         container.backgroundColor = setting.background
