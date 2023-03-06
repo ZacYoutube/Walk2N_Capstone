@@ -16,7 +16,6 @@ public class AuthManager {
         DatabaseManager.shared.canCreateAcc(email: email) { canCreate in
             if canCreate {
                 Auth.auth().createUser(withEmail: email, password: password) { authData, err in
-                    print("imhhhhh", authData != nil, err)
                     if authData != nil {
                         completion(true, (authData?.user.uid)!)
                     }else{

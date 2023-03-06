@@ -28,7 +28,7 @@ class TrackRunViewController: UIViewController {
     let locationManager = CLLocationManager()
     let regionInMeters: Double = 500
     var locationAccess = false
-        
+    
     var locationsPassed = [CLLocation]()
     var isRunning = false
     var route: MKPolyline?
@@ -44,7 +44,7 @@ class TrackRunViewController: UIViewController {
     var timer: Timer = Timer()
     var count: Int = 0
     var counting: Bool = false
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setUpNavbar(text: "Map")
@@ -61,7 +61,7 @@ class TrackRunViewController: UIViewController {
         distanceLabel.isHidden = true
         stepsLabel.isHidden = true
         statusView.isHidden = true
-            
+        
         statusView.backgroundColor = UIColor.background
         timeLabel.textColor = UIColor.lessDark
         timeLabel.text = formatTimerStr(hour: 0, min: 0, sec: 0)
@@ -125,35 +125,59 @@ class TrackRunViewController: UIViewController {
     func startRun() {
         reset()
         
-        isRunning = true
-        distanceLabel.isHidden = true
-        stepsLabel.isHidden = true
-        sv.isHidden = true
-        runButton.isHidden = true
-        statusView.isHidden = false
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        let countDownVC = storyboard!.instantiateViewController(withIdentifier: "countdown") as! CountDownViewController
+        countDownVC.modalPresentationStyle = .fullScreen
+        countDownVC.modalTransitionStyle = .coverVertical
+        present(countDownVC, animated: true)
         
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerCounter), userInfo: nil, repeats: true)
-        
-        distanceLabel.text = ""
-        stepsLabel.text = ""
-        
-        locationManager.allowsBackgroundLocationUpdates = true
-        locationManager.startUpdatingLocation()
-        
-        startRunTime = Date()
-        
-        if CMPedometer.isStepCountingAvailable() {
-            self.stepCounter.pedometer.startUpdates(from: self.startRunTime!) { data, err in
-                if err == nil {
-                    if let res = data {
-                        DispatchQueue.main.sync {
-                            self.stepLabel.text = "Steps: \(res.numberOfSteps)"
+        countDownVC.onDone = {
+            result in
+            
+            if result == true {
+                self.isRunning = true
+                self.distanceLabel.isHidden = true
+                self.stepsLabel.isHidden = true
+                self.sv.isHidden = true
+                self.runButton.isHidden = true
+                self.statusView.isHidden = false
+                
+                self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.timerCounter), userInfo: nil, repeats: true)
+                
+                self.distanceLabel.text = ""
+                self.stepsLabel.text = ""
+                
+                self.locationManager.allowsBackgroundLocationUpdates = true
+                self.locationManager.startUpdatingLocation()
+                
+                self.startRunTime = Date()
+                
+                if CMPedometer.isStepCountingAvailable() {
+                    self.stepCounter.pedometer.startUpdates(from: self.startRunTime!) { data, err in
+                        if err == nil {
+                            if let res = data {
+                                DispatchQueue.main.sync {
+                                    self.stepLabel.text = "Steps: \(res.numberOfSteps)"
+                                }
+                            }
                         }
                     }
                 }
+                
+                if  let arrayOfTabBarItems = self.tabBarController!.tabBar.items! as AnyObject as? NSArray,let tabBarItem = arrayOfTabBarItems[0] as? UITabBarItem {
+                    tabBarItem.isEnabled = false
+                }
+                if  let arrayOfTabBarItems = self.tabBarController!.tabBar.items! as AnyObject as? NSArray,let tabBarItem = arrayOfTabBarItems[1] as? UITabBarItem {
+                    tabBarItem.isEnabled = false
+                }
+                if  let arrayOfTabBarItems = self.tabBarController!.tabBar.items! as AnyObject as? NSArray,let tabBarItem = arrayOfTabBarItems[3] as? UITabBarItem {
+                    tabBarItem.isEnabled = false
+                }
+                if  let arrayOfTabBarItems = self.tabBarController!.tabBar.items! as AnyObject as? NSArray,let tabBarItem = arrayOfTabBarItems[4] as? UITabBarItem {
+                    tabBarItem.isEnabled = false
+                }
             }
         }
-
     }
     
     
@@ -178,12 +202,27 @@ class TrackRunViewController: UIViewController {
         sv.backgroundColor = .white
         sv.layer.cornerRadius = 8
         
+        stepLabel.text = "Steps: 0"
+        
         locationManager.allowsBackgroundLocationUpdates = false
         locationManager.stopUpdatingLocation()
         displayRoute()
         
         endRunTime = Date()
         calculateBonus()
+        
+        if  let arrayOfTabBarItems = tabBarController!.tabBar.items! as AnyObject as? NSArray,let tabBarItem = arrayOfTabBarItems[0] as? UITabBarItem {
+            tabBarItem.isEnabled = true
+        }
+        if  let arrayOfTabBarItems = tabBarController!.tabBar.items! as AnyObject as? NSArray,let tabBarItem = arrayOfTabBarItems[1] as? UITabBarItem {
+            tabBarItem.isEnabled = true
+        }
+        if  let arrayOfTabBarItems = tabBarController!.tabBar.items! as AnyObject as? NSArray,let tabBarItem = arrayOfTabBarItems[3] as? UITabBarItem {
+            tabBarItem.isEnabled = true
+        }
+        if  let arrayOfTabBarItems = tabBarController!.tabBar.items! as AnyObject as? NSArray,let tabBarItem = arrayOfTabBarItems[4] as? UITabBarItem {
+            tabBarItem.isEnabled = true
+        }
     }
     
     @objc func timerCounter() -> Void {
@@ -221,6 +260,8 @@ class TrackRunViewController: UIViewController {
                     var bonus: Double = 0.0
                     
                     let db = DatabaseManager.shared
+                    
+                    self.stepsLabel.text = "Steps Taken: \(steps), bonus earned: 0"
                     
                     // here we can calculate the bonus - formula for now
                     db.getUserInfo { docSnapshot in
@@ -273,9 +314,9 @@ extension TrackRunViewController{
                             let alert = UIAlertController(title: "Confirmation", message: "You will not receive any bonus if you don't wear a shoe. Are you sure?", preferredStyle: .alert)
                             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                             alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in
-//                                self.runButton.setTitle("STOP MOVE", for: .normal)
+                                //                                self.runButton.setTitle("STOP MOVE", for: .normal)
                                 self.startRun()
-//                                self.runButton.setTitleColor(.red, for: .normal)
+                                //                                self.runButton.setTitleColor(.red, for: .normal)
                             }))
                             self.present(alert, animated: true)
                         } else {
@@ -287,19 +328,11 @@ extension TrackRunViewController{
                     }
                 }
             }
+            
         }
     }
     
     private func toggleRun() {
-//        if self.runButton.title(for: .normal) == "START MOVE" {
-//            self.runButton.setTitle("STOP MOVE", for: .normal)
-//            self.startRun()
-//            self.runButton.setTitleColor(.red, for: .normal)
-//        } else {
-//            self.runButton.setTitle("START MOVE", for: .normal)
-//            self.stopRun()
-//            self.runButton.setTitleColor(UIColor.lessDark, for: .normal)
-//        }
         if self.runButton.isHidden == true {
             self.runButton.isHidden = false
             self.stopRun()

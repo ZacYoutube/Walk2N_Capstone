@@ -174,7 +174,7 @@ class HealthKitManager {
             if let res = result {
                 res.enumerateStatistics(from: startOfNDaysAgo, to: now) { stats, val in
                     if let count = stats.sumQuantity() {
-                        let val = count.doubleValue(for: HKUnit.count())
+                        let val = count.doubleValue(for: HKUnit.meter())
                         let date = stats.startDate
                         distanceArr.append(val)
                         distanceDate.append(date)

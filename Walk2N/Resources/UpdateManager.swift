@@ -43,7 +43,6 @@ class UpdateManager {
                         let currentShoe = doc["currentShoe"] as! [String: Any]
                         awardPerStep = (currentShoe["awardPerStep"] as! Double)
                     }
-                    
                     var bonusEarned = 0.0
                     var newEarning = balance
                     
@@ -54,7 +53,7 @@ class UpdateManager {
                     }
                     
                     HealthKitManager().gettingStepCount(0) { steps, time in
-                        if steps.count > 0 && (steps[steps.count - 1] != 0.0){
+                        if steps.count > 0 {
                             let currentStep = steps[0]
                             
                             if wearShoe == true && newestSteps < currentStep {
@@ -63,9 +62,10 @@ class UpdateManager {
                                 bonusEarned = (currentStep - newestSteps) * awardPerStep!
                                 // need to delete duplicate earning from map run
                                 newEarning = balance + bonusEarned - bonusEarnedDuringRealTimeRun
-                                
+                                print(bonusEarned, newEarning, bonusSoFar)
                                 db.updateUserInfo(fieldToUpdate: ["balance"], fieldValues: [newEarning]) { bool in }
-                                db.updateUserInfo(fieldToUpdate: ["bonusEarnedToday"], fieldValues: [bonusSoFar + bonusEarned]) { bool in }
+                                db.updateUserInfo(fieldToUpdate: ["bonusEarnedToday"], fieldValues: [bonusSoFar + bonusEarned - bonusEarnedDuringRealTimeRun]) { bool in }
+                                db.updateUserInfo(fieldToUpdate: ["bonusEarnedDuringRealTimeRun"], fieldValues: [0]) { bool in }
                             }
                             
                             
@@ -73,7 +73,13 @@ class UpdateManager {
                             if diffInDays > 0 {
                                 self.addStepToDB(diffInDays - 1)
                                 GoalPredictManager.shared.predict()
-                                
+                                if steps[0] == 0.0 {
+                                    db.updateUserInfo(fieldToUpdate: ["bonusEarnedToday"], fieldValues: [0]) { bool in }
+                                } else {
+                                    if wearShoe == true {
+                                        db.updateUserInfo(fieldToUpdate: ["bonusEarnedToday"], fieldValues: [steps[0] * awardPerStep!]) { bool in }
+                                    }
+                                }
                             } else {
                                 // if it is the same day, check if steps are the same, if not, update the same day step count
                                 if newestSteps < currentStep {
@@ -100,7 +106,7 @@ class UpdateManager {
                                 let wearShoe = (doc["currentShoe"] as? [String: Any]) != nil ? true : false
                                 let stepToday = HistoricalStep(id: UUID().uuidString, uid: Auth.auth().currentUser?.uid, stepCount: Int(0), date: Date(), reachedGoal: false, wearShoe: wearShoe, stepGoal: 0)
                                 self.updateDBWithStep(stepData: stepToday)
-                                db.updateUserInfo(fieldToUpdate: ["bonusEarnedToday"], fieldValues: [0]) { bool in }
+                                db.updateUserInfo(fieldToUpdate: ["bonusEarnedToday", "bonusEarnedDuringRealTimeRun", "bonusAwardedForReachingStepGoal"], fieldValues: [0, 0, false]) { bool in }
                                 GoalPredictManager.shared.predict()
                             }
                         }
@@ -192,7 +198,7 @@ class UpdateManager {
     
     private func addStepToDB(_ n: Int) {
         if (Auth.auth().currentUser != nil) {
-            DatabaseManager().updateUserInfo(fieldToUpdate: ["bonusEarnedToday", "bonusEarnedDuringRealTimeRun", "bonusAwardedForReachingStepGoal"], fieldValues: [0, 0, false]) { bool in }
+            DatabaseManager().updateUserInfo(fieldToUpdate: ["bonusEarnedDuringRealTimeRun", "bonusAwardedForReachingStepGoal"], fieldValues: [0, false]) { bool in }
             
             HealthKitManager().gettingStepCount(n) { stepArr, timeArr in
                 for (step, time) in zip(stepArr, timeArr) {

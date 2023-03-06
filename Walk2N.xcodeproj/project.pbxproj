@@ -51,6 +51,7 @@
 		D5A93D29299602BA00E12217 /* PopUpModalCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A93D27299602BA00E12217 /* PopUpModalCollectionViewCell.swift */; };
 		D5A93D2A299602BA00E12217 /* PopUpModalCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D5A93D28299602BA00E12217 /* PopUpModalCollectionViewCell.xib */; };
 		D5AD2B3B29B31CE0005CB1EB /* ProfileUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AD2B3A29B31CE0005CB1EB /* ProfileUserInfo.swift */; };
+		D5AD2B4129B542C1005CB1EB /* CountDownViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AD2B4029B542C1005CB1EB /* CountDownViewController.swift */; };
 		D5BE8C5A2994781800ABA0D4 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D5BE8C592994781800ABA0D4 /* FirebaseFirestoreSwift */; };
 		D5CA906929A95F1E00C53B7B /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CA906829A95F1E00C53B7B /* Alert.swift */; };
 		D5CA908029A9751F00C53B7B /* AlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CA907F29A9751F00C53B7B /* AlertViewController.swift */; };
@@ -103,6 +104,7 @@
 		D5A93D28299602BA00E12217 /* PopUpModalCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopUpModalCollectionViewCell.xib; sourceTree = "<group>"; };
 		D5AD2B3A29B31CE0005CB1EB /* ProfileUserInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileUserInfo.swift; sourceTree = "<group>"; };
 		D5AD2B3E29B3EFC4005CB1EB /* walk2N.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = walk2N.playground; sourceTree = "<group>"; };
+		D5AD2B4029B542C1005CB1EB /* CountDownViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownViewController.swift; sourceTree = "<group>"; };
 		D5CA906829A95F1E00C53B7B /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		D5CA907F29A9751F00C53B7B /* AlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewController.swift; sourceTree = "<group>"; };
 		D5CA908129A9753800C53B7B /* AlertCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -203,6 +205,7 @@
 				D597DF7D29976CCA00DF4D13 /* TrackRunViewController.swift */,
 				D597DF7F2997713F00DF4D13 /* Annotation.swift */,
 				D597DF8329984B1300DF4D13 /* StepCounter.swift */,
+				D5AD2B4029B542C1005CB1EB /* CountDownViewController.swift */,
 			);
 			path = "Track run";
 			sourceTree = "<group>";
@@ -420,6 +423,7 @@
 				D5631F9B29A6B799007E4678 /* goal_predictor.mlmodel in Sources */,
 				D597DF8429984B1300DF4D13 /* StepCounter.swift in Sources */,
 				D566373129A8251800DE1B21 /* RoundedWhiteButton.swift in Sources */,
+				D5AD2B4129B542C1005CB1EB /* CountDownViewController.swift in Sources */,
 				D53A7FC52991EE8D000220B9 /* ShoeStoreViewController.swift in Sources */,
 				D5A3C37F298B1BC300772D1B /* HistoricalStepViewController.swift in Sources */,
 				D512E9B72988A468007B0D2F /* SignUpViewController.swift in Sources */,
