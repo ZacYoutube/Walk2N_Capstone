@@ -27,6 +27,9 @@ class CountDownViewController: UIViewController {
             self.dismiss(animated: true)
             self.onDone?(true)
         }
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
+        view.addGestureRecognizer(tap)
     }
     
     @objc private func timerCounter() {
@@ -37,5 +40,11 @@ class CountDownViewController: UIViewController {
             self.dismiss(animated: true)
             onDone?(true)
         }
+    }
+    
+    @objc func handleTap(_ sender: UITapGestureRecognizer? = nil) {
+        t.invalidate()
+        self.dismiss(animated: true)
+        onDone?(true)
     }
 }

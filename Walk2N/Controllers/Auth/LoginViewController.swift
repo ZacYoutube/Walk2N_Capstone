@@ -76,7 +76,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @objc func dismiss(_ sender: Any) {
         self.dismiss(animated: false, completion: nil)
-        print("tabbbbb")
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -127,7 +126,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     self.hideLoading()
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
                     let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
-                    //                    (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
                     self.changeRootViewController(mainTabBarController)
                 }else{
                     self.errorLabel.text = "Failed to log in"

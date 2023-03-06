@@ -52,6 +52,11 @@
 		D5A93D2A299602BA00E12217 /* PopUpModalCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D5A93D28299602BA00E12217 /* PopUpModalCollectionViewCell.xib */; };
 		D5AD2B3B29B31CE0005CB1EB /* ProfileUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AD2B3A29B31CE0005CB1EB /* ProfileUserInfo.swift */; };
 		D5AD2B4129B542C1005CB1EB /* CountDownViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AD2B4029B542C1005CB1EB /* CountDownViewController.swift */; };
+		D5AD2B5229B5C2A7005CB1EB /* SaveRunViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AD2B5129B5C2A7005CB1EB /* SaveRunViewController.swift */; };
+		D5AD2B5429B5E16B005CB1EB /* WalkHist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AD2B5329B5E16B005CB1EB /* WalkHist.swift */; };
+		D5AD2B5629B5ED9F005CB1EB /* WalkHistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AD2B5529B5ED9F005CB1EB /* WalkHistViewController.swift */; };
+		D5AD2B5929B5EFB7005CB1EB /* WalkHistCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AD2B5729B5EFB7005CB1EB /* WalkHistCollectionViewCell.swift */; };
+		D5AD2B5A29B5EFB7005CB1EB /* WalkHistCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D5AD2B5829B5EFB7005CB1EB /* WalkHistCollectionViewCell.xib */; };
 		D5BE8C5A2994781800ABA0D4 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D5BE8C592994781800ABA0D4 /* FirebaseFirestoreSwift */; };
 		D5CA906929A95F1E00C53B7B /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CA906829A95F1E00C53B7B /* Alert.swift */; };
 		D5CA908029A9751F00C53B7B /* AlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CA907F29A9751F00C53B7B /* AlertViewController.swift */; };
@@ -105,6 +110,11 @@
 		D5AD2B3A29B31CE0005CB1EB /* ProfileUserInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileUserInfo.swift; sourceTree = "<group>"; };
 		D5AD2B3E29B3EFC4005CB1EB /* walk2N.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = walk2N.playground; sourceTree = "<group>"; };
 		D5AD2B4029B542C1005CB1EB /* CountDownViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownViewController.swift; sourceTree = "<group>"; };
+		D5AD2B5129B5C2A7005CB1EB /* SaveRunViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveRunViewController.swift; sourceTree = "<group>"; };
+		D5AD2B5329B5E16B005CB1EB /* WalkHist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkHist.swift; sourceTree = "<group>"; };
+		D5AD2B5529B5ED9F005CB1EB /* WalkHistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkHistViewController.swift; sourceTree = "<group>"; };
+		D5AD2B5729B5EFB7005CB1EB /* WalkHistCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkHistCollectionViewCell.swift; sourceTree = "<group>"; };
+		D5AD2B5829B5EFB7005CB1EB /* WalkHistCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalkHistCollectionViewCell.xib; sourceTree = "<group>"; };
 		D5CA906829A95F1E00C53B7B /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		D5CA907F29A9751F00C53B7B /* AlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewController.swift; sourceTree = "<group>"; };
 		D5CA908129A9753800C53B7B /* AlertCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -186,6 +196,7 @@
 				D512E9CF2988E67E007B0D2F /* HistoricalStep.swift */,
 				D597DF8829A2C0B500DF4D13 /* Bonus.swift */,
 				D5CA906829A95F1E00C53B7B /* Alert.swift */,
+				D5AD2B5329B5E16B005CB1EB /* WalkHist.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -206,6 +217,10 @@
 				D597DF7F2997713F00DF4D13 /* Annotation.swift */,
 				D597DF8329984B1300DF4D13 /* StepCounter.swift */,
 				D5AD2B4029B542C1005CB1EB /* CountDownViewController.swift */,
+				D5AD2B5129B5C2A7005CB1EB /* SaveRunViewController.swift */,
+				D5AD2B5529B5ED9F005CB1EB /* WalkHistViewController.swift */,
+				D5AD2B5729B5EFB7005CB1EB /* WalkHistCollectionViewCell.swift */,
+				D5AD2B5829B5EFB7005CB1EB /* WalkHistCollectionViewCell.xib */,
 			);
 			path = "Track run";
 			sourceTree = "<group>";
@@ -397,6 +412,7 @@
 				D512E9AF2988A33E007B0D2F /* LaunchScreen.storyboard in Resources */,
 				D53A7FC32991EDBA000220B9 /* ShoeListCollectionViewCell.xib in Resources */,
 				D597DF792996DFA100DF4D13 /* Main.storyboard in Resources */,
+				D5AD2B5A29B5EFB7005CB1EB /* WalkHistCollectionViewCell.xib in Resources */,
 				D512E9BE2988A997007B0D2F /* GoogleService-Info.plist in Resources */,
 				D512E9AC2988A33E007B0D2F /* Assets.xcassets in Resources */,
 			);
@@ -409,6 +425,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5AD2B5929B5EFB7005CB1EB /* WalkHistCollectionViewCell.swift in Sources */,
 				D5A3C37D298B1BA700772D1B /* MainPageViewController.swift in Sources */,
 				D5A3C389298B316900772D1B /* AuthManager.swift in Sources */,
 				D53A7FC22991EDBA000220B9 /* ShoeListCollectionViewCell.swift in Sources */,
@@ -430,11 +447,13 @@
 				D512E9B92988A480007B0D2F /* LoginViewController.swift in Sources */,
 				D5A3C398298C902E00772D1B /* HealthKitManager.swift in Sources */,
 				D5631F9D29A6B842007E4678 /* GoalPredictManager.swift in Sources */,
+				D5AD2B5629B5ED9F005CB1EB /* WalkHistViewController.swift in Sources */,
 				D5A3C381298B1BE000772D1B /* ProfileViewController.swift in Sources */,
 				D5A93D29299602BA00E12217 /* PopUpModalCollectionViewCell.swift in Sources */,
 				D597DF802997713F00DF4D13 /* Annotation.swift in Sources */,
 				D512E9CC2988E1C5007B0D2F /* Shoe.swift in Sources */,
 				D566373329A825B200DE1B21 /* MainMenuViewController.swift in Sources */,
+				D5AD2B5429B5E16B005CB1EB /* WalkHist.swift in Sources */,
 				D512E9CE2988E229007B0D2F /* User.swift in Sources */,
 				D597DF8929A2C0B500DF4D13 /* Bonus.swift in Sources */,
 				D512E9C52988C02A007B0D2F /* Constants.swift in Sources */,
@@ -442,6 +461,7 @@
 				D5A93D262996014200E12217 /* PopUpModalViewController.swift in Sources */,
 				D5CA908329A9753800C53B7B /* AlertCollectionViewCell.swift in Sources */,
 				D5AD2B3B29B31CE0005CB1EB /* ProfileUserInfo.swift in Sources */,
+				D5AD2B5229B5C2A7005CB1EB /* SaveRunViewController.swift in Sources */,
 				D5A3C391298C12B600772D1B /* CollectInformationViewController.swift in Sources */,
 				D597DF87299EF53D00DF4D13 /* ProfileTableViewCell.swift in Sources */,
 				D5CA906929A95F1E00C53B7B /* Alert.swift in Sources */,

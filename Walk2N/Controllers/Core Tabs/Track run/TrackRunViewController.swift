@@ -24,7 +24,8 @@ class TrackRunViewController: UIViewController {
     @IBOutlet weak var stopRunButton: UIButton!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var stepLabel: UILabel!
-    
+    @IBOutlet weak var viewWalkHist: UIButton!
+        
     let locationManager = CLLocationManager()
     let regionInMeters: Double = 500
     var locationAccess = false
@@ -32,7 +33,11 @@ class TrackRunViewController: UIViewController {
     var locationsPassed = [CLLocation]()
     var isRunning = false
     var route: MKPolyline?
-    var distanceTraveled: Double = 0.0
+    
+    static var distanceTraveled: Double = 0.0
+    static var numOfSteps: Double = 0.0
+    static var bonusAccu: Double = 0.0
+    static var locationArr = [CLLocation]()
     
     var startRunTime: Date?
     var endRunTime: Date?
@@ -45,10 +50,18 @@ class TrackRunViewController: UIViewController {
     var count: Int = 0
     var counting: Bool = false
     
+    static var duration: Double = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setUpNavbar(text: "Map")
         mapView.delegate = self
+        viewWalkHist.setOnClickListener {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let walkHistViewController = storyboard.instantiateViewController(identifier: "WalkHistViewController")
+            walkHistViewController.modalPresentationStyle = .fullScreen
+            self.present(walkHistViewController, animated: true)
+        }
         reset()
         setup()
     }
@@ -102,9 +115,9 @@ class TrackRunViewController: UIViewController {
             }
         }
         
-        distanceTraveled = totalDistance
+        TrackRunViewController.distanceTraveled = totalDistance
         let displayDistance: String
-        displayDistance = String(format: "Distance Travelled: %.2f kilometers", distanceTraveled * 0.001)
+        displayDistance = String(format: "Distance Travelled: %.2f kilometers", TrackRunViewController.distanceTraveled * 0.001)
         distanceLabel.text = displayDistance
     }
     
@@ -120,6 +133,13 @@ class TrackRunViewController: UIViewController {
         
         let appleMapsURL = "http://maps.apple.com/maps?saddr=\(startLocation.latitude),\(startLocation.longitude)&daddr=\(endLocation.latitude),\(endLocation.longitude)"
         return appleMapsURL
+    }
+    
+    func minutesBetweenDates(_ oldDate: Date, _ newDate: Date) -> Double {
+        let newDateMinutes = newDate.timeIntervalSinceReferenceDate/60
+        let oldDateMinutes = oldDate.timeIntervalSinceReferenceDate/60
+
+        return Double(newDateMinutes - oldDateMinutes).truncate(places: 1)
     }
     
     func startRun() {
@@ -158,6 +178,7 @@ class TrackRunViewController: UIViewController {
                             if let res = data {
                                 DispatchQueue.main.sync {
                                     self.stepLabel.text = "Steps: \(res.numberOfSteps)"
+                                    TrackRunViewController.numOfSteps = Double(truncating: res.numberOfSteps)
                                 }
                             }
                         }
@@ -187,29 +208,28 @@ class TrackRunViewController: UIViewController {
         count = 0
         timeLabel.text = formatTimerStr(hour: 0, min: 0, sec: 0)
         timer.invalidate()
-        
+
         stepCounter.endTracking()
-        
-        distanceLabel.isHidden = false
-        stepsLabel.isHidden = false
-        distanceLabel.textColor = .lessDark
-        stepsLabel.textColor = .lessDark
         
         statusView.isHidden = true
         runButton.isHidden = false
-        
-        sv.isHidden = false
-        sv.backgroundColor = .white
-        sv.layer.cornerRadius = 8
-        
-        stepLabel.text = "Steps: 0"
         
         locationManager.allowsBackgroundLocationUpdates = false
         locationManager.stopUpdatingLocation()
         displayRoute()
         
         endRunTime = Date()
-        calculateBonus()
+        calculateBonus { bonus in
+            TrackRunViewController.bonusAccu = bonus
+            TrackRunViewController.duration = self.minutesBetweenDates(self.startRunTime!, self.endRunTime!)
+            TrackRunViewController.locationArr = self.locationsPassed
+                    
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let saveWalkVC = storyboard.instantiateViewController(identifier: "SaveWalkVC")
+            saveWalkVC.modalPresentationStyle = .fullScreen
+            self.present(saveWalkVC, animated: true)
+        }
+        
         
         if  let arrayOfTabBarItems = tabBarController!.tabBar.items! as AnyObject as? NSArray,let tabBarItem = arrayOfTabBarItems[0] as? UITabBarItem {
             tabBarItem.isEnabled = true
@@ -246,8 +266,7 @@ class TrackRunViewController: UIViewController {
         return timeStr
     }
     
-    private func calculateBonus() {
-        
+    func calculateBonus(completion:@escaping ((Double) -> Void)) {
         self.stepCounter.getSteps(from: self.startRunTime!) { stepsTaken in
             
             DispatchQueue.main.async {
@@ -263,11 +282,17 @@ class TrackRunViewController: UIViewController {
                     
                     self.stepsLabel.text = "Steps Taken: \(steps), bonus earned: 0"
                     
+//                    TrackRunViewController.bonusAccu = Double(steps * currentShoe.awardPerStep!).truncate(places: 2)
+                    
+//                    print("triggered")
+                    
+                    completion(Double(steps * currentShoe.awardPerStep!).truncate(places: 2))
+                    
                     // here we can calculate the bonus - formula for now
                     db.getUserInfo { docSnapshot in
                         for doc in docSnapshot {
                             if (doc["currentShoe"] as? [String: Any]) != nil {
-                                if self.distanceTraveled * 0.001 > 0.0 {
+                                if TrackRunViewController.distanceTraveled * 0.001 > 0.0 {
                                     let bonusSoFar = doc["bonusEarnedToday"] as! Double
                                     bonus = bonusSoFar + steps * currentShoe.awardPerStep!
                                     db.updateUserInfo(fieldToUpdate: ["bonusEarnedToday", "balance", "bonusEarnedDuringRealTimeRun"], fieldValues: [bonus, balance! + bonus - bonusSoFar, bonus - bonusSoFar]) { bool in }
@@ -276,8 +301,9 @@ class TrackRunViewController: UIViewController {
                                 }
                             }
                         }
-                        
                     }
+                } else {
+                    completion(0)
                 }
             }
         }
@@ -314,9 +340,7 @@ extension TrackRunViewController{
                             let alert = UIAlertController(title: "Confirmation", message: "You will not receive any bonus if you don't wear a shoe. Are you sure?", preferredStyle: .alert)
                             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                             alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in
-                                //                                self.runButton.setTitle("STOP MOVE", for: .normal)
                                 self.startRun()
-                                //                                self.runButton.setTitleColor(.red, for: .normal)
                             }))
                             self.present(alert, animated: true)
                         } else {
@@ -375,7 +399,7 @@ extension TrackRunViewController: MKMapViewDelegate {
             let pin = MKPinAnnotationView(annotation: annotation, reuseIdentifier: id)
             pin.canShowCallout = true
             pin.animatesDrop = true
-            pin.pinTintColor = annotation.coordinateType == .start ? .green : .red
+            pin.pinTintColor = annotation.coordinateType == .start ? .lightGreen : .lightRed
             pin.calloutOffset = CGPoint(x: -8, y: -3)
             return pin
         }
@@ -414,7 +438,7 @@ extension TrackRunViewController: MKMapViewDelegate {
     
     func reset() {
         removeOverlays()
-        distanceTraveled = 0
+        TrackRunViewController.distanceTraveled = 0
         locationsPassed.removeAll()
         route = nil
     }

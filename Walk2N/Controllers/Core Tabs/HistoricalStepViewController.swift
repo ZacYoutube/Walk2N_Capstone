@@ -46,6 +46,7 @@ class HistoricalStepViewController: UIViewController, ChartViewDelegate {
         stepBarContainer.backgroundColor = .white
         distLineContainer.backgroundColor = .white
         distInfoContainer.backgroundColor = .white
+        goalInfoBarContainer.backgroundColor = .white
         
         goalInfoBarContainer.layer.cornerRadius = 8
         goalInfoBarContainer.layer.masksToBounds = true

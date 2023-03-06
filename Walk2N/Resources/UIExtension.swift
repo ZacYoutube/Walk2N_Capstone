@@ -116,11 +116,12 @@ extension UIViewController {
         //        var alert = UIButton(type: .custom)
         var balance = UIButton(type: .custom)
         var alert = ButtonWithBadge()
+//        var pet = UIButton(type: .custom)
         alert.isRead = true
         
         let alertButtonItem = UIBarButtonItem(customView: alert)
         let balanceItem = UIBarButtonItem(customView: balance)
-        
+//        let petItem = UIBarButtonItem(customView: pet)
         
         alert.setOnClickListener {
             let alertView = AlertViewController()
@@ -129,6 +130,17 @@ extension UIViewController {
             alert.isRead = true
         }
         
+//        pet.setOnClickListener {
+//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//            let petViewController = storyboard.instantiateViewController(identifier: "PetViewController")
+//            let newNavVC = UINavigationController()
+//
+//            newNavVC.setViewControllers([petViewController], animated: false)
+//
+//            UIApplication.shared.keyWindow?.rootViewController = newNavVC
+//            UIApplication.shared.keyWindow?.rootViewController?.navigationController?.isNavigationBarHidden = false
+//        }
+        
         var alertIcon = UIImage(named: "notify.png")!
         alertIcon = resizeImage(image: alertIcon, newWidth: 30)
         alert.setImage(alertIcon, for: .normal)
@@ -136,6 +148,10 @@ extension UIViewController {
         var balanceIcon = UIImage(named: "coin.png")!
         balanceIcon = resizeImage(image: balanceIcon, newWidth: 30)
         balance.setImage(balanceIcon, for: .normal)
+        
+//        var petIcon = UIImage(named: "pet.png")!
+//        petIcon = resizeImage(image: petIcon, newWidth: 30)
+//        pet.setImage(petIcon, for: .normal)
         
         let containView = UIView(frame: CGRectMake(0, 0, 120, 40))
         let balanaceLabel = UILabel(frame: CGRectMake(0, 0, 80, 40))
