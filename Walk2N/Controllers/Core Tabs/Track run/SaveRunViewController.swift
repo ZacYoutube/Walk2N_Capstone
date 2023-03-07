@@ -172,8 +172,7 @@ class SaveRunViewController: UIViewController {
     
     @objc func handleSwipes(_ sender: UISwipeGestureRecognizer)
     {
-        if sender.direction == .right
-        {
+        if sender.direction == .right {
             self.dismiss(animated: true)
         }
     }

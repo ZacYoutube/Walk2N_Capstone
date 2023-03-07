@@ -9,7 +9,7 @@ import UIKit
 import Firebase
 
 class WalkHistViewController: UIViewController {
-
+    
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var backBtn: UIButton!
     @IBOutlet var collectionView: UICollectionView!
@@ -37,6 +37,13 @@ class WalkHistViewController: UIViewController {
         collectionView.dataSource = self
         view.addSubview(collectionView)
         
+        let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipes(_:)))
+        rightSwipe.direction = .right
+        
+        self.view.isUserInteractionEnabled = true
+        
+        self.view.addGestureRecognizer(rightSwipe)
+        
         getWalkDist()
     }
     
@@ -47,7 +54,7 @@ class WalkHistViewController: UIViewController {
             let ref = db.collection("walkHistory")
             
             let query = ref.whereField("uid", isEqualTo: uid! as String)
-                    
+            
             query.getDocuments { querySnapshot, error in
                 for document in querySnapshot!.documents {
                     let elem = document.data() as [String: Any]
@@ -58,7 +65,13 @@ class WalkHistViewController: UIViewController {
             }
         }
     }
-
+    @objc func handleSwipes(_ sender: UISwipeGestureRecognizer)
+    {
+        if sender.direction == .right {
+            self.dismiss(animated: true)
+        }
+    }
+    
 }
 
 extension WalkHistViewController: UICollectionViewDelegate {
