@@ -32,7 +32,7 @@ class SaveRunViewController: UIViewController {
     var route: MKPolyline?
     
     let trackVC = TrackRunViewController.self
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -103,7 +103,7 @@ class SaveRunViewController: UIViewController {
             
             let date = Date()
             
-            let walkObj = WalkHist(uid: uid, distance: distance, duration: duration, steps: steps, bonus: bonus, longitudeArr: longitudeArr, latitudeArr: latitudeArr, title: title, description: description, date: date)
+            let walkObj = WalkHist(id: "", uid: uid, distance: distance, duration: duration, steps: steps, bonus: bonus, longitudeArr: longitudeArr, latitudeArr: latitudeArr, title: title, description: description, date: date)
             
             let db = Firestore.firestore()
             
@@ -173,7 +173,13 @@ class SaveRunViewController: UIViewController {
     @objc func handleSwipes(_ sender: UISwipeGestureRecognizer)
     {
         if sender.direction == .right {
-            self.dismiss(animated: true)
+            let transition: CATransition = CATransition()
+            transition.duration = 0.5
+            transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+            transition.type = CATransitionType.reveal
+            transition.subtype = CATransitionSubtype.fromLeft
+            self.view.window!.layer.add(transition, forKey: nil)
+            self.dismiss(animated: false, completion: nil)
         }
     }
     

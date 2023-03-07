@@ -19,8 +19,10 @@ public class WalkHist: Codable {
     var title: String?
     var description: String?
     var date: Date?
+    var id: String?
     
-    init(uid: String?, distance: Double?, duration: Double?, steps: Double?, bonus: Double?, longitudeArr: [Double]?, latitudeArr: [Double]?, title: String?, description: String?, date: Date?) {
+    init(id: String?, uid: String?, distance: Double?, duration: Double?, steps: Double?, bonus: Double?, longitudeArr: [Double]?, latitudeArr: [Double]?, title: String?, description: String?, date: Date?) {
+        self.id = id
         self.uid = uid
         self.distance = distance
         self.duration = duration

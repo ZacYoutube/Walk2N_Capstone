@@ -16,6 +16,8 @@ class WalkHistViewController: UIViewController {
     
     var dataSource : [WalkHist] = []
     
+    var activityView:UIActivityIndicatorView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         containerView.backgroundColor = .white
@@ -26,7 +28,7 @@ class WalkHistViewController: UIViewController {
         
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        layout.itemSize = CGSize(width: 360, height: 470)
+        layout.itemSize = CGSize(width: 360, height: 490)
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(WalkHistCollectionViewCell.nib(),forCellWithReuseIdentifier: WalkHistCollectionViewCell.identifier)
         collectionView.backgroundColor = .background
@@ -58,7 +60,7 @@ class WalkHistViewController: UIViewController {
             query.getDocuments { querySnapshot, error in
                 for document in querySnapshot!.documents {
                     let elem = document.data() as [String: Any]
-                    let walkHist = WalkHist(uid: uid, distance: elem["distance"] as! Double, duration: elem["duration"] as! Double, steps: elem["steps"] as! Double, bonus: elem["bonus"] as! Double, longitudeArr: elem["longitudeArr"] as! [Double], latitudeArr: elem["latitudeArr"] as! [Double], title: elem["title"] as! String, description: elem["description"] as! String, date: (elem["date"] as! Timestamp).dateValue())
+                    let walkHist = WalkHist(id: document.documentID, uid: uid, distance: (elem["distance"] as! Double), duration: (elem["duration"] as! Double), steps: (elem["steps"] as! Double), bonus: (elem["bonus"] as! Double), longitudeArr: (elem["longitudeArr"] as! [Double]), latitudeArr: (elem["latitudeArr"] as! [Double]), title: (elem["title"] as! String), description: (elem["description"] as! String), date: (elem["date"] as! Timestamp).dateValue())
                     self.dataSource.append(walkHist)
                     self.collectionView.reloadData()
                 }
@@ -68,8 +70,26 @@ class WalkHistViewController: UIViewController {
     @objc func handleSwipes(_ sender: UISwipeGestureRecognizer)
     {
         if sender.direction == .right {
-            self.dismiss(animated: true)
+            let transition: CATransition = CATransition()
+            transition.duration = 0.5
+            transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+            transition.type = CATransitionType.reveal
+            transition.subtype = CATransitionSubtype.fromLeft
+            self.view.window!.layer.add(transition, forKey: nil)
+            self.dismiss(animated: false, completion: nil)
         }
+    }
+    // show loading gif when in process
+    func showLoading() {
+        activityView = UIActivityIndicatorView(style: .large)
+        activityView?.center = self.view.center
+        self.view.addSubview(activityView!)
+        activityView?.startAnimating()
+    }
+    
+    // dismiss loading gif
+    func hideLoading(){
+        activityView?.stopAnimating()
     }
     
 }
@@ -89,13 +109,36 @@ extension WalkHistViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WalkHistCollectionViewCell.identifier, for: indexPath) as! WalkHistCollectionViewCell
         
         cell.configure(with: self.dataSource[indexPath.row])
+        cell.deleteWalkHist.setOnClickListener {
+            self.showLoading()
+            let alert = UIAlertController(title: "Delete this record?", message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in
+                let docId = self.dataSource[indexPath.row].id!
+                let docRef = Firestore.firestore().collection("walkHistory").document(docId)
+                
+                docRef.delete() { error in
+                    if let error = error {
+                        print("Error deleting document: \(error)")
+                        self.hideLoading()
+                    } else {
+                        print("Document successfully deleted")
+                        self.hideLoading()
+                    }
+                    self.dataSource.remove(at: indexPath.row)
+                    self.collectionView.reloadData()
+                }
+            }))
+            self.getTopMostViewController()?.present(alert, animated: true, completion: nil)
+            
+        }
         return cell
     }
 }
 
 extension WalkHistViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ PopCollectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 360, height: 470)
+        return CGSize(width: 360, height: 490)
     }
 }
 

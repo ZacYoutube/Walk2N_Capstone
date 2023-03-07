@@ -31,6 +31,8 @@ class StepCounter {
             if err == nil {
                 let numberOfSteps = data!.numberOfSteps
                 completion(Int(numberOfSteps.intValue))
+            } else {
+                completion(0)
             }
         }
         

@@ -29,7 +29,7 @@ class TrackRunViewController: UIViewController {
     let locationManager = CLLocationManager()
     let regionInMeters: Double = 500
     var locationAccess = false
-    
+        
     var locationsPassed = [CLLocation]()
     var isRunning = false
     var route: MKPolyline?
@@ -219,17 +219,21 @@ class TrackRunViewController: UIViewController {
         displayRoute()
         
         endRunTime = Date()
+        
         calculateBonus { bonus in
+            
             TrackRunViewController.bonusAccu = bonus
             TrackRunViewController.duration = self.minutesBetweenDates(self.startRunTime!, self.endRunTime!)
             TrackRunViewController.locationArr = self.locationsPassed
-                    
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let saveWalkVC = storyboard.instantiateViewController(identifier: "SaveWalkVC")
-            saveWalkVC.modalPresentationStyle = .fullScreen
-            self.present(saveWalkVC, animated: true)
+            
+            DispatchQueue.main.async {
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let saveWalkVC = storyboard.instantiateViewController(identifier: "SaveWalkVC")
+                saveWalkVC.modalPresentationStyle = .fullScreen
+                self.present(saveWalkVC, animated: true)
+            }
         }
-        
+       
         
         if  let arrayOfTabBarItems = tabBarController!.tabBar.items! as AnyObject as? NSArray,let tabBarItem = arrayOfTabBarItems[0] as? UITabBarItem {
             tabBarItem.isEnabled = true
@@ -268,7 +272,6 @@ class TrackRunViewController: UIViewController {
     
     func calculateBonus(completion:@escaping ((Double) -> Void)) {
         self.stepCounter.getSteps(from: self.startRunTime!) { stepsTaken in
-            
             DispatchQueue.main.async {
                 if self.currentShoe != nil {
                     let steps = Double(stepsTaken!)
@@ -281,10 +284,6 @@ class TrackRunViewController: UIViewController {
                     let db = DatabaseManager.shared
                     
                     self.stepsLabel.text = "Steps Taken: \(steps), bonus earned: 0"
-                    
-//                    TrackRunViewController.bonusAccu = Double(steps * currentShoe.awardPerStep!).truncate(places: 2)
-                    
-//                    print("triggered")
                     
                     completion(Double(steps * currentShoe.awardPerStep!).truncate(places: 2))
                     

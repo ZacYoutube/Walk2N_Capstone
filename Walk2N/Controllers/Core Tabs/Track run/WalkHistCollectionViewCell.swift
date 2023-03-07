@@ -7,6 +7,7 @@
 
 import UIKit
 import MapKit
+import Firebase
 
 class WalkHistCollectionViewCell: UICollectionViewCell {
 
@@ -20,6 +21,7 @@ class WalkHistCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var steps: UILabel!
     @IBOutlet weak var bonus: UILabel!
     @IBOutlet weak var descriptionText: UITextView!
+    @IBOutlet weak var deleteWalkHist: UIButton!
     
     static let identifier = "WalkHistCollectionViewCell"
     var routeCoordinates = [CLLocationCoordinate2D]()
@@ -62,9 +64,9 @@ class WalkHistCollectionViewCell: UICollectionViewCell {
         descriptionText.text = walkHist.description!
         
         descriptionText.isEditable = false
-        descriptionText.layer.borderColor = UIColor.lightGray.cgColor
-        descriptionText.layer.borderWidth = 1
-        descriptionText.layer.cornerRadius = 8
+//        descriptionText.layer.borderColor = UIColor.lightGray.cgColor
+//        descriptionText.layer.borderWidth = 1
+//        descriptionText.layer.cornerRadius = 8
         
         profileImg.clipsToBounds = true
         profileImg.translatesAutoresizingMaskIntoConstraints = false
