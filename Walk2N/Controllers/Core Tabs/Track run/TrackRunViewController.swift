@@ -395,10 +395,9 @@ extension TrackRunViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if let annotation = annotation as? Annotation {
             let id = "pin"
-            let pin = MKPinAnnotationView(annotation: annotation, reuseIdentifier: id)
+            let pin = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: id)
             pin.canShowCallout = true
-            pin.animatesDrop = true
-            pin.pinTintColor = annotation.coordinateType == .start ? .lightGreen : .lightRed
+
             pin.calloutOffset = CGPoint(x: -8, y: -3)
             return pin
         }
@@ -412,6 +411,7 @@ extension TrackRunViewController: MKMapViewDelegate {
         }
         route = MKPolyline(coordinates: routeCoordinates, count: routeCoordinates.count)
         guard let route = route else { return }
+
         mapView.addOverlay(route)
         mapView.setVisibleMapRect(route.boundingMapRect, edgePadding: UIEdgeInsets(top: 200, left: 50, bottom: 50, right: 50), animated: true)
         
@@ -420,6 +420,7 @@ extension TrackRunViewController: MKMapViewDelegate {
     }
     
     func setupAnnotations() {
+        print("called", locationsPassed)
         guard let startLocation = locationsPassed.first?.coordinate, let endLocation = locationsPassed.last?.coordinate, locationsPassed.count > 1 else {
             return
         }

@@ -197,11 +197,9 @@ extension SaveRunViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if let annotation = annotation as? Annotation {
-            let id = "pin1"
-            let pin = MKPinAnnotationView(annotation: annotation, reuseIdentifier: id)
+            let id = "pin"
+            let pin = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: id)
             pin.canShowCallout = true
-            pin.animatesDrop = true
-            pin.pinTintColor = annotation.coordinateType == .start ? .lightGreen : .lightRed
             pin.calloutOffset = CGPoint(x: -8, y: -3)
             return pin
         }

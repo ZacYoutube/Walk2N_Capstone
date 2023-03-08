@@ -126,6 +126,10 @@ extension WalkHistViewController: UICollectionViewDataSource {
                         self.hideLoading()
                     }
                     self.dataSource.remove(at: indexPath.row)
+                    print(indexPath.row)
+                    for i in 0..<self.dataSource.count {
+                        print(self.dataSource[i].firestoreData)
+                    }
                     self.collectionView.reloadData()
                 }
             }))

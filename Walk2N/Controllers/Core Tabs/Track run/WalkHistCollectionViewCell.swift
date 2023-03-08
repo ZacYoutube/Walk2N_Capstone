@@ -38,11 +38,11 @@ class WalkHistCollectionViewCell: UICollectionViewCell {
     public func configure(with walkHist: WalkHist) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM d, h:mm a"
-        
         walkHistObj = walkHist
         
+        routeCoordinates.removeAll()
+        
         if (walkHist.longitudeArr) != nil && (walkHist.latitudeArr) != nil {
-            
             for i in 0..<walkHist.longitudeArr!.count {
                 let longitude = walkHist.longitudeArr![i]
                 let latitude = walkHist.latitudeArr![i]
@@ -120,10 +120,8 @@ extension WalkHistCollectionViewCell: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if let annotation = annotation as? Annotation {
             let id = "pin2"
-            let pin = MKPinAnnotationView(annotation: annotation, reuseIdentifier: id)
+            let pin = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: id)
             pin.canShowCallout = true
-            pin.animatesDrop = true
-            pin.pinTintColor = annotation.coordinateType == .start ? .lightGreen : .lightRed
             pin.calloutOffset = CGPoint(x: -8, y: -3)
             return pin
         }

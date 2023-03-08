@@ -37,7 +37,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         super.viewDidLoad()
         view.backgroundColor = .white
         containerView.backgroundColor = .background
-                    
+        
         tableView.register(ProfileTableViewCell.self, forCellReuseIdentifier: ProfileTableViewCell.identifier)
         
         settingModels[0] = section(title: "Personal Information", setting: [setting](repeating: setting(title: nil, image: nil, text: nil, arrow: nil, background: nil, handler: {}), count: 4))
@@ -47,7 +47,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     override func viewWillAppear(_ animated: Bool) {
         self.setUpNavbar(text: "Profile")
-
+        
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 90)
         userInfoHeader = ProfileUserInfo(frame: frame)
         
@@ -98,23 +98,48 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             for doc in docSnapshot {
                 if doc["balance"] != nil && (doc["balance"] as? Double) != nil {
                     let balance = String(describing: (doc["balance"] as! Double).truncate(places: 2))
-                    self.settingModels[2].setting![0] = (setting(title: "Balance", image: UIImage(named: "balance.png")!, text: balance, arrow: false, background: .lightGreen, handler: {}))
+                    self.settingModels[2].setting![0] = (setting(title: "Token Balance", image: UIImage(named: "balance.png")!, text: balance, arrow: true, background: .lightGreen, handler: {}))
                 }
                 if doc["age"] != nil && (doc["age"] as? Double) != nil {
                     let age = String(describing: Int(doc["age"] as! Double))
-                    self.settingModels[0].setting![0] = (setting(title: "Age", image: UIImage(named: "age.png")!, text: "\(age)", arrow: false, background: .lightGreen, handler: {}))
+                    self.settingModels[0].setting![0] = (setting(title: "Age", image: UIImage(named: "age.png")!, text: "\(age)", arrow: true, background: .lightGreen, handler: {
+                        
+                        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                        let editVC = storyboard.instantiateViewController(identifier: "editVC")
+                        
+                        editVC.modalPresentationStyle = .fullScreen
+                        self.present(editVC, animated: true)
+                    }))
                 }
                 if doc["height"] != nil && (doc["height"] as? Double) != nil{
                     let height = String(describing: (doc["height"] as! Double))
-                    self.settingModels[0].setting![1] = (setting(title: "Height", image: UIImage(named: "height.png")!, text: "\(height) cm", arrow: false, background: .lightGreen, handler: {}))
+                    self.settingModels[0].setting![1] = (setting(title: "Height", image: UIImage(named: "height.png")!, text: "\(height) cm", arrow: true, background: .lightGreen, handler: {
+                        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                        let editVC = storyboard.instantiateViewController(identifier: "editVC")
+                        
+                        editVC.modalPresentationStyle = .fullScreen
+                        self.present(editVC, animated: true)
+                    }))
                 }
                 if doc["weight"] != nil && (doc["weight"] as? Double) != nil{
                     let weight = String(describing: (doc["weight"] as! Double))
-                    self.settingModels[0].setting![2] = (setting(title: "Weight", image: UIImage(named: "weight.png")!, text: "\(weight) kg", arrow: false, background: .lightGreen, handler: {}))
+                    self.settingModels[0].setting![2] = (setting(title: "Weight", image: UIImage(named: "weight.png")!, text: "\(weight) kg", arrow: true, background: .lightGreen, handler: {
+                        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                        let editVC = storyboard.instantiateViewController(identifier: "editVC")
+                        
+                        editVC.modalPresentationStyle = .fullScreen
+                        self.present(editVC, animated: true)
+                    }))
                 }
                 if doc["gender"] != nil && (doc["gender"] as? String) != nil{
                     let gender = String(describing: (doc["gender"] as! String))
-                    self.settingModels[0].setting![3] = (setting(title: "Sex", image: UIImage(named: "gender.png")!, text: "\(gender)", arrow: false, background: .lightGreen, handler: {}))
+                    self.settingModels[0].setting![3] = (setting(title: "Sex", image: UIImage(named: "gender.png")!, text: "\(gender)", arrow: true, background: .lightGreen, handler: {
+                        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                        let editVC = storyboard.instantiateViewController(identifier: "editVC")
+                        
+                        editVC.modalPresentationStyle = .fullScreen
+                        self.present(editVC, animated: true)
+                    }))
                 }
                 if doc["historicalSteps"] != nil && (doc["historicalSteps"] as? [Any]) != nil{
                     let historicalSteps = doc["historicalSteps"] as! [Any]
@@ -131,7 +156,10 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                         }
                     }
                     
-                    self.settingModels[1].setting![0] = (setting(title: "Steps (past week)", image: UIImage(named: "steps.png")!, text: "\(count)", arrow: false, background: .lightGreen, handler: {}))
+                    self.settingModels[1].setting![0] = (setting(title: "Steps (past week)", image: UIImage(named: "steps.png")!, text: "\(count)", arrow: true, background: .lightGreen, handler: {
+                        self.tabBarController?.selectedIndex = 3
+                        
+                    }))
                 }
                 self.tableView.reloadData()
             }
@@ -143,8 +171,10 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         hk.gettingDistance(7) { dist in
             DispatchQueue.main.async {
                 let distance = String(describing: (dist).truncate(places: 2))
-                self.settingModels[1].setting![1] = (setting(title: "Distance (past week)", image: UIImage(named: "dist.png")!, text: "\(distance) km", arrow: false, background: .lightGreen, handler: {}))
-//                self.settingModels[2].setting![1] = (setting(title: "Privacy", image: UIImage(named: "privacy.png")!, text: "", arrow: true, background:  UIColor.rgb(red: 146, green: 139, blue: 203), handler: {}))
+                self.settingModels[1].setting![1] = (setting(title: "Distance (past week)", image: UIImage(named: "dist.png")!, text: "\(distance) km", arrow: true, background: .lightGreen, handler: {
+                    self.tabBarController?.selectedIndex = 3
+                }))
+                //                self.settingModels[2].setting![1] = (setting(title: "Privacy", image: UIImage(named: "privacy.png")!, text: "", arrow: true, background:  UIColor.rgb(red: 146, green: 139, blue: 203), handler: {}))
                 self.settingModels[2].setting![1] = (setting(title: "Log out", image: UIImage(named: "logout.png")!, text: "", arrow: true, background: .lightGreen) {
                     self.logout()
                 })

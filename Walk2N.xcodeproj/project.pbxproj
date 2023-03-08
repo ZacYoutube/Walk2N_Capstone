@@ -20,6 +20,7 @@
 		D512E9CC2988E1C5007B0D2F /* Shoe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D512E9CB2988E1C5007B0D2F /* Shoe.swift */; };
 		D512E9CE2988E229007B0D2F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D512E9CD2988E229007B0D2F /* User.swift */; };
 		D512E9D02988E67E007B0D2F /* HistoricalStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = D512E9CF2988E67E007B0D2F /* HistoricalStep.swift */; };
+		D530770929B7BC8700076184 /* UpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D530770829B7BC8700076184 /* UpdateViewController.swift */; };
 		D53A7FC22991EDBA000220B9 /* ShoeListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53A7FC02991EDBA000220B9 /* ShoeListCollectionViewCell.swift */; };
 		D53A7FC32991EDBA000220B9 /* ShoeListCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D53A7FC12991EDBA000220B9 /* ShoeListCollectionViewCell.xib */; };
 		D53A7FC52991EE8D000220B9 /* ShoeStoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53A7FC42991EE8D000220B9 /* ShoeStoreViewController.swift */; };
@@ -79,6 +80,7 @@
 		D512E9CB2988E1C5007B0D2F /* Shoe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shoe.swift; sourceTree = "<group>"; };
 		D512E9CD2988E229007B0D2F /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		D512E9CF2988E67E007B0D2F /* HistoricalStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricalStep.swift; sourceTree = "<group>"; };
+		D530770829B7BC8700076184 /* UpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateViewController.swift; sourceTree = "<group>"; };
 		D53A7FC02991EDBA000220B9 /* ShoeListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoeListCollectionViewCell.swift; sourceTree = "<group>"; };
 		D53A7FC12991EDBA000220B9 /* ShoeListCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShoeListCollectionViewCell.xib; sourceTree = "<group>"; };
 		D53A7FC42991EE8D000220B9 /* ShoeStoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoeStoreViewController.swift; sourceTree = "<group>"; };
@@ -302,6 +304,7 @@
 			isa = PBXGroup;
 			children = (
 				D5A3C390298C12B600772D1B /* CollectInformationViewController.swift */,
+				D530770829B7BC8700076184 /* UpdateViewController.swift */,
 			);
 			path = "Collect Info";
 			sourceTree = "<group>";
@@ -430,6 +433,7 @@
 				D5A3C389298B316900772D1B /* AuthManager.swift in Sources */,
 				D53A7FC22991EDBA000220B9 /* ShoeListCollectionViewCell.swift in Sources */,
 				D5631F9F29A70958007E4678 /* alert_predictor.mlmodel in Sources */,
+				D530770929B7BC8700076184 /* UpdateViewController.swift in Sources */,
 				D5631FA129A70C3B007E4678 /* AlertPredictManager.swift in Sources */,
 				D512E9A32988A33D007B0D2F /* AppDelegate.swift in Sources */,
 				D5A3C387298B30D000772D1B /* DatabaseManager.swift in Sources */,

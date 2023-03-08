@@ -375,8 +375,8 @@ class MainPageViewController: UIViewController {
                                 self.currentShoeImg.image = UIImage(data: imageData)
                                 self.currentShoeImg.layer.borderColor = nil
                                 self.currentShoeImg.layer.borderWidth = 0
-                                self.currentShoeImg.heightAnchor.constraint(equalToConstant: 100).isActive = true
-                                self.currentShoeImg.widthAnchor.constraint(equalToConstant: 200).isActive = true
+                                self.currentShoeImg.heightAnchor.constraint(equalToConstant: 150).isActive = true
+                                self.currentShoeImg.widthAnchor.constraint(equalToConstant: 250).isActive = true
                                 
                                 let df = DateFormatter()
                                 df.dateFormat = "MM/dd/YYYY"

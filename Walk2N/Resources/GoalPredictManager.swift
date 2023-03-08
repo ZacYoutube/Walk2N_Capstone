@@ -27,6 +27,8 @@ public class GoalPredictManager {
                     let height = doc["height"] as! Double
                     let gender = doc["gender"] as! String
                     
+                    print(age, weight, height, gender, "in goal predictor")
+                    
                     if age < 30 {
                         ageLabel = 0.0
                     }
@@ -40,6 +42,7 @@ public class GoalPredictManager {
                     
                     do {
                         let result = try self.goalPredictor.prediction(gender: genderLabel, age: ageLabel, bmi: bmi)
+                        print(result.steps)
                         completion(Double(result.steps))
                     } catch {
                         print(error)
