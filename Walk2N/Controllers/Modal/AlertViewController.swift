@@ -12,6 +12,7 @@ class AlertViewController: UIViewController {
     
     var dataSource : [Alert] = []
     @IBOutlet var collectionView: UICollectionView!
+    @IBOutlet var backBtn: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,11 +24,14 @@ class AlertViewController: UIViewController {
         collectionView.register(AlertCollectionViewCell.nib(),forCellWithReuseIdentifier: AlertCollectionViewCell.identifier)
         collectionView.backgroundColor = UIColor(red: 245/250, green: 245/250, blue: 245/250, alpha: 1)
         collectionView.contentInset = UIEdgeInsets(top: 10, left: 10, bottom: 20, right: 10)
-        collectionView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+        collectionView.frame = CGRect(x: 0, y: 100, width: view.frame.width, height: view.frame.height - 100)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = UIColor(red: 245/250, green: 245/250, blue: 245/250, alpha: 1)
         collectionView.delegate = self
         collectionView.dataSource = self
+        backBtn.setOnClickListener {
+            self.dismiss(animated: true)
+        }
         view.addSubview(collectionView)
     }
     

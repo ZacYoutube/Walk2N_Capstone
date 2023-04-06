@@ -52,7 +52,7 @@ class UpdateManager {
                         db.updateUserInfo(fieldToUpdate: ["bonusAwardedForReachingStepGoal", "bonusEarnedToday", "balance"], fieldValues: [true, bonusSoFar, balance + bonusSoFar]) { bool in }
                     }
                     
-                    HealthKitManager().gettingStepCount(0) { steps, time in
+                    HealthKitManager().gettingStepCount(0) { [self] steps, time in
                         if steps.count > 0 {
                             let currentStep = steps[0]
                             
@@ -68,10 +68,11 @@ class UpdateManager {
                                 db.updateUserInfo(fieldToUpdate: ["bonusEarnedDuringRealTimeRun"], fieldValues: [0]) { bool in }
                             }
                             
+                            let b = doc["bonusEarnedToday"] as? Double ?? 0
                             
                             // if there is step data in the database check if these are up to date, and push the most recent data into the db
                             if diffInDays > 0 {
-                                self.addStepToDB(diffInDays - 1)
+                                self.addStepToDB(diffInDays - 1, bonus: b)
                                 GoalPredictManager.shared.predict()
                                 if steps[0] == 0.0 {
                                     db.updateUserInfo(fieldToUpdate: ["bonusEarnedToday"], fieldValues: [0]) { bool in }
@@ -89,7 +90,7 @@ class UpdateManager {
                                             let elem = historicalSteps[i] as! [String: Any]
                                             let reachedGoal = currentStep >= ((doc["stepGoalToday"] as? Double) != nil ? doc["stepGoalToday"] as! Double : 0.0)
                                             let wearShoe = doc["currentShoe"] as? [String: Any]? == nil ? false: true
-                                            let newElem = HistoricalStep(id: (elem["id"] as! String), uid: (elem["uid"] as! String), stepCount: Int(currentStep), date: (elem["date"] as! Timestamp).dateValue(), reachedGoal: reachedGoal, wearShoe: wearShoe, stepGoal: (doc["stepGoalToday"] as? Double ?? 0.0))
+                                            let newElem = HistoricalStep(id: (elem["id"] as! String), uid: (elem["uid"] as! String), stepCount: Int(currentStep), date: (elem["date"] as! Timestamp).dateValue(), reachedGoal: reachedGoal, wearShoe: wearShoe, stepGoal: (doc["stepGoalToday"] as? Double ?? 0.0), bonusEarned: doc["bonusEarnedToday"] as? Double ?? 0.0)
                                             newestHistoricalArray.append(newElem.firestoreData)
                                         } else {
                                             newestHistoricalArray.append(historicalSteps[i])
@@ -101,22 +102,25 @@ class UpdateManager {
                         }
                         // meaning no data is recorded yet
                         else {
-                            if diffInDays > 0 {
+                            let lastDay = ((historicalSteps[historicalSteps.count - 1] as! [String: Any])["date"] as! Timestamp).dateValue()
+                            let today = Date()
+                            if self.isSameDay(lastDay, today) == false {
                                 // reset everything
                                 let wearShoe = (doc["currentShoe"] as? [String: Any]) != nil ? true : false
-                                let stepToday = HistoricalStep(id: UUID().uuidString, uid: Auth.auth().currentUser?.uid, stepCount: Int(0), date: Date(), reachedGoal: false, wearShoe: wearShoe, stepGoal: 0)
+                                let stepToday = HistoricalStep(id: UUID().uuidString, uid: Auth.auth().currentUser?.uid, stepCount: Int(0), date: Date(), reachedGoal: false, wearShoe: wearShoe, stepGoal: (doc["stepGoalToday"] as! Double), bonusEarned: doc["bonusEarned"] as? Double ?? 0.0)
                                 self.updateDBWithStep(stepData: stepToday)
                                 db.updateUserInfo(fieldToUpdate: ["bonusEarnedToday", "bonusEarnedDuringRealTimeRun", "bonusAwardedForReachingStepGoal"], fieldValues: [0, 0, false]) { bool in }
                                 GoalPredictManager.shared.predict()
                             }
+                          }
                         }
-                    }
+                    
                     
                     
                     
                 }
                 else {
-                    self.addStepToDB(6)
+                    self.addStepToDB(6, bonus: 0)
                 }
                 
             }
@@ -128,20 +132,20 @@ class UpdateManager {
             let bonus = historyArr[i] as! [String: Any]
             let bonusDate = (bonus["date"] as! Timestamp).dateValue()
             
-            if isSameDay(date1: bonusDate, date2: date){
+            if isSameDay(bonusDate, date){
                 return true
             }
         }
         return false
     }
     
-    func isSameDay(date1: Date, date2: Date) -> Bool {
-        let diff = Calendar.current.dateComponents([.day], from: date1, to: date2)
-        if diff.day == 0 {
-            return true
-        } else {
-            return false
-        }
+    func isSameDay(_ date1: Date, _ date2: Date) -> Bool {
+        let calendar = Calendar.current
+        let components1 = calendar.dateComponents([.year, .month, .day], from: date1)
+        let components2 = calendar.dateComponents([.year, .month, .day], from: date2)
+        return components1.year == components2.year &&
+        components1.month == components2.month &&
+        components1.day == components2.day
     }
     
     //    func updateHistoricalSteps() {
@@ -196,11 +200,12 @@ class UpdateManager {
     //        }
     //    }
     
-    private func addStepToDB(_ n: Int) {
+    private func addStepToDB(_ n: Int, bonus: Double) {
         if (Auth.auth().currentUser != nil) {
             DatabaseManager().updateUserInfo(fieldToUpdate: ["bonusEarnedDuringRealTimeRun", "bonusAwardedForReachingStepGoal"], fieldValues: [0, false]) { bool in }
-            
+            var count = 0
             HealthKitManager().gettingStepCount(n) { stepArr, timeArr in
+                count += 1
                 for (step, time) in zip(stepArr, timeArr) {
                     var reachedGoal = false
                     var stepGoalToday = 0.0
@@ -214,11 +219,16 @@ class UpdateManager {
                                     reachedGoal = true
                                 }
                             }
+                        
+                            if n > 1 && self.isSameDay(time, Date()) == false {
+                                stepGoalToday = 0
+                            }
+                            
                             if doc["currentShoe"] as? [String: Any] != nil {
-                                stepToday = HistoricalStep(id: UUID().uuidString, uid: Auth.auth().currentUser?.uid, stepCount: Int(step), date: time, reachedGoal: reachedGoal, wearShoe: true, stepGoal: stepGoalToday)
+                                stepToday = HistoricalStep(id: UUID().uuidString, uid: Auth.auth().currentUser?.uid, stepCount: Int(step), date: time, reachedGoal: reachedGoal, wearShoe: true, stepGoal: stepGoalToday, bonusEarned: bonus)
                                 self.updateDBWithStep(stepData: stepToday!)
                             } else {
-                                stepToday = HistoricalStep(id: UUID().uuidString, uid: Auth.auth().currentUser?.uid, stepCount: Int(step), date: time, reachedGoal: reachedGoal, wearShoe: false, stepGoal: stepGoalToday)
+                                stepToday = HistoricalStep(id: UUID().uuidString, uid: Auth.auth().currentUser?.uid, stepCount: Int(step), date: time, reachedGoal: reachedGoal, wearShoe: false, stepGoal: stepGoalToday, bonusEarned: bonus)
                                 self.updateDBWithStep(stepData: stepToday!)
                             }
                         }

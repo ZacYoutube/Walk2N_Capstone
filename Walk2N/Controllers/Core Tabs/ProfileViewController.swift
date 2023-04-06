@@ -30,6 +30,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var backBtn: UIButton!
     
     var settingModels = [section](repeating: section(title: "", setting: nil), count: 3)
     
@@ -38,15 +39,14 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         view.backgroundColor = .white
         containerView.backgroundColor = .background
         
+        backBtn.setOnClickListener {
+            self.dismiss(animated: true)
+        }
+        
         tableView.register(ProfileTableViewCell.self, forCellReuseIdentifier: ProfileTableViewCell.identifier)
         
-        settingModels[0] = section(title: "Personal Information", setting: [setting](repeating: setting(title: nil, image: nil, text: nil, arrow: nil, background: nil, handler: {}), count: 4))
-        settingModels[1] = section(title: "Activity level", setting: [setting](repeating: setting(title: nil, image: nil, text: nil, arrow: nil, background: nil, handler: {}), count: 2))
-        settingModels[2] = section(title: "Others", setting: [setting](repeating: setting(title: nil, image: nil, text: nil, arrow: nil, background: nil, handler: {}), count: 2))
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        self.setUpNavbar(text: "Profile")
+        tableView.refreshControl = UIRefreshControl()
+        tableView.refreshControl?.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
         
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 90)
         userInfoHeader = ProfileUserInfo(frame: frame)
@@ -54,6 +54,39 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.tableHeaderView = userInfoHeader
         tableView.tableHeaderView?.backgroundColor = UIColor.white
         tableView.tableHeaderView?.layer.cornerRadius = 8
+        
+        containerView.center = view.center
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
+        tableView.backgroundColor = UIColor.background
+        containerView.addSubview(tableView)
+        
+        view.addSubview(containerView)
+            
+        configure()
+        
+        settingModels[0] = section(title: "Personal Information", setting: [setting](repeating: setting(title: nil, image: nil, text: nil, arrow: nil, background: nil, handler: {}), count: 4))
+        settingModels[1] = section(title: "Activity level", setting: [setting](repeating: setting(title: nil, image: nil, text: nil, arrow: nil, background: nil, handler: {}), count: 2))
+        settingModels[2] = section(title: "Others", setting: [setting](repeating: setting(title: nil, image: nil, text: nil, arrow: nil, background: nil, handler: {}), count: 2))
+    }
+    
+    override func viewWillAppear(_ animated: Bool) { }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+    }
+        
+    @objc private func didPullToRefresh() {
+        // refresh data
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.configure()
+            self.tableView.refreshControl?.endRefreshing()
+        }
+    }
+    
+    func configure() {
         
         db.getUserInfo { docSnapshot in
             for doc in docSnapshot {
@@ -73,29 +106,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                         }.resume()
                     }
                 }
-            }
-        }
-        
-        containerView.center = view.center
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
-        tableView.backgroundColor = UIColor.background
-        containerView.addSubview(tableView)
-        
-        view.addSubview(containerView)
-        configure()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-    }
-    
-    func configure() {
-        
-        db.getUserInfo { docSnapshot in
-            for doc in docSnapshot {
                 if doc["balance"] != nil && (doc["balance"] as? Double) != nil {
                     let balance = String(describing: (doc["balance"] as! Double).truncate(places: 2))
                     self.settingModels[2].setting![0] = (setting(title: "Token Balance", image: UIImage(named: "balance.png")!, text: balance, arrow: true, background: .lightGreen, handler: {}))
@@ -117,8 +127,13 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                         let storyboard = UIStoryboard(name: "Main", bundle: nil)
                         let editVC = storyboard.instantiateViewController(identifier: "editVC")
                         
-                        editVC.modalPresentationStyle = .fullScreen
-                        self.present(editVC, animated: true)
+                        let nav = UINavigationController(rootViewController: editVC)
+                        
+                        editVC.title = "Edit Personal Information"
+                        
+                        nav.modalPresentationStyle = .fullScreen
+                        
+                        self.present(nav, animated: true)
                     }))
                 }
                 if doc["weight"] != nil && (doc["weight"] as? Double) != nil{
@@ -127,8 +142,13 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                         let storyboard = UIStoryboard(name: "Main", bundle: nil)
                         let editVC = storyboard.instantiateViewController(identifier: "editVC")
                         
-                        editVC.modalPresentationStyle = .fullScreen
-                        self.present(editVC, animated: true)
+                        let nav = UINavigationController(rootViewController: editVC)
+                        
+                        editVC.title = "Edit Personal Information"
+                        
+                        nav.modalPresentationStyle = .fullScreen
+                        
+                        self.present(nav, animated: true)
                     }))
                 }
                 if doc["gender"] != nil && (doc["gender"] as? String) != nil{
@@ -137,8 +157,13 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                         let storyboard = UIStoryboard(name: "Main", bundle: nil)
                         let editVC = storyboard.instantiateViewController(identifier: "editVC")
                         
-                        editVC.modalPresentationStyle = .fullScreen
-                        self.present(editVC, animated: true)
+                        let nav = UINavigationController(rootViewController: editVC)
+                        
+                        editVC.title = "Edit Personal Information"
+                        
+                        nav.modalPresentationStyle = .fullScreen
+                        
+                        self.present(nav, animated: true)
                     }))
                 }
                 if doc["historicalSteps"] != nil && (doc["historicalSteps"] as? [Any]) != nil{

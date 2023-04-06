@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>565817254717-v8pnlu6kfn09usc5kf0307srvsihq0ut.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.565817254717-v8pnlu6kfn09usc5kf0307srvsihq0ut</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCu-b7RO_GsQ4ayHaZyUKJhY3k3UMqLSyQ</string>
+	<key>GCM_SENDER_ID</key>
+	<string>565817254717</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>cs205.Walk2N.V2</string>
+	<key>PROJECT_ID</key>
+	<string>walk2n-4fcf0</string>
+	<key>STORAGE_BUCKET</key>
+	<string>walk2n-4fcf0.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:565817254717:ios:2155c9eb3e2143f3a1db54</string>
+	<key>DATABASE_URL</key>
+	<string>https://walk2n-4fcf0-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>

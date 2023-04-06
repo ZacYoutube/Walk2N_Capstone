@@ -173,7 +173,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             signupBtn.isEnabled = true
             signupBtn.alpha = 1
             signupBtn.layer.borderColor = nil
-            signupBtn.backgroundColor = UIColor.rgb(red: 40, green: 104, blue: 71)
+            signupBtn.backgroundColor = UIColor.lightGreen
             signupBtn.setTitleColor(.white, for: .normal)
         } else {
             signupBtn.setTitleColor(.black, for: .normal)

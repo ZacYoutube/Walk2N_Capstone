@@ -52,51 +52,33 @@ class HistoricalStepViewController: UIViewController, ChartViewDelegate {
         goalInfoBarContainer.layer.masksToBounds = true
         goalInfoInfoContainer.layer.cornerRadius = 8
         
-        
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
         displayStepMetrics()
         displayDist()
         displayGoal()
         self.setUpNavbar(text: "History")
         
-        //        HealthKitManager().gettingStepCount(7) { steps, time in
-        //            var color = [NSUIColor](repeating: NSUIColor(red: 255.0, green: 0, blue: 0, alpha: 1.0), count: steps.count)
-        //            for i in 0..<steps.count{
-        //                // 1000 is the step goal: we can update it based on the ML model output
-        //                if steps[i] >= 1000 {
-        //                        color[i] = NSUIColor(red: 46/255.0, green: 204/255.0, blue: 113/255.0, alpha: 1.0)
-        //                }
-        //            }
-        //            var timeArr: Array<String> = Array(repeating: "", count: time.count)
-        //            for i in 0..<time.count {
-        //                timeArr[i] = time[i].dayOfWeek()!
-        //             }
-        //            self.displaySteps(stepsArr: steps, timeArr: timeArr, color: color)
-        //            var average: Double = 0.0
-        //            var total: Double = 0.0
-        //            for i in 0..<steps.count{
-        //                total += steps[i]
-        //            }
-        //
-        //            average = Double(floor(Double(total) / Double(steps.count)))
-        //
-        //            if average.isNaN {
-        //                average = 0.0
-        //            }
-        //
-        //            // keep updating on the main thread
-        //            DispatchQueue.main.async {
-        //                self.averageSteps.text = String(average)
-        //                self.totalSteps.text = String(total)
-        //            }
-        //        }
+        scrollView.refreshControl = UIRefreshControl()
+        scrollView.refreshControl?.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
+        
     }
+    
+    override func viewWillAppear(_ animated: Bool) { }
     
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
+    }
+    
+    @objc private func didPullToRefresh() {
+        // refresh data
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.displayStepMetrics()
+            self.displayDist()
+            self.displayGoal()
+            self.setUpNavbar(text: "History")
+            self.scrollView.refreshControl?.endRefreshing()
+        }
+        
     }
     
     private func displayStepMetrics() {
@@ -147,6 +129,7 @@ class HistoricalStepViewController: UIViewController, ChartViewDelegate {
                         timeArr[i] = (((historicalSteps[i] as! [String:Any])["date"] as! Timestamp).dateValue()).dayOfWeek()!
                         stepsArr[i] = (historicalSteps[i] as! [String:Any])["stepCount"] as! Double
                     }
+                    print(historicalSteps)
                     self.displaySteps(stepsArr: stepsArr, timeArr: timeArr, color: color)
                     var average: Double = 0.0
                     var total: Double = 0.0
@@ -183,6 +166,7 @@ class HistoricalStepViewController: UIViewController, ChartViewDelegate {
     }
     
     private func displaySteps(stepsArr: Array<Double>, timeArr: Array<String>, color: Array<NSUIColor>) {
+        print(stepsArr)
         DispatchQueue.main.async {
             self.barChart.frame = self.stepBarContainer.bounds
             self.barChart.setChartValues(xAxisValues: timeArr, values: stepsArr, color: color, label: "Steps for past week")

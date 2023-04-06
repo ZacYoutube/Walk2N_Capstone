@@ -15,8 +15,9 @@ public class HistoricalStep {
     var reachedGoal: Bool?
     var wearShoe: Bool?
     var stepGoal: Double?
+    var bonusEarned: Double?
     
-    init(id: String?, uid: String?, stepCount: Int?, date: Date?, reachedGoal: Bool?, wearShoe: Bool?, stepGoal: Double?) {
+    init(id: String?, uid: String?, stepCount: Int?, date: Date?, reachedGoal: Bool?, wearShoe: Bool?, stepGoal: Double?, bonusEarned: Double?) {
         self.id = id
         self.uid = uid
         self.stepCount = stepCount
@@ -24,6 +25,7 @@ public class HistoricalStep {
         self.reachedGoal = reachedGoal
         self.wearShoe = wearShoe
         self.stepGoal = stepGoal
+        self.bonusEarned = bonusEarned
     }
     
     var firestoreData: [String: Any] {
@@ -34,7 +36,8 @@ public class HistoricalStep {
             "date": date as Any,
             "reachedGoal": reachedGoal as Any,
             "wearShoe": wearShoe as Any,
-            "stepGoal": stepGoal as Any
+            "stepGoal": stepGoal as Any,
+            "bonusEarned": bonusEarned as Any
         ]
     }
     

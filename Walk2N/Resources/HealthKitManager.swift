@@ -137,6 +137,29 @@ class HealthKitManager {
         healthStore.execute(query)
     }
     
+    func getDistOnSpecificDate(_ date: Date, completion:((Double) -> Void)?) {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month, .day], from: date)
+        let startDate = calendar.date(from: components)!
+        let endDate = calendar.date(byAdding: .day, value: 1, to: startDate)!
+
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
+        let distanceType = HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)!
+        
+        let query = HKStatisticsQuery(quantityType: distanceType, quantitySamplePredicate: predicate, options: .cumulativeSum) { (query, result, error) in
+            if let result = result {
+                if let distance = result.sumQuantity() {
+                    let distanceInMeters = distance.doubleValue(for: HKUnit.meter())
+                    completion!(distanceInMeters)
+                }
+            }
+        }
+
+        healthStore.execute(query)
+
+
+    }
+    
     func gettingDistanceArr(_ n: Int, completion:(([Double], [Date]) -> Void)?){
         guard let type = HKSampleType.quantityType(forIdentifier: .distanceWalkingRunning) else {
             fatalError("Something went wrong retriebing quantity type distanceWalkingRunning")

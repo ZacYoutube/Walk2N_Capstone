@@ -11,6 +11,7 @@ import Firebase
 class ShoeStoreViewController: UIViewController {
     
     @IBOutlet var collectionView: UICollectionView!
+    @IBOutlet var backBtn: UIButton!
     
     var dataSource : [Shoe] = []
     
@@ -18,19 +19,18 @@ class ShoeStoreViewController: UIViewController {
         super.viewDidLoad()
         //        navigationItem.title = "Store"
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: 180, height: 320)
+        layout.itemSize = CGSize(width: 340, height: 320)
         collectionView.backgroundColor = UIColor.background
         collectionView.contentInset = UIEdgeInsets(top: 10, left: 10, bottom: 20, right: 10)
         collectionView.collectionViewLayout = layout
         collectionView.register(ShoeListCollectionViewCell.nib(), forCellWithReuseIdentifier: ShoeListCollectionViewCell.identifier)
         collectionView.delegate = self
         collectionView.dataSource = self
+        backBtn.setOnClickListener {
+            self.getTopMostViewController()!.dismiss(animated: true)
+        }
         getShoes()
         
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        self.setUpNavbar(text: "Store")
     }
     
     private func getShoes() -> Void {
@@ -60,13 +60,16 @@ extension ShoeStoreViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShoeListCollectionViewCell.identifier, for: indexPath) as! ShoeListCollectionViewCell
         
         cell.configure(with: self.dataSource[indexPath.row])
+        cell.layer.borderColor = UIColor.lightGreen.cgColor
+        cell.layer.borderWidth = 5
+        
         return cell
     }
 }
 
 extension ShoeStoreViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 180, height: 320)
+        return CGSize(width: 340, height: 320)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 10

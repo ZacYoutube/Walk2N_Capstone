@@ -54,16 +54,25 @@ class TrackRunViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setUpNavbar(text: "Map")
         mapView.delegate = self
         viewWalkHist.setOnClickListener {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let walkHistViewController = storyboard.instantiateViewController(identifier: "WalkHistViewController")
-            walkHistViewController.modalPresentationStyle = .fullScreen
-            self.present(walkHistViewController, animated: true)
+            
+            let nav = UINavigationController(rootViewController: walkHistViewController)
+            
+            walkHistViewController.title = "Walk History"
+            
+            nav.modalPresentationStyle = .fullScreen
+            
+            self.present(nav, animated: true)
         }
         reset()
         setup()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.setUpNavbar(text: "Map")
     }
     
     func setup() {
@@ -229,8 +238,14 @@ class TrackRunViewController: UIViewController {
             DispatchQueue.main.async {
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let saveWalkVC = storyboard.instantiateViewController(identifier: "SaveWalkVC")
-                saveWalkVC.modalPresentationStyle = .fullScreen
-                self.present(saveWalkVC, animated: true)
+                
+                let nav = UINavigationController(rootViewController: saveWalkVC)
+                
+                saveWalkVC.title = "Save Walk Route"
+                
+                nav.modalPresentationStyle = .fullScreen
+                
+                self.present(nav, animated: true)
             }
         }
        

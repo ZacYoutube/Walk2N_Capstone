@@ -8,6 +8,7 @@
 import UIKit
 import Firebase
 import Charts
+import SideMenu
 
 extension UIView {
     
@@ -115,13 +116,22 @@ extension UIViewController {
         
         //        var alert = UIButton(type: .custom)
         var balance = UIButton(type: .custom)
+        var profile = UIButton(type: .custom)
         var alert = ButtonWithBadge()
-//        var pet = UIButton(type: .custom)
+        
+        let menu = SideMenuNavigationController(rootViewController: MenuListController())
+        menu.leftSide = true
+        
+        SideMenuManager.default.leftMenuNavigationController = menu
+        SideMenuManager.default.addPanGestureToPresent(toView: self.view)
+        
+        //        var pet = UIButton(type: .custom)
         alert.isRead = true
         
         let alertButtonItem = UIBarButtonItem(customView: alert)
+        let profileButtonItem = UIBarButtonItem(customView: profile)
         let balanceItem = UIBarButtonItem(customView: balance)
-//        let petItem = UIBarButtonItem(customView: pet)
+        //        let petItem = UIBarButtonItem(customView: pet)
         
         alert.setOnClickListener {
             let alertView = AlertViewController()
@@ -130,16 +140,20 @@ extension UIViewController {
             alert.isRead = true
         }
         
-//        pet.setOnClickListener {
-//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//            let petViewController = storyboard.instantiateViewController(identifier: "PetViewController")
-//            let newNavVC = UINavigationController()
-//
-//            newNavVC.setViewControllers([petViewController], animated: false)
-//
-//            UIApplication.shared.keyWindow?.rootViewController = newNavVC
-//            UIApplication.shared.keyWindow?.rootViewController?.navigationController?.isNavigationBarHidden = false
-//        }
+        profile.setOnClickListener {
+            self.present(menu, animated: true)
+        }
+        
+        //        pet.setOnClickListener {
+        //            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        //            let petViewController = storyboard.instantiateViewController(identifier: "PetViewController")
+        //            let newNavVC = UINavigationController()
+        //
+        //            newNavVC.setViewControllers([petViewController], animated: false)
+        //
+        //            UIApplication.shared.keyWindow?.rootViewController = newNavVC
+        //            UIApplication.shared.keyWindow?.rootViewController?.navigationController?.isNavigationBarHidden = false
+        //        }
         
         var alertIcon = UIImage(named: "notify.png")!
         alertIcon = resizeImage(image: alertIcon, newWidth: 30)
@@ -149,9 +163,9 @@ extension UIViewController {
         balanceIcon = resizeImage(image: balanceIcon, newWidth: 30)
         balance.setImage(balanceIcon, for: .normal)
         
-//        var petIcon = UIImage(named: "pet.png")!
-//        petIcon = resizeImage(image: petIcon, newWidth: 30)
-//        pet.setImage(petIcon, for: .normal)
+        //        var petIcon = UIImage(named: "pet.png")!
+        //        petIcon = resizeImage(image: petIcon, newWidth: 30)
+        //        pet.setImage(petIcon, for: .normal)
         
         let containView = UIView(frame: CGRectMake(0, 0, 120, 40))
         let balanaceLabel = UILabel(frame: CGRectMake(0, 0, 80, 40))
@@ -176,21 +190,21 @@ extension UIViewController {
                     }
                 }
                 
-                //                if doc["profileImgUrl"] != nil && (doc["profileImgUrl"] as? String) != nil {
-                //                    if let url = URL(string: doc["profileImgUrl"] as! String) {
-                //                        URLSession.shared.dataTask(with: url) { (data, response, error) in
-                //                            guard let imageData = data else { return }
-                //                            DispatchQueue.main.async { [self] in
-                //                                var profileImage = UIImage(data: imageData)
-                //                                profileImage = resizeImage(image: profileImage!, newWidth: 45).circleMasked
-                //
-                //                                profile.setImage(profileImage, for: .normal)
-                //                                profile.frame = CGRect(x: 0.0, y: 0.0, width: 30.0, height: 30.0)
-                //                                profile.addTarget(self, action: #selector(navigateToProfile), for: .touchUpInside)
-                //                            }
-                //                        }.resume()
-                //                    }
-                //                }
+                if doc["profileImgUrl"] != nil && (doc["profileImgUrl"] as? String) != nil {
+                    if let url = URL(string: doc["profileImgUrl"] as! String) {
+                        URLSession.shared.dataTask(with: url) { (data, response, error) in
+                            guard let imageData = data else { return }
+                            DispatchQueue.main.async { [self] in
+                                var profileImage = UIImage(data: imageData)
+                                profileImage = resizeImage(image: profileImage!, newWidth: 45).circleMasked
+                                
+                                profile.setImage(profileImage, for: .normal)
+                                profile.frame = CGRect(x: 0.0, y: 0.0, width: 30.0, height: 30.0)
+                                profile.addTarget(self, action: #selector(navigateToProfile), for: .touchUpInside)
+                            }
+                        }.resume()
+                    }
+                }
             }
         }
         
@@ -224,7 +238,10 @@ extension UIViewController {
         let space = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
         space.width = 20
         
-        self.navigationItem.rightBarButtonItems = [alertButtonItem, space, balanceItem]
+        self.navigationItem.rightBarButtonItems = [profileButtonItem]
+        //        self.navigationItem.leftBarButtonItem = profileButtonItem
+        
+        //        self.navigationItem.title = text
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: navigationLabel)
         
@@ -244,9 +261,9 @@ extension UIViewController {
     }
     
     func changeRootViewController(_ vc: UIViewController, animated: Bool = true) {
-//        guard let window = self.window else {
-//            return
-//        }
+        //        guard let window = self.window else {
+        //            return
+        //        }
         
         // change the root view controller to your specific view controller
         UIApplication.shared.keyWindow?.rootViewController = vc
@@ -260,6 +277,76 @@ extension UIViewController {
         }
         
         return topMostViewController
+    }
+    
+    class MenuListController: UITableViewController {
+        var items = ["Profile", "Data Source: iPhone HealthKit", "Notification", "Log Out"]
+        
+        override func viewDidLoad() {
+            super.viewDidLoad()
+            tableView.backgroundColor = .background1
+            tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        }
+        
+        override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+            return items.count
+        }
+        
+        override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            let row = indexPath.row
+            if row == 0 {
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let profileViewController = storyboard.instantiateViewController(identifier: "ProfileViewController")
+                
+                let nav = UINavigationController(rootViewController: profileViewController)
+                
+                profileViewController.title = "Profile"
+                
+                nav.modalPresentationStyle = .fullScreen
+                
+                self.present(nav, animated: true)
+                
+            }
+            else if row == 2 {
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let alertView = storyboard.instantiateViewController(identifier: "AlertViewController")
+               
+                let nav = UINavigationController(rootViewController: alertView)
+                
+                alertView.title = "Notification History"
+                
+                nav.modalPresentationStyle = .fullScreen
+                
+                self.present(nav, animated: true)
+                
+                
+            }
+            else if row == 3 {
+                self.logout()
+            }
+        }
+        
+        override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            cell.textLabel?.text = items[indexPath.row]
+            cell.textLabel?.textColor = .lessDark
+            cell.backgroundColor = .background1
+            return cell
+        }
+    }
+    
+    private func logout() {
+        let alert = UIAlertController(title: "Confirmation", message: "Log out?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in
+            AuthManager().logout()
+            
+            // after logout, redirect to login
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let mainMenuViewController = storyboard.instantiateViewController(identifier: "MainMenuViewController")
+            self.changeRootViewController(mainMenuViewController)
+        }))
+        self.present(alert, animated: true)
     }
 }
 
@@ -287,6 +374,7 @@ extension Date {
     var unixTimestamp: UnixTimestamp {
         return UnixTimestamp(self.timeIntervalSince1970 * 1_000)
     }
+    
 }
 
 extension UIImage {
@@ -307,36 +395,57 @@ extension UIImage {
             UIImage(cgImage: cgImage, scale: format.scale, orientation: imageOrientation)
                 .draw(in: .init(origin: .zero, size: breadthSize))
             UIBezierPath(ovalIn: breadthRect).lineWidth = 100
-            UIColor.black.setStroke()
-            UIBezierPath(ovalIn: breadthRect).stroke()
+            //            UIColor.black.setStroke()
+            //            UIBezierPath(ovalIn: breadthRect).stroke()
         }
     }
 }
 
 extension UIColor {
+    //    286847
     static func rgb(red: CGFloat, green: CGFloat, blue: CGFloat) -> UIColor {
         return UIColor(red: red/255, green: green/255, blue: blue/255, alpha: 1)
     }
     
     static let grayish = UIColor.rgb(red: 237, green: 237, blue: 237)
     
-    static let lightGreen = UIColor.rgb(red: 139, green: 203, blue: 187)
+    //    static let lightGreen = UIColor.rgb(red: 139, green: 203, blue: 187)
+    static let lightGreen = UIColor(hexString: "#009d99")
     static let lessDark = UIColor.rgb(red: 73, green: 81, blue: 88)
-    static let background1 = UIColor(red: 245/250, green: 245/250, blue: 245/250, alpha: 1)
-//    static let lightRed = UIColor.rgb(red: 241, green: 160, blue: 159)
-//    static let background1 = UIColor(red: 247, green: 249, blue: 255, alpha: 255)
+    //    static let background1 = UIColor(red: 245/250, green: 245/250, blue: 245/250, alpha: 1)
+    static let background1 = UIColor(hexString: "f7f7f7")
+    //    static let lightRed = UIColor.rgb(red: 241, green: 160, blue: 159)
+    //    static let background1 = UIColor(red: 247, green: 249, blue: 255, alpha: 255)
     
     
     static let background = UIColor.rgb(red: 246, green: 246, blue: 246)
-//    static let background = UIColor.rgb(red: 242, green: 242, blue: 246)
+    //    static let background = UIColor.rgb(red: 242, green: 242, blue: 246)
     static let lightRed = UIColor.rgb(red: 241, green: 160, blue: 159)
     static let darkRed = UIColor.rgb(red: 139, green: 0, blue: 0)
     static let darkGreen = UIColor.rgb(red: 40, green: 104, blue: 71)
-//    static let background1 = UIColor(red: 247, green: 249, blue: 255, alpha: 255)
+    //    static let background1 = UIColor(red: 247, green: 249, blue: 255, alpha: 255)
+    
+    convenience init(hexString: String) {
+        let hex = hexString.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int = UInt64()
+        Scanner(string: hex).scanHexInt64(&int)
+        let a, r, g, b: UInt64
+        switch hex.count {
+        case 3: // RGB (12-bit)
+            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+        case 6: // RGB (24-bit)
+            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+        case 8: // ARGB (32-bit)
+            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+        default:
+            (a, r, g, b) = (255, 0, 0, 0)
+        }
+        self.init(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
+    }
 }
 
 extension NSMutableAttributedString {
-    var fontSize:CGFloat { return 16 }
+    var fontSize:CGFloat { return 15 }
     var boldFont:UIFont { return UIFont.boldSystemFont(ofSize: fontSize) }
     var normalFont:UIFont { return UIFont.systemFont(ofSize: fontSize)}
     

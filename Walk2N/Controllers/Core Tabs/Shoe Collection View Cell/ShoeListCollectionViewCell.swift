@@ -33,7 +33,7 @@ class ShoeListCollectionViewCell: UICollectionViewCell {
         shoeDurability.text = String(shoe.awardPerStep!)
         shoeName.text = String(shoe.name!)
         
-        shoeAction.backgroundColor = UIColor.rgb(red: 139, green: 203, blue: 187)
+        shoeAction.backgroundColor = .lightGreen
 //        shoeAction.setTitleColor(UIColor.rgb(red: 73, green: 81, blue: 88), for: .normal)
         shoeAction.setTitleColor(.white, for: .normal)
         shoeAction.layer.cornerRadius = 8
@@ -71,7 +71,7 @@ class ShoeListCollectionViewCell: UICollectionViewCell {
                 self.shoeAction.setTitle("Buy", for: .normal)
                 self.shoeAction.setTitleColor(.white, for: .normal)
                 self.shoeAction.isEnabled = true
-                self.shoeAction.backgroundColor = UIColor.rgb(red: 139, green: 203, blue: 187)
+                self.shoeAction.backgroundColor = .lightGreen
                 
                 if data["boughtShoes"] != nil {
                     let boughtShoes = data["boughtShoes"] as? [Any]
@@ -121,12 +121,12 @@ class ShoeListCollectionViewCell: UICollectionViewCell {
                         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { handler in
                             alert.dismiss(animated: true)
                         }))
-                        self.window?.rootViewController?.present(alert, animated: true)
+                        self.getTopMostViewController()!.present(alert, animated: true)
                     }
                 }
             }
         }))
-        self.window?.rootViewController?.present(alert, animated: true)
+        getTopMostViewController()!.present(alert, animated: true)
     }
     
     private func retrieveImage(url: String){
@@ -138,6 +138,16 @@ class ShoeListCollectionViewCell: UICollectionViewCell {
               }
             }.resume()
           }
+    }
+    
+    func getTopMostViewController() -> UIViewController? {
+        var topMostViewController = UIApplication.shared.keyWindow?.rootViewController
+        
+        while let presentedViewController = topMostViewController?.presentedViewController {
+            topMostViewController = presentedViewController
+        }
+        
+        return topMostViewController
     }
 
     static func nib() -> UINib {

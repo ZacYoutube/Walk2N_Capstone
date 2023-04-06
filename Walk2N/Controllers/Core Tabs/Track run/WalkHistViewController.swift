@@ -109,6 +109,8 @@ extension WalkHistViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WalkHistCollectionViewCell.identifier, for: indexPath) as! WalkHistCollectionViewCell
         
         cell.configure(with: self.dataSource[indexPath.row])
+        cell.layer.borderWidth = 5
+        cell.layer.borderColor = UIColor.lightGreen.cgColor
         cell.deleteWalkHist.setOnClickListener {
             self.showLoading()
             let alert = UIAlertController(title: "Delete this record?", message: "", preferredStyle: .alert)

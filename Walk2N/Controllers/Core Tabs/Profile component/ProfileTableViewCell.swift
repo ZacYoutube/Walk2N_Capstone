@@ -46,7 +46,7 @@ class ProfileTableViewCell: UITableViewCell {
         
         let img = setting.image?.withRenderingMode(.alwaysTemplate)
         iv.image = img
-        iv.tintColor = UIColor.lessDark
+        iv.tintColor = UIColor.white
         
         if setting.arrow == true {
             accessoryType = .disclosureIndicator

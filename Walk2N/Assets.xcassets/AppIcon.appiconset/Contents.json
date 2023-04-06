@@ -1,6 +1,112 @@
 {
   "images" : [
     {
+      "filename" : "transparent-Screenshot 2023-04-02 at 7.05.49 PM.png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "scale" : "2x",
+      "size" : "20x20"
+    },
+    {
+      "filename" : "transparent-Screenshot 2023-04-02 at 7.05.49 PM (2).png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "scale" : "3x",
+      "size" : "20x20"
+    },
+    {
+      "filename" : "transparent-Screenshot 2023-04-02 at 7.05.49 PM (3).png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "scale" : "2x",
+      "size" : "29x29"
+    },
+    {
+      "filename" : "transparent-Screenshot 2023-04-02 at 7.05.49 PM (4).png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "scale" : "3x",
+      "size" : "29x29"
+    },
+    {
+      "filename" : "transparent-Screenshot 2023-04-02 at 7.05.49 PM (5).png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "scale" : "2x",
+      "size" : "38x38"
+    },
+    {
+      "filename" : "transparent-Screenshot 2023-04-02 at 7.05.49 PM (6).png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "scale" : "3x",
+      "size" : "38x38"
+    },
+    {
+      "filename" : "transparent-Screenshot 2023-04-02 at 7.05.49 PM (7).png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "scale" : "2x",
+      "size" : "40x40"
+    },
+    {
+      "filename" : "transparent-Screenshot 2023-04-02 at 7.05.49 PM (8).png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "scale" : "3x",
+      "size" : "40x40"
+    },
+    {
+      "filename" : "transparent-Screenshot 2023-04-02 at 7.05.49 PM (8) 1.png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "scale" : "2x",
+      "size" : "60x60"
+    },
+    {
+      "filename" : "transparent-Screenshot 2023-04-02 at 7.05.49 PM (9).png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "scale" : "3x",
+      "size" : "60x60"
+    },
+    {
+      "filename" : "transparent-Screenshot 2023-04-02 at 7.05.49 PM (10).png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "scale" : "2x",
+      "size" : "64x64"
+    },
+    {
+      "filename" : "transparent-Screenshot 2023-04-02 at 7.05.49 PM (11).png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "scale" : "3x",
+      "size" : "64x64"
+    },
+    {
+      "filename" : "transparent-Screenshot 2023-04-02 at 7.05.49 PM (12).png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "scale" : "2x",
+      "size" : "68x68"
+    },
+    {
+      "filename" : "transparent-Screenshot 2023-04-02 at 7.05.49 PM (13).png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "scale" : "2x",
+      "size" : "76x76"
+    },
+    {
+      "filename" : "transparent-Screenshot 2023-04-02 at 7.05.49 PM (14).png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "scale" : "2x",
+      "size" : "83.5x83.5"
+    },
+    {
+      "filename" : "transparent-Screenshot 2023-04-02 at 7.05.49 PM (15).png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"

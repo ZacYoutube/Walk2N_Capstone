@@ -19,7 +19,7 @@ class PopUpModalViewController: UIViewController {
         view.backgroundColor = .systemBackground
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        layout.itemSize = CGSize(width: 180, height: 300)
+        layout.itemSize = CGSize(width: 340, height: 320)
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(PopUpModalCollectionViewCell.nib(),forCellWithReuseIdentifier: PopUpModalCollectionViewCell.identifier)
         collectionView.backgroundColor = .background
@@ -77,12 +77,14 @@ extension PopUpModalViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PopUpModalCollectionViewCell.identifier, for: indexPath) as! PopUpModalCollectionViewCell
         
         cell.configure(with: self.dataSource[indexPath.row])
+        cell.layer.borderWidth = 5
+        cell.layer.borderColor = UIColor.lightGreen.cgColor
         return cell
     }
 }
 
 extension PopUpModalViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ PopCollectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 180, height: 300)
+        return CGSize(width: 340, height: 320)
     }
 }

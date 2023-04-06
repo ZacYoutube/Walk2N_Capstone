@@ -58,6 +58,19 @@
 		D5AD2B5629B5ED9F005CB1EB /* WalkHistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AD2B5529B5ED9F005CB1EB /* WalkHistViewController.swift */; };
 		D5AD2B5929B5EFB7005CB1EB /* WalkHistCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AD2B5729B5EFB7005CB1EB /* WalkHistCollectionViewCell.swift */; };
 		D5AD2B5A29B5EFB7005CB1EB /* WalkHistCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D5AD2B5829B5EFB7005CB1EB /* WalkHistCollectionViewCell.xib */; };
+		D5B5E20329C1583D009782DF /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5B5E20229C1583D009782DF /* CalendarViewController.swift */; };
+		D5B5E20529C170EA009782DF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D5B5E20429C170EA009782DF /* GoogleService-Info.plist */; };
+		D5B5E20829C17EB4009782DF /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = D5B5E20729C17EB4009782DF /* FSCalendar */; };
+		D5B5E20B29D37F64009782DF /* SideMenu in Frameworks */ = {isa = PBXBuildFile; productRef = D5B5E20A29D37F64009782DF /* SideMenu */; };
+		D5B5E20D29D39260009782DF /* NutritionalGuidanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5B5E20C29D39260009782DF /* NutritionalGuidanceViewController.swift */; };
+		D5B5E21029D3C372009782DF /* CurrentSneakerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5B5E20F29D3C372009782DF /* CurrentSneakerViewController.swift */; };
+		D5BC397D29DAA90200FF3546 /* WaveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BC397C29DAA90200FF3546 /* WaveView.swift */; };
+		D5BC398029DB9AE300FF3546 /* ChatgptApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BC397F29DB9AE300FF3546 /* ChatgptApi.swift */; };
+		D5BC398329DBBC8700FF3546 /* ChatGPTSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D5BC398229DBBC8700FF3546 /* ChatGPTSwift */; };
+		D5BC398529DCF1A100FF3546 /* ImageApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BC398429DCF1A100FF3546 /* ImageApi.swift */; };
+		D5BC398B29DCF71300FF3546 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = D5BC398A29DCF71300FF3546 /* OpenAI */; };
+		D5BC398F29DE20DC00FF3546 /* Meal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BC398E29DE20DC00FF3546 /* Meal.swift */; };
+		D5BC399229DE2D1D00FF3546 /* MealDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BC399129DE2D1D00FF3546 /* MealDetailViewController.swift */; };
 		D5BE8C5A2994781800ABA0D4 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D5BE8C592994781800ABA0D4 /* FirebaseFirestoreSwift */; };
 		D5CA906929A95F1E00C53B7B /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CA906829A95F1E00C53B7B /* Alert.swift */; };
 		D5CA908029A9751F00C53B7B /* AlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CA907F29A9751F00C53B7B /* AlertViewController.swift */; };
@@ -75,7 +88,6 @@
 		D512E9B02988A33E007B0D2F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D512E9B62988A468007B0D2F /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		D512E9B82988A480007B0D2F /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		D512E9BD2988A997007B0D2F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D512E9C42988C02A007B0D2F /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		D512E9CB2988E1C5007B0D2F /* Shoe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shoe.swift; sourceTree = "<group>"; };
 		D512E9CD2988E229007B0D2F /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -117,6 +129,15 @@
 		D5AD2B5529B5ED9F005CB1EB /* WalkHistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkHistViewController.swift; sourceTree = "<group>"; };
 		D5AD2B5729B5EFB7005CB1EB /* WalkHistCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkHistCollectionViewCell.swift; sourceTree = "<group>"; };
 		D5AD2B5829B5EFB7005CB1EB /* WalkHistCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalkHistCollectionViewCell.xib; sourceTree = "<group>"; };
+		D5B5E20229C1583D009782DF /* CalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
+		D5B5E20429C170EA009782DF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D5B5E20C29D39260009782DF /* NutritionalGuidanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NutritionalGuidanceViewController.swift; sourceTree = "<group>"; };
+		D5B5E20F29D3C372009782DF /* CurrentSneakerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentSneakerViewController.swift; sourceTree = "<group>"; };
+		D5BC397C29DAA90200FF3546 /* WaveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveView.swift; sourceTree = "<group>"; };
+		D5BC397F29DB9AE300FF3546 /* ChatgptApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatgptApi.swift; sourceTree = "<group>"; };
+		D5BC398429DCF1A100FF3546 /* ImageApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageApi.swift; sourceTree = "<group>"; };
+		D5BC398E29DE20DC00FF3546 /* Meal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meal.swift; sourceTree = "<group>"; };
+		D5BC399129DE2D1D00FF3546 /* MealDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetailViewController.swift; sourceTree = "<group>"; };
 		D5CA906829A95F1E00C53B7B /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		D5CA907F29A9751F00C53B7B /* AlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewController.swift; sourceTree = "<group>"; };
 		D5CA908129A9753800C53B7B /* AlertCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -130,11 +151,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				D597DF7B29976A4D00DF4D13 /* CoreLocation.framework in Frameworks */,
+				D5BC398B29DCF71300FF3546 /* OpenAI in Frameworks */,
 				D5BE8C5A2994781800ABA0D4 /* FirebaseFirestoreSwift in Frameworks */,
 				D5A3C38E298B8B8900772D1B /* FirebaseDatabase in Frameworks */,
 				D512E9C12988AB27007B0D2F /* FirebaseAuth in Frameworks */,
 				D566373529A847D400DE1B21 /* FirebaseStorage in Frameworks */,
+				D5B5E20829C17EB4009782DF /* FSCalendar in Frameworks */,
 				D512E9C32988AB27007B0D2F /* FirebaseFirestore in Frameworks */,
+				D5B5E20B29D37F64009782DF /* SideMenu in Frameworks */,
+				D5BC398329DBBC8700FF3546 /* ChatGPTSwift in Frameworks */,
 				D5A3C3AD298CC6C600772D1B /* Charts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -162,6 +187,7 @@
 		D512E9A12988A33D007B0D2F /* Walk2N */ = {
 			isa = PBXGroup;
 			children = (
+				D5BC397E29DB9ACC00FF3546 /* GPT Resources */,
 				D5AD2B3F29B3EFCE005CB1EB /* ML models */,
 				D5AD2B3D29B3EFB8005CB1EB /* Playground */,
 				D5A3C396298C8F8E00772D1B /* Walk2N.entitlements */,
@@ -174,7 +200,7 @@
 				D512E9AB2988A33E007B0D2F /* Assets.xcassets */,
 				D5A3C378298B1ABE00772D1B /* Views */,
 				D512E9B02988A33E007B0D2F /* Info.plist */,
-				D512E9BD2988A997007B0D2F /* GoogleService-Info.plist */,
+				D5B5E20429C170EA009782DF /* GoogleService-Info.plist */,
 			);
 			path = Walk2N;
 			sourceTree = "<group>";
@@ -182,6 +208,7 @@
 		D512E9BC2988A4AC007B0D2F /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				D5BC399029DE2D0300FF3546 /* Meal Detail */,
 				D5BE8C5B2995E17700ABA0D4 /* Modal */,
 				D5A3C38F298C129600772D1B /* Collect Info */,
 				D5A3C383298B1C2A00772D1B /* Auth */,
@@ -199,6 +226,7 @@
 				D597DF8829A2C0B500DF4D13 /* Bonus.swift */,
 				D5CA906829A95F1E00C53B7B /* Alert.swift */,
 				D5AD2B5329B5E16B005CB1EB /* WalkHist.swift */,
+				D5BC398E29DE20DC00FF3546 /* Meal.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -246,6 +274,7 @@
 				D5631F9C29A6B842007E4678 /* GoalPredictManager.swift */,
 				D5631FA029A70C3B007E4678 /* AlertPredictManager.swift */,
 				D5CA908529ABEEA100C53B7B /* UpdateManager.swift */,
+				D5BC397C29DAA90200FF3546 /* WaveView.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -270,6 +299,7 @@
 		D5A3C382298B1BF100772D1B /* Core Tabs */ = {
 			isa = PBXGroup;
 			children = (
+				D5B5E20129C157F2009782DF /* Calendar */,
 				D597DF85299EF50A00DF4D13 /* Profile component */,
 				D597DF7C29976C6100DF4D13 /* Track run */,
 				D53A7FBF2991EC69000220B9 /* Shoe Collection View Cell */,
@@ -277,6 +307,8 @@
 				D5A3C37E298B1BC300772D1B /* HistoricalStepViewController.swift */,
 				D5A3C380298B1BE000772D1B /* ProfileViewController.swift */,
 				D53A7FC42991EE8D000220B9 /* ShoeStoreViewController.swift */,
+				D5B5E20C29D39260009782DF /* NutritionalGuidanceViewController.swift */,
+				D5B5E20F29D3C372009782DF /* CurrentSneakerViewController.swift */,
 			);
 			path = "Core Tabs";
 			sourceTree = "<group>";
@@ -326,6 +358,31 @@
 			path = "ML models";
 			sourceTree = "<group>";
 		};
+		D5B5E20129C157F2009782DF /* Calendar */ = {
+			isa = PBXGroup;
+			children = (
+				D5B5E20229C1583D009782DF /* CalendarViewController.swift */,
+			);
+			path = Calendar;
+			sourceTree = "<group>";
+		};
+		D5BC397E29DB9ACC00FF3546 /* GPT Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D5BC397F29DB9AE300FF3546 /* ChatgptApi.swift */,
+				D5BC398429DCF1A100FF3546 /* ImageApi.swift */,
+			);
+			path = "GPT Resources";
+			sourceTree = "<group>";
+		};
+		D5BC399029DE2D0300FF3546 /* Meal Detail */ = {
+			isa = PBXGroup;
+			children = (
+				D5BC399129DE2D1D00FF3546 /* MealDetailViewController.swift */,
+			);
+			path = "Meal Detail";
+			sourceTree = "<group>";
+		};
 		D5BE8C5B2995E17700ABA0D4 /* Modal */ = {
 			isa = PBXGroup;
 			children = (
@@ -362,6 +419,10 @@
 				D5A3C3AC298CC6C600772D1B /* Charts */,
 				D5BE8C592994781800ABA0D4 /* FirebaseFirestoreSwift */,
 				D566373429A847D400DE1B21 /* FirebaseStorage */,
+				D5B5E20729C17EB4009782DF /* FSCalendar */,
+				D5B5E20A29D37F64009782DF /* SideMenu */,
+				D5BC398229DBBC8700FF3546 /* ChatGPTSwift */,
+				D5BC398A29DCF71300FF3546 /* OpenAI */,
 			);
 			productName = Walk2N;
 			productReference = D512E99F2988A33D007B0D2F /* Walk2N.app */;
@@ -395,6 +456,10 @@
 				D512E9BF2988AB27007B0D2F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				D5A3C3AB298CC6C600772D1B /* XCRemoteSwiftPackageReference "Charts" */,
 				D5CA907429A96F2000C53B7B /* XCRemoteSwiftPackageReference "iOSDropDown" */,
+				D5B5E20629C17EB4009782DF /* XCRemoteSwiftPackageReference "FSCalendar" */,
+				D5B5E20929D37F64009782DF /* XCRemoteSwiftPackageReference "SideMenu" */,
+				D5BC398129DBBC8700FF3546 /* XCRemoteSwiftPackageReference "ChatGPTSwift" */,
+				D5BC398929DCF71300FF3546 /* XCRemoteSwiftPackageReference "OpenAI" */,
 			);
 			productRefGroup = D512E9A02988A33D007B0D2F /* Products */;
 			projectDirPath = "";
@@ -411,12 +476,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				D5A93D2A299602BA00E12217 /* PopUpModalCollectionViewCell.xib in Resources */,
+				D5B5E20529C170EA009782DF /* GoogleService-Info.plist in Resources */,
 				D5CA908429A9753800C53B7B /* AlertCollectionViewCell.xib in Resources */,
 				D512E9AF2988A33E007B0D2F /* LaunchScreen.storyboard in Resources */,
 				D53A7FC32991EDBA000220B9 /* ShoeListCollectionViewCell.xib in Resources */,
 				D597DF792996DFA100DF4D13 /* Main.storyboard in Resources */,
 				D5AD2B5A29B5EFB7005CB1EB /* WalkHistCollectionViewCell.xib in Resources */,
-				D512E9BE2988A997007B0D2F /* GoogleService-Info.plist in Resources */,
 				D512E9AC2988A33E007B0D2F /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -434,6 +499,7 @@
 				D53A7FC22991EDBA000220B9 /* ShoeListCollectionViewCell.swift in Sources */,
 				D5631F9F29A70958007E4678 /* alert_predictor.mlmodel in Sources */,
 				D530770929B7BC8700076184 /* UpdateViewController.swift in Sources */,
+				D5B5E20D29D39260009782DF /* NutritionalGuidanceViewController.swift in Sources */,
 				D5631FA129A70C3B007E4678 /* AlertPredictManager.swift in Sources */,
 				D512E9A32988A33D007B0D2F /* AppDelegate.swift in Sources */,
 				D5A3C387298B30D000772D1B /* DatabaseManager.swift in Sources */,
@@ -445,8 +511,10 @@
 				D597DF8429984B1300DF4D13 /* StepCounter.swift in Sources */,
 				D566373129A8251800DE1B21 /* RoundedWhiteButton.swift in Sources */,
 				D5AD2B4129B542C1005CB1EB /* CountDownViewController.swift in Sources */,
+				D5B5E21029D3C372009782DF /* CurrentSneakerViewController.swift in Sources */,
 				D53A7FC52991EE8D000220B9 /* ShoeStoreViewController.swift in Sources */,
 				D5A3C37F298B1BC300772D1B /* HistoricalStepViewController.swift in Sources */,
+				D5BC397D29DAA90200FF3546 /* WaveView.swift in Sources */,
 				D512E9B72988A468007B0D2F /* SignUpViewController.swift in Sources */,
 				D512E9B92988A480007B0D2F /* LoginViewController.swift in Sources */,
 				D5A3C398298C902E00772D1B /* HealthKitManager.swift in Sources */,
@@ -455,6 +523,7 @@
 				D5A3C381298B1BE000772D1B /* ProfileViewController.swift in Sources */,
 				D5A93D29299602BA00E12217 /* PopUpModalCollectionViewCell.swift in Sources */,
 				D597DF802997713F00DF4D13 /* Annotation.swift in Sources */,
+				D5BC398F29DE20DC00FF3546 /* Meal.swift in Sources */,
 				D512E9CC2988E1C5007B0D2F /* Shoe.swift in Sources */,
 				D566373329A825B200DE1B21 /* MainMenuViewController.swift in Sources */,
 				D5AD2B5429B5E16B005CB1EB /* WalkHist.swift in Sources */,
@@ -462,9 +531,13 @@
 				D597DF8929A2C0B500DF4D13 /* Bonus.swift in Sources */,
 				D512E9C52988C02A007B0D2F /* Constants.swift in Sources */,
 				D512E9A52988A33D007B0D2F /* SceneDelegate.swift in Sources */,
+				D5BC399229DE2D1D00FF3546 /* MealDetailViewController.swift in Sources */,
 				D5A93D262996014200E12217 /* PopUpModalViewController.swift in Sources */,
+				D5BC398529DCF1A100FF3546 /* ImageApi.swift in Sources */,
 				D5CA908329A9753800C53B7B /* AlertCollectionViewCell.swift in Sources */,
 				D5AD2B3B29B31CE0005CB1EB /* ProfileUserInfo.swift in Sources */,
+				D5BC398029DB9AE300FF3546 /* ChatgptApi.swift in Sources */,
+				D5B5E20329C1583D009782DF /* CalendarViewController.swift in Sources */,
 				D5AD2B5229B5C2A7005CB1EB /* SaveRunViewController.swift in Sources */,
 				D5A3C391298C12B600772D1B /* CollectInformationViewController.swift in Sources */,
 				D597DF87299EF53D00DF4D13 /* ProfileTableViewCell.swift in Sources */,
@@ -627,7 +700,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = cs205.Walk2N;
+				PRODUCT_BUNDLE_IDENTIFIER = cs205.Walk2N.V2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -661,7 +734,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = cs205.Walk2N;
+				PRODUCT_BUNDLE_IDENTIFIER = cs205.Walk2N.V2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -709,6 +782,38 @@
 				minimumVersion = 4.1.0;
 			};
 		};
+		D5B5E20629C17EB4009782DF /* XCRemoteSwiftPackageReference "FSCalendar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/WenchaoD/FSCalendar.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		D5B5E20929D37F64009782DF /* XCRemoteSwiftPackageReference "SideMenu" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jonkykong/SideMenu";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
+		D5BC398129DBBC8700FF3546 /* XCRemoteSwiftPackageReference "ChatGPTSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/alfianlosari/ChatGPTSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		D5BC398929DCF71300FF3546 /* XCRemoteSwiftPackageReference "OpenAI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MacPaw/OpenAI.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		D5CA907429A96F2000C53B7B /* XCRemoteSwiftPackageReference "iOSDropDown" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/jriosdev/iOSDropDown.git";
@@ -744,6 +849,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D5A3C3AB298CC6C600772D1B /* XCRemoteSwiftPackageReference "Charts" */;
 			productName = Charts;
+		};
+		D5B5E20729C17EB4009782DF /* FSCalendar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D5B5E20629C17EB4009782DF /* XCRemoteSwiftPackageReference "FSCalendar" */;
+			productName = FSCalendar;
+		};
+		D5B5E20A29D37F64009782DF /* SideMenu */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D5B5E20929D37F64009782DF /* XCRemoteSwiftPackageReference "SideMenu" */;
+			productName = SideMenu;
+		};
+		D5BC398229DBBC8700FF3546 /* ChatGPTSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D5BC398129DBBC8700FF3546 /* XCRemoteSwiftPackageReference "ChatGPTSwift" */;
+			productName = ChatGPTSwift;
+		};
+		D5BC398A29DCF71300FF3546 /* OpenAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D5BC398929DCF71300FF3546 /* XCRemoteSwiftPackageReference "OpenAI" */;
+			productName = OpenAI;
 		};
 		D5BE8C592994781800ABA0D4 /* FirebaseFirestoreSwift */ = {
 			isa = XCSwiftPackageProductDependency;
