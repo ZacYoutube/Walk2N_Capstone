@@ -13,7 +13,6 @@
 		D512E9AF2988A33E007B0D2F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D512E9AD2988A33E007B0D2F /* LaunchScreen.storyboard */; };
 		D512E9B72988A468007B0D2F /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D512E9B62988A468007B0D2F /* SignUpViewController.swift */; };
 		D512E9B92988A480007B0D2F /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D512E9B82988A480007B0D2F /* LoginViewController.swift */; };
-		D512E9BE2988A997007B0D2F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D512E9BD2988A997007B0D2F /* GoogleService-Info.plist */; };
 		D512E9C12988AB27007B0D2F /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = D512E9C02988AB27007B0D2F /* FirebaseAuth */; };
 		D512E9C32988AB27007B0D2F /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = D512E9C22988AB27007B0D2F /* FirebaseFirestore */; };
 		D512E9C52988C02A007B0D2F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D512E9C42988C02A007B0D2F /* Constants.swift */; };
