@@ -9,7 +9,7 @@ import Foundation
 import ChatGPTSwift
 
 class GptApiService {
-    private let apiKey = "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"
+    private let apiKey = ""
     
     func fetchUrlRequest(url: String, httpMethod: String, messagePrompt: String, completion:((String) -> Void)?) {
         
