@@ -23,7 +23,7 @@ enum RetrieveImageError: Error {
 }
 
 class ImageApiService {
-    private let apiKey = ""
+    private let apiKey = ApiKeyObject.apiKey
     private let openaiImageApiUrl = "https://api.openai.com/v1/images/generations"
     private let openaiCompletionUrl = "https://api.openai.com/v1/completions"
     private let id = UUID().uuidString

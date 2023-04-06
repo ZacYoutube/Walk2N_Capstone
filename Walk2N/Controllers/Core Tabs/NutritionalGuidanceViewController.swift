@@ -133,9 +133,7 @@ class NutritionalGuidanceViewController: UIViewController {
         print(prompt)
         setUpLoading()
         
-        GptApiService().fetchUrlRequest(url: "",
-                                        httpMethod: "",
-                                        messagePrompt: prompt ) { output in
+        GptApiService().getGptResponse(messagePrompt: prompt) { output in
             
             print(output, output.contains("{") && output.contains("}"))
             
@@ -202,9 +200,7 @@ class NutritionalGuidanceViewController: UIViewController {
         let mealName = breakfastData["mealName"] as! String
         
         let calories = breakfastData["calories"] as? Double ?? Double(breakfastData["calories"] as! String)!
-        
-        //        let ingredients = breakfastData["ingredients"] as! [Any]
-        
+            
         let macronutrients = breakfastData["macronutrients"] as? [String: Any]
         
         let carbs = macronutrients!["carbs"] as! String
@@ -265,9 +261,7 @@ class NutritionalGuidanceViewController: UIViewController {
         let mealName = lunchData["mealName"] as! String
         
         let calories = lunchData["calories"] as? Double ?? Double(lunchData["calories"] as! String)!
-        
-        //        let ingredients = lunchData["ingredients"] as! [Any]
-        
+                
         let macronutrients = lunchData["macronutrients"] as? [String: Any]
         
         let carbs = macronutrients!["carbs"] as! String
@@ -327,9 +321,7 @@ class NutritionalGuidanceViewController: UIViewController {
         let mealName = dinnerData["mealName"] as! String
         
         let calories = dinnerData["calories"] as? Double ?? Double(dinnerData["calories"] as! String)!
-        
-        //        let ingredients = dinnerData["ingredients"] as! [Any]
-        
+                
         let macronutrients = dinnerData["macronutrients"] as? [String: Any]
         
         let carbs = macronutrients!["carbs"] as! String

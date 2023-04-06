@@ -9,9 +9,9 @@ import Foundation
 import ChatGPTSwift
 
 class GptApiService {
-    private let apiKey = ""
+    private let apiKey = ApiKeyObject.apiKey
     
-    func fetchUrlRequest(url: String, httpMethod: String, messagePrompt: String, completion:((String) -> Void)?) {
+    func getGptResponse(messagePrompt: String, completion:((String) -> Void)?) {
         
         let api = ChatGPTAPI(apiKey: apiKey)
 
@@ -20,7 +20,7 @@ class GptApiService {
                 let response = try await api.sendMessage(text: messagePrompt,
                                                          model: "gpt-3.5-turbo",
                                                          systemText: "You are a nutritionist",
-                                                         temperature: 0.5)
+                                                         temperature: 0.8)
                 completion!(response)
             } catch {
                 print(error.localizedDescription)

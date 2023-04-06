@@ -133,7 +133,7 @@ class MealDetailViewController: UIViewController {
     private func getIngredientAndTime(prompt: String) {
         setUpLoading()
 
-        GptApiService().fetchUrlRequest(url: "", httpMethod: "", messagePrompt: prompt) { output in
+        GptApiService().getGptResponse(messagePrompt: prompt) { output in
             print(output)
             if output.contains("{") && output.contains("}") {
                 
