@@ -30,6 +30,8 @@
 		D566373129A8251800DE1B21 /* RoundedWhiteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D566373029A8251800DE1B21 /* RoundedWhiteButton.swift */; };
 		D566373329A825B200DE1B21 /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D566373229A825B200DE1B21 /* MainMenuViewController.swift */; };
 		D566373529A847D400DE1B21 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = D566373429A847D400DE1B21 /* FirebaseStorage */; };
+		D570FB3D29E4BEC4001157BA /* DietaryFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D570FB3C29E4BEC4001157BA /* DietaryFilterViewController.swift */; };
+		D570FB3F29E4DDA2001157BA /* DietFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D570FB3E29E4DDA2001157BA /* DietFilter.swift */; };
 		D597DF792996DFA100DF4D13 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D597DF782996DFA100DF4D13 /* Main.storyboard */; };
 		D597DF7B29976A4D00DF4D13 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D597DF7A29976A4D00DF4D13 /* CoreLocation.framework */; };
 		D597DF7E29976CCA00DF4D13 /* TrackRunViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597DF7D29976CCA00DF4D13 /* TrackRunViewController.swift */; };
@@ -71,6 +73,8 @@
 		D5BC398F29DE20DC00FF3546 /* Meal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BC398E29DE20DC00FF3546 /* Meal.swift */; };
 		D5BC399229DE2D1D00FF3546 /* MealDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BC399129DE2D1D00FF3546 /* MealDetailViewController.swift */; };
 		D5BC399429DF5BA800FF3546 /* ApiKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BC399329DF5BA800FF3546 /* ApiKey.swift */; };
+		D5BC399629E3265600FF3546 /* MealHist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BC399529E3265600FF3546 /* MealHist.swift */; };
+		D5BC399929E3A3DA00FF3546 /* SwiftSpinner in Frameworks */ = {isa = PBXBuildFile; productRef = D5BC399829E3A3DA00FF3546 /* SwiftSpinner */; };
 		D5BE8C5A2994781800ABA0D4 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D5BE8C592994781800ABA0D4 /* FirebaseFirestoreSwift */; };
 		D5CA906929A95F1E00C53B7B /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CA906829A95F1E00C53B7B /* Alert.swift */; };
 		D5CA908029A9751F00C53B7B /* AlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CA907F29A9751F00C53B7B /* AlertViewController.swift */; };
@@ -102,6 +106,8 @@
 		D5631FA029A70C3B007E4678 /* AlertPredictManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPredictManager.swift; sourceTree = "<group>"; };
 		D566373029A8251800DE1B21 /* RoundedWhiteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedWhiteButton.swift; sourceTree = "<group>"; };
 		D566373229A825B200DE1B21 /* MainMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
+		D570FB3C29E4BEC4001157BA /* DietaryFilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DietaryFilterViewController.swift; sourceTree = "<group>"; };
+		D570FB3E29E4DDA2001157BA /* DietFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DietFilter.swift; sourceTree = "<group>"; };
 		D597DF782996DFA100DF4D13 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../../../../Main.storyboard; sourceTree = "<group>"; };
 		D597DF7A29976A4D00DF4D13 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		D597DF7D29976CCA00DF4D13 /* TrackRunViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackRunViewController.swift; sourceTree = "<group>"; };
@@ -139,6 +145,7 @@
 		D5BC398E29DE20DC00FF3546 /* Meal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meal.swift; sourceTree = "<group>"; };
 		D5BC399129DE2D1D00FF3546 /* MealDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDetailViewController.swift; sourceTree = "<group>"; };
 		D5BC399329DF5BA800FF3546 /* ApiKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiKey.swift; sourceTree = "<group>"; };
+		D5BC399529E3265600FF3546 /* MealHist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealHist.swift; sourceTree = "<group>"; };
 		D5CA906829A95F1E00C53B7B /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		D5CA907F29A9751F00C53B7B /* AlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewController.swift; sourceTree = "<group>"; };
 		D5CA908129A9753800C53B7B /* AlertCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -159,6 +166,7 @@
 				D566373529A847D400DE1B21 /* FirebaseStorage in Frameworks */,
 				D5B5E20829C17EB4009782DF /* FSCalendar in Frameworks */,
 				D512E9C32988AB27007B0D2F /* FirebaseFirestore in Frameworks */,
+				D5BC399929E3A3DA00FF3546 /* SwiftSpinner in Frameworks */,
 				D5B5E20B29D37F64009782DF /* SideMenu in Frameworks */,
 				D5BC398329DBBC8700FF3546 /* ChatGPTSwift in Frameworks */,
 				D5A3C3AD298CC6C600772D1B /* Charts in Frameworks */,
@@ -228,6 +236,8 @@
 				D5CA906829A95F1E00C53B7B /* Alert.swift */,
 				D5AD2B5329B5E16B005CB1EB /* WalkHist.swift */,
 				D5BC398E29DE20DC00FF3546 /* Meal.swift */,
+				D5BC399529E3265600FF3546 /* MealHist.swift */,
+				D570FB3E29E4DDA2001157BA /* DietFilter.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -239,6 +249,14 @@
 				D53A7FC12991EDBA000220B9 /* ShoeListCollectionViewCell.xib */,
 			);
 			path = "Shoe Collection View Cell";
+			sourceTree = "<group>";
+		};
+		D570FB3B29E4BEAA001157BA /* Dietary Filter */ = {
+			isa = PBXGroup;
+			children = (
+				D570FB3C29E4BEC4001157BA /* DietaryFilterViewController.swift */,
+			);
+			path = "Dietary Filter";
 			sourceTree = "<group>";
 		};
 		D597DF7C29976C6100DF4D13 /* Track run */ = {
@@ -300,6 +318,7 @@
 		D5A3C382298B1BF100772D1B /* Core Tabs */ = {
 			isa = PBXGroup;
 			children = (
+				D570FB3B29E4BEAA001157BA /* Dietary Filter */,
 				D5B5E20129C157F2009782DF /* Calendar */,
 				D597DF85299EF50A00DF4D13 /* Profile component */,
 				D597DF7C29976C6100DF4D13 /* Track run */,
@@ -425,6 +444,7 @@
 				D5B5E20A29D37F64009782DF /* SideMenu */,
 				D5BC398229DBBC8700FF3546 /* ChatGPTSwift */,
 				D5BC398A29DCF71300FF3546 /* OpenAI */,
+				D5BC399829E3A3DA00FF3546 /* SwiftSpinner */,
 			);
 			productName = Walk2N;
 			productReference = D512E99F2988A33D007B0D2F /* Walk2N.app */;
@@ -462,6 +482,7 @@
 				D5B5E20929D37F64009782DF /* XCRemoteSwiftPackageReference "SideMenu" */,
 				D5BC398129DBBC8700FF3546 /* XCRemoteSwiftPackageReference "ChatGPTSwift" */,
 				D5BC398929DCF71300FF3546 /* XCRemoteSwiftPackageReference "OpenAI" */,
+				D5BC399729E3A3DA00FF3546 /* XCRemoteSwiftPackageReference "SwiftSpinner" */,
 			);
 			productRefGroup = D512E9A02988A33D007B0D2F /* Products */;
 			projectDirPath = "";
@@ -534,7 +555,9 @@
 				D597DF8929A2C0B500DF4D13 /* Bonus.swift in Sources */,
 				D512E9C52988C02A007B0D2F /* Constants.swift in Sources */,
 				D512E9A52988A33D007B0D2F /* SceneDelegate.swift in Sources */,
+				D570FB3F29E4DDA2001157BA /* DietFilter.swift in Sources */,
 				D5BC399229DE2D1D00FF3546 /* MealDetailViewController.swift in Sources */,
+				D570FB3D29E4BEC4001157BA /* DietaryFilterViewController.swift in Sources */,
 				D5A93D262996014200E12217 /* PopUpModalViewController.swift in Sources */,
 				D5BC398529DCF1A100FF3546 /* ImageApi.swift in Sources */,
 				D5CA908329A9753800C53B7B /* AlertCollectionViewCell.swift in Sources */,
@@ -543,6 +566,7 @@
 				D5B5E20329C1583D009782DF /* CalendarViewController.swift in Sources */,
 				D5AD2B5229B5C2A7005CB1EB /* SaveRunViewController.swift in Sources */,
 				D5A3C391298C12B600772D1B /* CollectInformationViewController.swift in Sources */,
+				D5BC399629E3265600FF3546 /* MealHist.swift in Sources */,
 				D597DF87299EF53D00DF4D13 /* ProfileTableViewCell.swift in Sources */,
 				D5CA906929A95F1E00C53B7B /* Alert.swift in Sources */,
 				D512E9D02988E67E007B0D2F /* HistoricalStep.swift in Sources */,
@@ -817,6 +841,14 @@
 				kind = branch;
 			};
 		};
+		D5BC399729E3A3DA00FF3546 /* XCRemoteSwiftPackageReference "SwiftSpinner" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/icanzilb/SwiftSpinner.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		D5CA907429A96F2000C53B7B /* XCRemoteSwiftPackageReference "iOSDropDown" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/jriosdev/iOSDropDown.git";
@@ -872,6 +904,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D5BC398929DCF71300FF3546 /* XCRemoteSwiftPackageReference "OpenAI" */;
 			productName = OpenAI;
+		};
+		D5BC399829E3A3DA00FF3546 /* SwiftSpinner */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D5BC399729E3A3DA00FF3546 /* XCRemoteSwiftPackageReference "SwiftSpinner" */;
+			productName = SwiftSpinner;
 		};
 		D5BE8C592994781800ABA0D4 /* FirebaseFirestoreSwift */ = {
 			isa = XCSwiftPackageProductDependency;

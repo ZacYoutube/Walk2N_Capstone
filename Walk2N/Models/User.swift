@@ -28,6 +28,7 @@ public class User {
     var bonusEarnedDuringRealTimeRun: Double?
     var profileImgUrl: String?
     var alertHist: Array<Alert>?
+    var mealHist: Array<MealHist>?
     
     init(uid: String?, email: String?, password: String?,
          firstName: String?, lastName: String?,
@@ -36,7 +37,7 @@ public class User {
          bonusEarnedToday: Double?, stepGoalToday: Int?, weight: Float?,
          height: Float?, age: Int?, gender: String?, bonusHistory: Array<Bonus>?,
          bonusAwardedForReachingStepGoal: Bool?, bonusEarnedDuringRealTimeRun: Double?,
-         profileImgUrl: String?, alertHist: Array<Alert>?) {
+         profileImgUrl: String?, alertHist: Array<Alert>?, mealHist: Array<MealHist>?) {
         self.uid = uid
         self.email = email
         self.password = password
@@ -57,5 +58,6 @@ public class User {
         self.bonusEarnedDuringRealTimeRun = bonusEarnedDuringRealTimeRun
         self.profileImgUrl = profileImgUrl
         self.alertHist = alertHist
+        self.mealHist = mealHist
     }
 }

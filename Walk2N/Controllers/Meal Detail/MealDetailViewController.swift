@@ -31,27 +31,17 @@ class MealDetailViewController: UIViewController {
     @IBOutlet weak var backBtn: UIButton!
     
     var mealNameText: String? = ""
-    var image: UIImage? = nil
     var mealCarbsText:Double? = 0
     var mealProteinText:Double? = 0
     var mealFatText:Double? = 0
     var cal: Double? = 0
+    var imageUrl: String? = nil
     
     var pieChart = PieChartView()
     
-    private let format = """
-            {
-                "estimatedCookTime": "2 hrs",
-                "ingredients": [
-                    "2 gram of chicken breast"
-                 ],
-                "directions" : [
-                    "First, cut the ....",
-                    "Second, the ....",
-                    "Third, the...."
-                ]
-            }
-        """
+    private let cookTimeFormat = "{ 'estimatedCookTime': '2 hrs' }"
+    private let ingredientFormat = "{ 'ingredients': ['2 gram of chicken breast'] }"
+    private let directionFormat = "{ 'directions': ['1. cut the ....' , '2. boil the ...']}"
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,20 +74,33 @@ class MealDetailViewController: UIViewController {
             self.getTopMostViewController()?.dismiss(animated: true, completion: nil)
         }
         
+        
         imageContainer.layer.zPosition = 1
         
     }
     
     private func setUpPassedInfo() {
         mealName.text = mealNameText!
-        mealImage.image = image!
+        if let url = URL(string: imageUrl!) {
+            DispatchQueue.global().async {
+                if let data = try? Data(contentsOf: url) {
+                    if let image = UIImage(data: data) {
+                        DispatchQueue.main.async {
+                            self.mealImage.image = image
+                        }
+                    }
+                }
+            }
+        }
         carbs.text = "\((cal! * mealCarbsText!).truncate(places: 0)) kcal"
         proteins.text = "\((cal! * mealProteinText!).truncate(places: 0)) kcal"
         fat.text = "\((cal! * mealFatText!).truncate(places: 0)) kcal"
         
         setUpPieChart()
         
-        getIngredientAndTime(prompt: "recommend the estimated cook time, ingredients, and cooking steps of \(String(describing: mealNameText)). Just give me an answer in the format of \(format), nothing else")
+        getCookTime(prompt: "recommend the estimated cook time for \(String(describing: mealNameText)). Just need the json format in the format of \(cookTimeFormat.replacingOccurrences(of: "'", with: "\""))")
+        getIngredients(prompt: "recommend the ingredients for \(String(describing: mealNameText)). Just need the json format in the format of \(ingredientFormat.replacingOccurrences(of: "'", with: "\""))")
+        getDirections(prompt: "recommend the cooking directions for \(String(describing: mealNameText)). Just need the json format in the format of \(directionFormat.replacingOccurrences(of: "'", with: "\""))")
     }
     
     private func setUpPieChart() {
@@ -130,11 +133,9 @@ class MealDetailViewController: UIViewController {
         pieChartContainer.addSubview(pieChart)
     }
     
-    private func getIngredientAndTime(prompt: String) {
-        setUpLoading()
-
+    
+    private func getCookTime(prompt: String) {
         GptApiService().getGptResponse(messagePrompt: prompt) { output in
-            print(output)
             if output.contains("{") && output.contains("}") {
                 
                 let openingBracketIndex = output.firstIndex(of: "{")
@@ -152,69 +153,149 @@ class MealDetailViewController: UIViewController {
                     }
                     return
                 }
-                                
+                
                 do {
                     let jsonData = try JSONSerialization.jsonObject(with: mealData, options: [])
-                                        
-                    if let jsonObj = jsonData as? [String: Any],
-                       let estimatedCookTime = jsonObj["estimatedCookTime"] as? String
-                        {
-                        let ingredients = jsonObj["ingredients"] as? [Any]
-                        let directions = jsonObj["directions"] as? [Any]
+                    
+                    if let jsonObj = jsonData as? [String: Any], let estimatedCookTime = jsonObj["estimatedCookTime"] as? String {
+                        DispatchQueue.main.async {
+                            self.prepTime.text = estimatedCookTime
+                        }
+                    }
+                    else {
+                        print("failed to convert json string to data")
+                    }
+                    
+                    
+                }
+                catch {
+                    print(error)
+                    
+                }
+            }
+            else {
+                print("no data")
+            }
+        }
+    }
+        
+    private func getIngredients(prompt: String) {
+        GptApiService().getGptResponse(messagePrompt: prompt) { output in
+            if output.contains("{") && output.contains("}") {
+                
+                let openingBracketIndex = output.firstIndex(of: "{")
+                let closingBracketIndex = output.lastIndex(of: "}")
+                
+                let startIndex = output.index(openingBracketIndex ?? output.startIndex, offsetBy: 0) // starting index of the desired substring
+                let endIndex = output.index(closingBracketIndex ?? output.endIndex, offsetBy: 0) // ending index of the desired substring
+                
+                let substr = output[startIndex...endIndex]
+                
+                guard let mealData = substr.data(using: .utf8) else {
+                    print("failed to convert json string to data")
+                    DispatchQueue.main.async {
+                        self.dismiss(animated: true, completion: nil)
+                    }
+                    return
+                }
+                
+                do {
+                    let jsonData = try JSONSerialization.jsonObject(with: mealData, options: [])
+                    
+                    if let jsonObj = jsonData as? [String: Any], let ingredients = jsonObj["ingredients"] as? [Any] {
                         
                         var ingredientStr: String = ""
                         
-                        var directionStr: String = ""
-                        
-                        for i in 0..<ingredients!.count {
-                            ingredientStr += "\(ingredients![i])\n\n"
+                        for i in 0..<ingredients.count {
+                            ingredientStr += "\(ingredients[i])\n\n"
                         }
                         
-                        for i in 0..<directions!.count {
-                            directionStr += "\(directions![i])\n\n"
-                        }
-                                                
                         DispatchQueue.main.async {
                             self.ingredients.text = ingredientStr
-                            self.directions.text = directionStr
-                            self.prepTime.text = estimatedCookTime
-                            self.getTopMostViewController()!.dismiss(animated: true, completion: nil)
                         }
-                        
                     }
                     else {
-                        DispatchQueue.main.async {
-                            self.getTopMostViewController()!.dismiss(animated: true, completion: nil)
-                        }
                         print("failed to convert json string to data")
                     }
+                    
+                    
                 }
                 catch {
-                    DispatchQueue.main.async {
-                        self.getTopMostViewController()!.dismiss(animated: true, completion: nil)
-                    }
                     print(error)
                 }
-            } else {
-                DispatchQueue.main.async {
-                    self.getTopMostViewController()!.dismiss(animated: true, completion: nil)
-                }
+            }
+            else {
                 print("no data")
             }
-            
         }
+        
     }
     
-    private func setUpLoading() {
-        let alert = UIAlertController(title: nil, message: "Getting recipes...", preferredStyle: .alert)
+    private func getDirections(prompt: String) {
+        GptApiService().getGptResponse(messagePrompt: prompt) { output in
+            if output.contains("{") && output.contains("}") {
+                
+                let openingBracketIndex = output.firstIndex(of: "{")
+                let closingBracketIndex = output.lastIndex(of: "}")
+                
+                let startIndex = output.index(openingBracketIndex ?? output.startIndex, offsetBy: 0) // starting index of the desired substring
+                let endIndex = output.index(closingBracketIndex ?? output.endIndex, offsetBy: 0) // ending index of the desired substring
+                
+                let substr = output[startIndex...endIndex]
+                
+                guard let mealData = substr.data(using: .utf8) else {
+                    print("failed to convert json string to data")
+                    DispatchQueue.main.async {
+                        self.dismiss(animated: true, completion: nil)
+                    }
+                    return
+                }
+                
+                do {
+                    let jsonData = try JSONSerialization.jsonObject(with: mealData, options: [])
+                    
+                    if let jsonObj = jsonData as? [String: Any], let directions = jsonObj["directions"] as? [Any] {
+                        
+                        var directionStr: String = ""
+                        
+                        for i in 0..<directions.count {
+                            directionStr += "\(directions[i])\n\n"
+                        }
+                        
+                        DispatchQueue.main.async {
+                            self.directions.text = directionStr
+                        }
+                    }
+                    else {
+                        print("failed to convert json string to data")
+                    }
+                    
+                    
+                }
+                catch {
+                    print(error)
+                }
+            }
+            else {
+                print("no data")
+            }
+        }
         
-        let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 5, y: 5, width: 50, height: 50))
-        loadingIndicator.hidesWhenStopped = true
-        loadingIndicator.style = UIActivityIndicatorView.Style.medium
-        loadingIndicator.startAnimating();
-        
-        alert.view.addSubview(loadingIndicator)
-        getTopMostViewController()!.present(alert, animated: true, completion: nil)
     }
+    
+    
+//    private func setUpLoading() {
+//        let alert = UIAlertController(title: nil, message: "Getting recipes...", preferredStyle: .alert)
+//
+//        let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 5, y: 5, width: 50, height: 50))
+//        loadingIndicator.hidesWhenStopped = true
+//        loadingIndicator.style = UIActivityIndicatorView.Style.medium
+//        loadingIndicator.startAnimating();
+//
+//        alert.view.addSubview(loadingIndicator)
+//        getTopMostViewController()!.present(alert, animated: true, completion: nil)
+//    }
+    
+    
     
 }

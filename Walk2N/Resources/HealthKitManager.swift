@@ -12,17 +12,20 @@ import HealthKit
 class HealthKitManager {
     let healthStore = HKHealthStore()
     
-    
     // checks and get authorization from Health app for stepCount and distanceWalkingRunning metrics
     func authorizeHealthKit() -> Bool {
         var isEnabled = true
         if HKHealthStore.isHealthDataAvailable() {
             let stepCount = NSSet(object: HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount) as Any)
             let distance = NSSet(object: HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.distanceWalkingRunning) as Any)
+            let activitySummaryType: Set = [HKObjectType.activitySummaryType()]
             healthStore.requestAuthorization(toShare: nil, read: (stepCount as! Set<HKObjectType>)) { success, err in
                 isEnabled = success
             }
             healthStore.requestAuthorization(toShare: nil, read: (distance as! Set<HKObjectType>)) { success, err in
+                isEnabled = success
+            }
+            healthStore.requestAuthorization(toShare: nil, read: activitySummaryType) { (success, error) in
                 isEnabled = success
             }
         }else{
@@ -142,7 +145,7 @@ class HealthKitManager {
         let components = calendar.dateComponents([.year, .month, .day], from: date)
         let startDate = calendar.date(from: components)!
         let endDate = calendar.date(byAdding: .day, value: 1, to: startDate)!
-
+        
         let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
         let distanceType = HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)!
         
@@ -154,10 +157,8 @@ class HealthKitManager {
                 }
             }
         }
-
+        
         healthStore.execute(query)
-
-
     }
     
     func gettingDistanceArr(_ n: Int, completion:(([Double], [Date]) -> Void)?){
@@ -204,6 +205,47 @@ class HealthKitManager {
                     }
                 }
                 completion!(distanceArr, distanceDate)
+            }
+        }
+        healthStore.execute(query)
+    }
+    
+    func gettingActivityLevel(completion:(([Double]) -> Void)?) {
+        let calendar = Calendar.current
+        let now = calendar.dateComponents([.year, .month, .day, .calendar], from: Date())
+
+        let predicate = HKQuery.predicateForActivitySummary(with: now)
+        let query = HKActivitySummaryQuery(predicate: predicate) { (query, summaries, error) in
+            if let error = error {
+                // Handle error
+                print(error)
+                return
+            }
+            if let summary = summaries?.first {
+                // Use the activity summary data
+                let activeEnergyBurned = summary.activeEnergyBurned.doubleValue(for: HKUnit.kilocalorie())
+                let samplesQuery = HKSampleQuery(sampleType: HKQuantityType.quantityType(forIdentifier: .basalEnergyBurned)!, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { (query, samples, error) in
+                    if let error = error {
+                        // Handle error
+                        print(error)
+                        return
+                    }
+                    if let sample = samples?.first as? HKQuantitySample {
+                        let restingEnergyBurned = sample.quantity.doubleValue(for: HKUnit.kilocalorie())
+                        let totalEnergyBurned = activeEnergyBurned + restingEnergyBurned
+                        let standingHours = summary.appleStandHours.doubleValue(for: HKUnit.count())
+                        let exerciseMinutes = summary.appleExerciseTime.doubleValue(for: HKUnit.minute())
+                        
+                        print("Active energy burned: \(activeEnergyBurned) kcal")
+                        print("Resting energy burned: \(restingEnergyBurned) kcal")
+                        print("Total energy burned: \(totalEnergyBurned) kcal")
+                        print("Standing hours: \(standingHours) hours")
+                        print("Exercise minutes: \(exerciseMinutes) minutes")
+                        
+                        completion!([restingEnergyBurned, activeEnergyBurned, standingHours, exerciseMinutes])
+                    }
+                }
+                self.healthStore.execute(samplesQuery)
             }
         }
         healthStore.execute(query)

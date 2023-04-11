@@ -86,6 +86,28 @@ extension UIView {
     
 }
 
+extension UILabel {
+    func setUpLoadingView(label: UILabel, stop: Bool) {
+        let spinner = UIActivityIndicatorView(style: .medium)
+        label.addSubview(spinner)
+
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.centerYAnchor.constraint(equalTo: label.centerYAnchor).isActive = true
+        spinner.centerXAnchor.constraint(equalTo: label.centerXAnchor).isActive = true
+        
+        if stop == true {
+            print("im triggered")
+            spinner.stopAnimating()
+            spinner.removeFromSuperview()
+            spinner.isHidden = true
+        }
+        else {
+            spinner.isHidden = false
+            spinner.startAnimating()
+        }
+    }
+}
+
 extension UIViewController {
     // hide keyboard
     func hideKeyboardWhenTappedAround() {
@@ -93,6 +115,7 @@ extension UIViewController {
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
     }
+    
     
     // push to navigation stack [ for convenience purposes ]
     func navigateToController(destController: Any) {

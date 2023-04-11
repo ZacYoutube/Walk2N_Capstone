@@ -110,7 +110,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                 if registered {
                     self.uploadProfileImage(image) { url in
                         if url != nil {
-                            var newUser = User(uid: uid, email: email, password: pass, firstName: nil, lastName: nil, balance: 1000.0, boughtShoes: nil, currentShoe: nil, historicalSteps: nil, bonusEarnedToday: 0.0, stepGoalToday: nil, weight: nil, height: nil, age: nil, gender: nil, bonusHistory: [], bonusAwardedForReachingStepGoal: false, bonusEarnedDuringRealTimeRun: 0.0, profileImgUrl: url!.absoluteString, alertHist: [])
+                            var newUser = User(uid: uid, email: email, password: pass, firstName: nil, lastName: nil, balance: 1000.0, boughtShoes: nil, currentShoe: nil, historicalSteps: nil, bonusEarnedToday: 0.0, stepGoalToday: nil, weight: nil, height: nil, age: nil, gender: nil, bonusHistory: [], bonusAwardedForReachingStepGoal: false, bonusEarnedDuringRealTimeRun: 0.0, profileImgUrl: url!.absoluteString, alertHist: [], mealHist: [])
                             DatabaseManager.shared.insertUser(user: newUser) { success in
                                 if success {
                                     self.hideLoading()

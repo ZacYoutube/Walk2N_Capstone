@@ -178,6 +178,43 @@ public class DatabaseManager {
         }
     }
     
+    func saveTodayRecom(meal: MealHist) {
+        db.collection("mealRecommendation").addDocument(data: [
+            "id": UUID().uuidString as Any,
+            "breakfast": meal.breakfast?.firestoreData as Any,
+            "lunch": meal.lunch?.firestoreData as Any,
+            "dinner": meal.dinner?.firestoreData as Any,
+            "date": meal.date as Any
+        ])
+    }
+    
+    func saveToDietFilter(dietFilter: DietFilter) {
+        db.collection("dietFilter").addDocument(data: [
+            "uid": dietFilter.uid as Any,
+            "bloodSugarLevel": dietFilter.bloodSugarLevel as Any,
+            "cholesterolLevel": dietFilter.cholesterolLevel as Any,
+            "dietGoal": dietFilter.dietGoal as Any,
+            "foodAlergies": dietFilter.foodAlergies as Any,
+            "dietaryPreferences": dietFilter.dietaryPreferences as Any,
+            "cusinePreferences": dietFilter.cusinePreferences as Any,
+            "otherInfo": dietFilter.otherInfo as Any
+        ])
+    }
+    
+    func getUserDietaryFilter(_ completion:@escaping(_ docSnapshot:[DocumentSnapshot])->Void ) {
+        let uid = Auth.auth().currentUser?.uid
+        if uid != nil {
+            db.collection("dietFilter").whereField("uid", isEqualTo: uid!).getDocuments { querySnapshot, err in
+                if let err = err {
+                    print("Error getting docs: \(err)")
+                }else{
+                    if let doc = querySnapshot?.documents {
+                        completion(doc)
+                    }
+                }
+            }
+        }
+    }
     
     
     

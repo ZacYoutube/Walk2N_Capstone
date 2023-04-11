@@ -15,9 +15,11 @@ class Meal {
     var mealCarbs: Double?
     var mealProtein: Double?
     var mealFat: Double?
-    var mealImg: UIImage?
+    var mealImg: String?
+    var ingredients: [String]?
+    var procedures: [String]?
     
-    init(mealName: String?, mealCalories: Double?, mealCarbs: Double?, mealProtein: Double?, mealFat: Double?, mealImg: UIImage?) {
+    init(mealName: String?, mealCalories: Double?, mealCarbs: Double?, mealProtein: Double?, mealFat: Double?, mealImg: String?) {
         self.mealName = mealName
         self.mealCalories = mealCalories
         self.mealCarbs = mealCarbs
@@ -33,7 +35,9 @@ class Meal {
             "mealCarbs": mealCarbs as Any,
             "mealProtein": mealProtein as Any,
             "mealFat": mealFat as Any,
-            "mealImg": mealImg as Any
+            "mealImg": mealImg as Any,
+            "ingredients": ingredients as Any,
+            "procedures": procedures as Any
         ]
     }
 }
