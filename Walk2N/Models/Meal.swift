@@ -16,8 +16,10 @@ class Meal {
     var mealProtein: Double?
     var mealFat: Double?
     var mealImg: String?
-    var ingredients: [String]?
-    var procedures: [String]?
+    var ingredients: [Any]?
+    var procedures: [Any]?
+    var estimatedCookTime: String?
+    var mealType: String?
     
     init(mealName: String?, mealCalories: Double?, mealCarbs: Double?, mealProtein: Double?, mealFat: Double?, mealImg: String?) {
         self.mealName = mealName
@@ -26,6 +28,22 @@ class Meal {
         self.mealProtein = mealProtein
         self.mealFat = mealFat
         self.mealImg = mealImg
+    }
+    
+    func setIngredients(ingredients: [Any]?) {
+        self.ingredients = ingredients
+    }
+    
+    func setProcedures(procedures: [Any]?) {
+        self.procedures = procedures
+    }
+    
+    func setEstimatedCookTime(estimatedCookTime: String?) {
+        self.estimatedCookTime = estimatedCookTime
+    }
+    
+    func setMealType(mealType: String?) {
+        self.mealType = mealType
     }
     
     var firestoreData: [String: Any] {
@@ -37,7 +55,8 @@ class Meal {
             "mealFat": mealFat as Any,
             "mealImg": mealImg as Any,
             "ingredients": ingredients as Any,
-            "procedures": procedures as Any
+            "procedures": procedures as Any,
+            "estimatedCookTime": estimatedCookTime as Any
         ]
     }
 }

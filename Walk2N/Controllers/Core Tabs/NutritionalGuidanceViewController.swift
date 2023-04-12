@@ -7,6 +7,7 @@
 
 import UIKit
 import SwiftSpinner
+import Firebase
 
 class NutritionalGuidanceViewController: UIViewController {
     
@@ -46,14 +47,13 @@ class NutritionalGuidanceViewController: UIViewController {
     
     @IBOutlet weak var regenerateBtn: UIButton!
     
+    let db = DatabaseManager.shared
+    
     var breakfastJson: Meal?
     var lunchJson: Meal?
     var dinnerJson: Meal?
     
-    var mealList: [Meal]?
-    
     private let format = "{ 'breakfast': { 'mealName': 'the name of the breakfast meal', 'calories': '200', 'macronutrients': { 'carbs': '10%', 'protein': '20%', 'fat': '70%' },},}, the macronutrients are in percentage"
-    private let conditionPrompt = "I am 5 feet 3 and 110 lbs, I want to gain weight"
     private let breakfastActionPrompt = "recommend me a [BREAKFAST] meal"
     private let lunchActionPrompt = "recommend me a [LUNCH] meal"
     private let dinnerActionPrompt = "recommend me a [DINNER] meal"
@@ -65,8 +65,7 @@ class NutritionalGuidanceViewController: UIViewController {
         
         contentView.backgroundColor = UIColor.white
         
-        self.updateMealView(self.conditionPrompt)
-        
+        initialMealLoading()
         
         scrollView.refreshControl = UIRefreshControl()
         scrollView.refreshControl?.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
@@ -104,7 +103,7 @@ class NutritionalGuidanceViewController: UIViewController {
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(_:)), name:NSNotification.Name(rawValue: "nutritionalFilter"), object: nil)
-
+        
         //        regenerateBtn.setOnClickListener { [self] in
         ////            self.updateMealView("I do not like the previous answer, recommend another [BREAKFAST] meal, another [LUNCH] meal, and another [DINNER] meal with associated [CALORIES] different from previous answer, but this time with Chinese food. in this format: \(format)")
         ////            self.updateMealView("\(originalPrompt)in this format: \(format)")
@@ -142,12 +141,165 @@ class NutritionalGuidanceViewController: UIViewController {
     //        present(alert, animated: true, completion: nil)
     //    }
     
-    private func updateMealView(_ prompt: String) {
-        DispatchQueue.main.async {
-            self.retrieveMealInfo(prompt: prompt + self.breakfastActionPrompt + " in the format of " + self.format.replacingOccurrences(of: "'", with: "\"") + self.strictFormat, mealType: "breakfast")
-            self.retrieveMealInfo(prompt: prompt + self.lunchActionPrompt + " in the format of " + self.format.replacingOccurrences(of: "'", with: "\"") + self.strictFormat, mealType: "lunch")
-            self.retrieveMealInfo(prompt: prompt + self.dinnerActionPrompt + " in the format of " + self.format.replacingOccurrences(of: "'", with: "\"") + self.strictFormat, mealType: "dinner")
+    private func initialMealLoading() {
+        var originalPrompt: String = ""
+        
+        self.db.getUserInfo { docSnapshot in
+            for doc in docSnapshot {
+                let age = doc["age"] as? Double
+                let height = doc["height"] as? Double
+                let weight = doc["weight"] as? Double
+                let gender = doc["gender"] as? String
+                
+                if age != nil {
+                    originalPrompt += "I am \(String(describing: age)) years old. "
+                }
+                if gender != nil && gender != "" {
+                    originalPrompt += "I am a \(String(describing: gender)). "
+                }
+                if weight != nil {
+                    originalPrompt += "I weigh \(String(describing: weight)) kg. "
+                }
+                if height != nil {
+                    originalPrompt += "And I am \(String(describing: height)) cm tall"
+                }
+                self.updateMealView(originalPrompt, updateBaesOnPreference: false)
+            }
         }
+    }
+    
+    private func updateMealView(_ prompt: String, updateBaesOnPreference: Bool) {
+        let dispatchGroup = DispatchGroup()
+        let calendar = Calendar.current
+        let today = Date()
+        let startOfDay = calendar.startOfDay(for: today)
+        
+        DispatchQueue.main.async {
+            
+            let uid = Auth.auth().currentUser?.uid
+            
+            self.db.getRecommendations { docSnapshot in
+                if docSnapshot.count == 0 || updateBaesOnPreference == true {
+                    
+                    dispatchGroup.enter()
+                    self.retrieveMealInfo(prompt: prompt + self.breakfastActionPrompt + " in the format of " + self.format.replacingOccurrences(of: "'", with: "\"") + self.strictFormat, mealType: "breakfast") {
+                        dispatchGroup.leave()
+                    }
+                    
+                    dispatchGroup.enter()
+                    self.retrieveMealInfo(prompt: prompt + self.lunchActionPrompt + " in the format of " + self.format.replacingOccurrences(of: "'", with: "\"") + self.strictFormat, mealType: "lunch") {
+                        dispatchGroup.leave()
+                    }
+                    
+                    dispatchGroup.enter()
+                    self.retrieveMealInfo(prompt: prompt + self.dinnerActionPrompt + " in the format of " + self.format.replacingOccurrences(of: "'", with: "\"") + self.strictFormat, mealType: "dinner") {
+                        dispatchGroup.leave()
+                    }
+                    dispatchGroup.notify(queue: .main) {
+                        if updateBaesOnPreference == true {
+                            self.db.updateRecom(uid: uid!, date: startOfDay, field: "breakfast", value: self.breakfastJson?.firestoreData as Any) { bool in }
+                            self.db.updateRecom(uid: uid!, date: startOfDay, field: "lunch", value: self.lunchJson?.firestoreData as Any) { bool in }
+                            self.db.updateRecom(uid: uid!, date: startOfDay, field: "dinner", value: self.dinnerJson?.firestoreData as Any) { bool in }
+        
+                        } else {
+                            self.db.saveTodayRecom(meal: MealHist(uid: uid, breakfast: self.breakfastJson!, lunch: self.lunchJson!, dinner: self.dinnerJson!, date: startOfDay))
+                        }
+                        
+//                                                        self.db.updateRecom(uid: uid!, date: startOfDay, field: "breakfast", value: self.breakfastJson!) { bool in }
+//                                                        self.db.updateRecom(uid: uid!, date: startOfDay, field: "lunch", value: self.lunchJson!) { bool in }
+//                                                        self.db.updateRecom(uid: uid!, date: startOfDay, field: "breakfast", value: self.dinnerJson!) { bool in }
+                        
+                    }
+                }
+                else {
+                    for doc in docSnapshot {
+                        let breakfastData = doc["breakfast"] as? [String: Any]
+                        let lunchData = doc["lunch"] as? [String: Any]
+                        let dinnerData = doc["dinner"] as? [String: Any]
+                        
+                        if breakfastData != nil {
+                            let calories = breakfastData!["mealCalories"] as! Double
+                            let carbs = breakfastData!["mealCarbs"] as! Double
+                            let protein = breakfastData!["mealProtein"] as! Double
+                            let fat = breakfastData!["mealFat"] as! Double
+                            let name = breakfastData!["mealName"] as! String
+                            let imgUrl = breakfastData!["mealImg"] as! String
+                            
+                            self.breakfastCalories.text = "\(calories) kcal"
+                            self.breakfastMealName.text = name
+                            self.breakfastCarbs.text = "\(Int(carbs * 100))%"
+                            self.breakfastProtein.text = "\(Int(protein * 100))%"
+                            self.breakfastFat.text = "\(Int(fat * 100))%"
+                            
+                            self.setUpImage(urlString: imgUrl, imageView: self.breakfastMealImage)
+                            
+                            self.setUpProportions(color: [.orange, .darkRed, UIColor(hexString: "#83c0ec")], proportions: [carbs, protein, fat], view: self.breakfastLineView)
+                            
+                            self.breakfastJson = Meal(mealName: name, mealCalories: calories, mealCarbs: carbs, mealProtein: protein, mealFat: fat, mealImg: imgUrl)
+                            self.breakfastJson?.setMealType(mealType: "breakfast")
+                            
+                            let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapBreakFast(_:)))
+                            self.breakfastCookbook.isUserInteractionEnabled = true
+                            self.breakfastCookbook.addGestureRecognizer(tap)
+                            
+                        }
+                        
+                        if lunchData != nil {
+                            let calories = lunchData!["mealCalories"] as! Double
+                            let carbs = lunchData!["mealCarbs"] as! Double
+                            let protein = lunchData!["mealProtein"] as! Double
+                            let fat = lunchData!["mealFat"] as! Double
+                            let name = lunchData!["mealName"] as! String
+                            let imgUrl = lunchData!["mealImg"] as! String
+                            
+                            self.lunchCalories.text = "\(calories) kcal"
+                            self.lunchMealName.text = name
+                            self.lunchCarbs.text = "\(Int(carbs * 100))%"
+                            self.lunchProtein.text = "\(Int(protein * 100))%"
+                            self.lunchFat.text = "\(Int(fat * 100))%"
+                            
+                            self.setUpImage(urlString: imgUrl, imageView: self.lunchMealImage)
+                            
+                            self.setUpProportions(color: [.orange, .darkRed, UIColor(hexString: "#83c0ec")], proportions: [carbs, protein, fat], view: self.lunchLineView)
+                            
+                            self.lunchJson = Meal(mealName: name, mealCalories: calories, mealCarbs: carbs, mealProtein: protein, mealFat: fat, mealImg: imgUrl)
+                            self.lunchJson?.setMealType(mealType: "lunch")
+                            
+                            let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapLunch(_:)))
+                            self.lunchContainer.addGestureRecognizer(tap)
+                        }
+                        
+                        if dinnerData != nil {
+                            let calories = dinnerData!["mealCalories"] as! Double
+                            let carbs = dinnerData!["mealCarbs"] as! Double
+                            let protein = dinnerData!["mealProtein"] as! Double
+                            let fat = dinnerData!["mealFat"] as! Double
+                            let name = dinnerData!["mealName"] as! String
+                            let imgUrl = dinnerData!["mealImg"] as! String
+                            
+                            self.dinnerCalories.text = "\(calories) kcal"
+                            self.dinnerMealName.text = name
+                            self.dinnerCarbs.text = "\(Int(carbs * 100))%"
+                            self.dinnerProtein.text = "\(Int(protein * 100))%"
+                            self.dinnerFat.text = "\(Int(fat * 100))%"
+                            
+                            self.setUpImage(urlString: imgUrl, imageView: self.dinnerMealImage)
+                            
+                            self.setUpProportions(color: [.orange, .darkRed, UIColor(hexString: "#83c0ec")], proportions: [carbs, protein, fat], view: self.dinnerLineView)
+                            
+                            self.dinnerJson = Meal(mealName: name, mealCalories: calories, mealCarbs: carbs, mealProtein: protein, mealFat: fat, mealImg: imgUrl)
+                            self.dinnerJson?.setMealType(mealType: "dinner")
+                            
+                            let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapDinner(_:)))
+                            self.dinnerContainer.addGestureRecognizer(tap)
+                        }
+                    }
+                }
+            }
+            
+            
+        }
+        
     }
     
     @objc func didPullToRefresh() {
@@ -157,10 +309,178 @@ class NutritionalGuidanceViewController: UIViewController {
     }
     
     @objc func handleNotification(_ notification: NSNotification) {
-       print("closed!")
+        print("closed!")
+        
+        if let data = notification.userInfo?["dietaryFilter"] as? DietFilter {
+            let bloodSugarLevel = data.bloodSugarLevel
+            let cholesterolLevel = data.cholesterolLevel
+            let dietaryGoal = data.dietGoal
+            let foodAlergies = data.foodAlergies
+            let dietaryPreference = data.dietaryPreferences
+            let cuisinePreference = data.cusinePreferences
+            let otherInfo = data.otherInfo
+            
+            var newConditionalPrompt: String = ""
+            var originalPrompt: String = ""
+            
+            if bloodSugarLevel != nil && bloodSugarLevel != "" {
+                newConditionalPrompt += "My blood sugar level is \(String(describing: bloodSugarLevel!)) mg/dL. "
+            }
+            if cholesterolLevel != nil && cholesterolLevel != "" {
+                newConditionalPrompt += "My cholesterol level is \(String(describing: cholesterolLevel!)) mg/dL. "
+            }
+            if dietaryGoal != nil && dietaryGoal != "" {
+                newConditionalPrompt += "My diet goal is \(String(describing: dietaryGoal!)). "
+            }
+            if foodAlergies != nil && foodAlergies!.count > 0 {
+                newConditionalPrompt += "I am alergic to the following food: "
+                for i in 0..<foodAlergies!.count {
+                    newConditionalPrompt += "\(foodAlergies![i]), "
+                }
+            }
+            if dietaryPreference != nil && dietaryPreference != "" {
+                newConditionalPrompt += "My dietary preference is \(String(describing: dietaryPreference!)). "
+            }
+            
+            if cuisinePreference != nil && cuisinePreference != "" {
+                newConditionalPrompt += "My favorite cuisines is \(String(describing: cuisinePreference!))dishes. "
+            }
+            
+            if otherInfo != nil && otherInfo != "" {
+                newConditionalPrompt += "Additionally, here is the things you need to watch out for: \(String(describing: otherInfo!))"
+            }
+            
+            self.db.getUserInfo { docSnapshot in
+                for doc in docSnapshot {
+                    let age = doc["age"] as? Double
+                    let height = doc["height"] as? Double
+                    let weight = doc["weight"] as? Double
+                    let gender = doc["gender"] as? String
+                    
+                    if age != nil {
+                        originalPrompt += "I am \(String(describing: age!)) years old. "
+                    }
+                    if gender != nil && gender != "" {
+                        originalPrompt += "I am a \(String(describing: gender!)). "
+                    }
+                    if weight != nil {
+                        originalPrompt += "I weigh \(String(describing: weight!)) kg. "
+                    }
+                    if height != nil {
+                        originalPrompt += "And I am \(String(describing: height!)) cm tall. "
+                    }
+                    
+                    print(originalPrompt + " " + newConditionalPrompt)
+                    self.updateMealView(originalPrompt + " " + newConditionalPrompt, updateBaesOnPreference: true)
+                }
+            }
+        }
+        
+//        db.getUserDietaryFilter { docSnapshot in
+//            if docSnapshot.count > 0 {
+//                for doc in docSnapshot {
+//                    let bloodSugarLevel = doc["bloodSugarLevel"] as? String
+//                    let cholesterolLevel = doc["cholesterolLevel"] as? String
+//                    let dietaryGoal = doc["dietGoal"] as? String
+//                    let foodAlergies = doc["foodAlergies"] as? [String]
+//                    let dietaryPreference = doc["dietaryPreferences"] as? String
+//                    let cuisinePreference = doc["cusinePreferences"] as? String
+//                    let otherInfo = doc["otherInfo"] as? String
+//
+//                    var newConditionalPrompt: String = ""
+//                    var originalPrompt: String = ""
+//
+//                    if bloodSugarLevel != nil && bloodSugarLevel != "" {
+//                        newConditionalPrompt += "My blood sugar level is \(String(describing: bloodSugarLevel!)) mg/dL. "
+//                    }
+//                    if cholesterolLevel != nil && cholesterolLevel != "" {
+//                        newConditionalPrompt += "My cholesterol level is \(String(describing: cholesterolLevel!)) mg/dL. "
+//                    }
+//                    if dietaryGoal != nil && dietaryGoal != "" {
+//                        newConditionalPrompt += "My diet goal is \(String(describing: dietaryGoal!)). "
+//                    }
+//                    if foodAlergies != nil && foodAlergies!.count > 0 {
+//                        newConditionalPrompt += "I am alergic to the following food: "
+//                        for i in 0..<foodAlergies!.count {
+//                            newConditionalPrompt += "\(foodAlergies![i]), "
+//                        }
+//                    }
+//                    if dietaryPreference != nil && dietaryPreference != "" {
+//                        newConditionalPrompt += "My dietary preference is \(String(describing: dietaryPreference!)). "
+//                    }
+//
+//                    if cuisinePreference != nil && cuisinePreference != "" {
+//                        newConditionalPrompt += "My favorite cuisines is \(String(describing: cuisinePreference!))dishes. "
+//                    }
+//
+//                    if otherInfo != nil && otherInfo != "" {
+//                        newConditionalPrompt += "Additionally, here is the things you need to watch out for: \(String(describing: otherInfo!))"
+//                    }
+//
+//                    self.db.getUserInfo { docSnapshot in
+//                        for doc in docSnapshot {
+//                            let age = doc["age"] as? Double
+//                            let height = doc["height"] as? Double
+//                            let weight = doc["weight"] as? Double
+//                            let gender = doc["gender"] as? String
+//
+//                            if age != nil {
+//                                originalPrompt += "I am \(String(describing: age!)) years old. "
+//                            }
+//                            if gender != nil && gender != "" {
+//                                originalPrompt += "I am a \(String(describing: gender!)). "
+//                            }
+//                            if weight != nil {
+//                                originalPrompt += "I weigh \(String(describing: weight!)) kg. "
+//                            }
+//                            if height != nil {
+//                                originalPrompt += "And I am \(String(describing: height!)) cm tall. "
+//                            }
+//
+//                            print(originalPrompt + " " + newConditionalPrompt)
+//                            self.updateMealView(originalPrompt + " " + newConditionalPrompt, updateBaesOnPreference: true)
+//                        }
+//                    }
+//
+//                }
+//            }
+//        }
     }
     
-    private func retrieveMealInfo(prompt: String, mealType: String) {
+    private func setUpImage(urlString: String, imageView: UIImageView) {
+        guard let url = URL(string: urlString) else { return }
+        
+        // Create URLSession
+        let session = URLSession.shared
+        
+        // Create data task to download image
+        let task = session.dataTask(with: url) { (data, response, error) in
+            // Handle errors
+            if let error = error {
+                print("Error downloading image: \(error)")
+                return
+            }
+            
+            // Check response status code
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                print("Error: invalid HTTP response code")
+                return
+            }
+            
+            // Set image on main thread
+            if let data = data, let image = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    imageView.image = image.circleMasked
+                }
+            }
+        }
+        
+        // Start data task to download image
+        task.resume()
+    }
+    
+    private func retrieveMealInfo(prompt: String, mealType: String, completion: @escaping () -> Void) {
         //        setUpLoading()
         DispatchQueue.main.async {
             GptApiService().getGptResponse(messagePrompt: prompt) { output in
@@ -187,24 +507,30 @@ class NutritionalGuidanceViewController: UIViewController {
                             if mealType == "breakfast" {
                                 let breakfastObj = jsonObj["breakfast"] as? [String: Any]
                                 if breakfastObj != nil {
-                                    self.setUpBreakfast(breakfastData: breakfastObj!)
+                                    self.setUpBreakfast(breakfastData: breakfastObj!) {
+                                        completion()
+                                    }
                                 }
                             }
                             if mealType == "lunch" {
                                 let lunchObj = jsonObj["lunch"] as? [String: Any]
                                 if lunchObj != nil {
-                                    self.setUpLunch(lunchData: lunchObj!)
+                                    self.setUpLunch(lunchData: lunchObj!) {
+                                        completion()
+                                    }
                                 }
                             }
                             if mealType == "dinner" {
                                 let dinnerObj = jsonObj["dinner"] as? [String: Any]
                                 if dinnerObj != nil {
-                                    self.setUpDinner(dinnerData: dinnerObj!)
+                                    self.setUpDinner(dinnerData: dinnerObj!) {
+                                        completion()
+                                    }
                                 }
                             }
                             
                         }
-//                        self.stopLoading()
+                        //                        self.stopLoading()
                     }
                     catch {
                         print(error)
@@ -217,48 +543,89 @@ class NutritionalGuidanceViewController: UIViewController {
         }
     }
     
-    private func setUpBreakfast(breakfastData: [String: Any]) {
-        DispatchQueue.main.async {
-            
-            let mealName = breakfastData["mealName"] as! String
-            
-            let calories = breakfastData["calories"] as? Double ?? Double(breakfastData["calories"] as! String)!
-            
-            let macronutrients = breakfastData["macronutrients"] as? [String: Any]
-            
-            let carbs = macronutrients!["carbs"] as! String
-            let protein = macronutrients!["protein"] as! String
-            let fat = macronutrients!["fat"] as! String
-            
-            Task {
-                do {
-                    let url = try await ImageApiService().generateImage(mealName)
-                    guard let imageURL = URL(string: url) else {
-                        throw RetrieveImageError.unableToCreateUrl
-                    }
-                    
-                    let (imageData, _) = try await URLSession.shared.data(from: imageURL)
-                    
-                    guard let image = UIImage(data: imageData) else {
-                        throw RetrieveImageError.unableToGetImage
-                    }
-                    
-                    self.breakfastMealImage.image = image.circleMasked
-                    let meal = Meal(mealName: mealName, mealCalories: calories, mealCarbs: self.percentToDouble(percent: carbs), mealProtein: self.percentToDouble(percent: protein), mealFat: self.percentToDouble(percent: fat), mealImg: url)
-                    
-                    self.breakfastJson = meal
-                    
-                    let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapBreakFast(_:)))
-                    self.breakfastCookbook.isUserInteractionEnabled = true
-                    self.breakfastCookbook.addGestureRecognizer(tap)
-                    
-                    
-                    
-                } catch {
-                    print(error)
+    private func setUpBreakfast(breakfastData: [String: Any], completion: @escaping () -> Void) {
+        
+        let mealName = breakfastData["mealName"] as! String
+        
+        let calories = breakfastData["calories"] as? Double ?? Double(breakfastData["calories"] as! String)!
+        
+        let macronutrients = breakfastData["macronutrients"] as? [String: Any]
+        
+        let carbs = macronutrients!["carbs"] as! String
+        let protein = macronutrients!["protein"] as! String
+        let fat = macronutrients!["fat"] as! String
+        
+        do {
+            try ImageApiService().generateImage(mealName, completion: { url in
+                guard let imageURL = URL(string: url!) else {
+                    print("invalid url")
+                    return
                 }
-            }
-            
+                let task = URLSession.shared.dataTask(with: imageURL) { data, response, error in
+                    guard let data = data, error == nil else {
+                        // Handle error
+                        return
+                    }
+                    do {
+                        guard let image = UIImage(data: data) else {
+                            throw RetrieveImageError.unableToGetImage
+                        }
+                        DispatchQueue.main.async {
+                            self.breakfastMealImage.image = image.circleMasked
+                        }
+                        let meal = Meal(mealName: mealName, mealCalories: calories, mealCarbs: self.percentToDouble(percent: carbs), mealProtein: self.percentToDouble(percent: protein), mealFat: self.percentToDouble(percent: fat), mealImg: url)
+                        
+                        self.breakfastJson = meal
+                        
+                        DispatchQueue.main.async {
+                            let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapBreakFast(_:)))
+                            self.breakfastCookbook.isUserInteractionEnabled = true
+                            self.breakfastCookbook.addGestureRecognizer(tap)
+                        }
+                        
+                        
+                        completion()
+                    } catch {
+                        print(error)
+                    }
+                }
+                task.resume()
+            })
+        }
+        catch {
+            print(error)
+        }
+        
+        //            Task {
+        //                do {
+        //                    let url = try await ImageApiService().generateImage(mealName)
+        //                    guard let imageURL = URL(string: url) else {
+        //                        throw RetrieveImageError.unableToCreateUrl
+        //                    }
+        //
+        //                    let (imageData, _) = try await URLSession.shared.data(from: imageURL)
+        //
+        //                    guard let image = UIImage(data: imageData) else {
+        //                        throw RetrieveImageError.unableToGetImage
+        //                    }
+        //
+        //                    self.breakfastMealImage.image = image.circleMasked
+        //                    let meal = Meal(mealName: mealName, mealCalories: calories, mealCarbs: self.percentToDouble(percent: carbs), mealProtein: self.percentToDouble(percent: protein), mealFat: self.percentToDouble(percent: fat), mealImg: url)
+        //
+        //                    self.breakfastJson = meal
+        //
+        //                    let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapBreakFast(_:)))
+        //                    self.breakfastCookbook.isUserInteractionEnabled = true
+        //                    self.breakfastCookbook.addGestureRecognizer(tap)
+        //
+        //                    completion()
+        //
+        //                } catch {
+        //                    print(error)
+        //                }
+        //            }
+        
+        DispatchQueue.main.async {
             self.breakfastMealName.text = mealName
             self.breakfastCalories.text = "\(calories) kcal"
             self.breakfastCarbs.text = carbs
@@ -268,6 +635,7 @@ class NutritionalGuidanceViewController: UIViewController {
             self.setUpProportions(color: [.orange, .darkRed, UIColor(hexString: "#83c0ec")], proportions: [self.percentToDouble(percent: carbs), self.percentToDouble(percent: protein), self.percentToDouble(percent: fat)], view: self.breakfastLineView)
             
         }
+        
         
     }
     
@@ -283,6 +651,7 @@ class NutritionalGuidanceViewController: UIViewController {
             mealDetail.mealCarbsText = self.breakfastJson?.mealCarbs
             mealDetail.mealProteinText = self.breakfastJson?.mealProtein
             mealDetail.cal = self.breakfastJson?.mealCalories
+            mealDetail.mealType = "breakfast"
             
             let nav = UINavigationController(rootViewController: mealDetail)
             
@@ -295,47 +664,91 @@ class NutritionalGuidanceViewController: UIViewController {
         
     }
     
-    private func setUpLunch(lunchData: [String: Any]) {
-        DispatchQueue.main.async {
-            
-            let mealName = lunchData["mealName"] as! String
-            
-            let calories = lunchData["calories"] as? Double ?? Double(lunchData["calories"] as! String)!
-            
-            let macronutrients = lunchData["macronutrients"] as? [String: Any]
-            
-            let carbs = macronutrients!["carbs"] as! String
-            let protein = macronutrients!["protein"] as! String
-            let fat = macronutrients!["fat"] as! String
-            
-            Task {
-                do {
-                    let url = try await ImageApiService().generateImage(mealName)
-                    guard let imageURL = URL(string: url) else {
-                        throw RetrieveImageError.unableToCreateUrl
-                    }
-                    
-                    let (imageData, _) = try await URLSession.shared.data(from: imageURL)
-                    
-                    guard let image = UIImage(data: imageData) else {
-                        throw RetrieveImageError.unableToGetImage
-                    }
-                    
-                    self.lunchMealImage.image = image.circleMasked
-                    
-                    
-                    let meal = Meal(mealName: mealName, mealCalories: calories, mealCarbs: self.percentToDouble(percent: carbs), mealProtein: self.percentToDouble(percent: protein), mealFat: self.percentToDouble(percent: fat), mealImg: url)
-                    
-                    self.lunchJson = meal
-                    
-                    let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapLunch(_:)))
-                    self.lunchContainer.addGestureRecognizer(tap)
-                    
-                } catch {
-                    print(error)
+    private func setUpLunch(lunchData: [String: Any], completion: @escaping () -> Void) {
+        
+        let mealName = lunchData["mealName"] as! String
+        
+        let calories = lunchData["calories"] as? Double ?? Double(lunchData["calories"] as! String)!
+        
+        let macronutrients = lunchData["macronutrients"] as? [String: Any]
+        
+        let carbs = macronutrients!["carbs"] as! String
+        let protein = macronutrients!["protein"] as! String
+        let fat = macronutrients!["fat"] as! String
+        
+        do {
+            try ImageApiService().generateImage(mealName, completion: { url in
+                guard let imageURL = URL(string: url!) else {
+                    print("invalid url")
+                    return
                 }
-            }
-            
+                let task = URLSession.shared.dataTask(with: imageURL) { data, response, error in
+                    guard let data = data, error == nil else {
+                        // Handle error
+                        return
+                    }
+                    do {
+                        guard let image = UIImage(data: data) else {
+                            throw RetrieveImageError.unableToGetImage
+                        }
+                        DispatchQueue.main.async {
+                            self.lunchMealImage.image = image.circleMasked
+                        }
+                        let meal = Meal(mealName: mealName, mealCalories: calories, mealCarbs: self.percentToDouble(percent: carbs), mealProtein: self.percentToDouble(percent: protein), mealFat: self.percentToDouble(percent: fat), mealImg: url)
+                        
+                        self.lunchJson = meal
+                        
+                        DispatchQueue.main.async {
+                            let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapLunch(_:)))
+                            self.lunchContainer.addGestureRecognizer(tap)
+                        }
+                        
+                        
+                        completion()
+                        
+                    } catch {
+                        print(error)
+                    }
+                }
+                task.resume()
+            })
+        }
+        catch {
+            print(error)
+        }
+        
+        //            Task {
+        //                do {
+        //                    let url = try await ImageApiService().generateImage(mealName)
+        //                    guard let imageURL = URL(string: url) else {
+        //                        throw RetrieveImageError.unableToCreateUrl
+        //                    }
+        //
+        //                    let (imageData, _) = try await URLSession.shared.data(from: imageURL)
+        //
+        //                    guard let image = UIImage(data: imageData) else {
+        //                        throw RetrieveImageError.unableToGetImage
+        //                    }
+        //
+        //                    self.lunchMealImage.image = image.circleMasked
+        //
+        //
+        //                    let meal = Meal(mealName: mealName, mealCalories: calories, mealCarbs: self.percentToDouble(percent: carbs), mealProtein: self.percentToDouble(percent: protein), mealFat: self.percentToDouble(percent: fat), mealImg: url)
+        //
+        //                    self.lunchJson = meal
+        //
+        //
+        //                    let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapLunch(_:)))
+        //                    self.lunchContainer.addGestureRecognizer(tap)
+        //
+        //                    completion()
+        //
+        //                } catch {
+        //                    print(error)
+        //                }
+        //            }
+        
+        DispatchQueue.main.async {
             self.lunchMealName.text = mealName
             self.lunchCalories.text = "\(calories) kcal"
             self.lunchCarbs.text = carbs
@@ -345,6 +758,7 @@ class NutritionalGuidanceViewController: UIViewController {
             self.setUpProportions(color: [.orange, .darkRed, UIColor(hexString: "#83c0ec")], proportions: [self.percentToDouble(percent: carbs), self.percentToDouble(percent: protein), self.percentToDouble(percent: fat)], view: self.lunchLineView)
             
         }
+        
     }
     
     @objc func tapLunch(_ sender: UITapGestureRecognizer? = nil) {
@@ -358,6 +772,7 @@ class NutritionalGuidanceViewController: UIViewController {
             mealDetail.mealCarbsText = self.lunchJson?.mealCarbs
             mealDetail.mealProteinText = self.lunchJson?.mealProtein
             mealDetail.cal = self.lunchJson?.mealCalories
+            mealDetail.mealType = "lunch"
             
             let nav = UINavigationController(rootViewController: mealDetail)
             
@@ -370,46 +785,89 @@ class NutritionalGuidanceViewController: UIViewController {
         
     }
     
-    private func setUpDinner(dinnerData: [String: Any]) {
-        DispatchQueue.main.async {
-            
-            let mealName = dinnerData["mealName"] as! String
-            
-            let calories = dinnerData["calories"] as? Double ?? Double(dinnerData["calories"] as! String)!
-            
-            let macronutrients = dinnerData["macronutrients"] as? [String: Any]
-            
-            let carbs = macronutrients!["carbs"] as! String
-            let protein = macronutrients!["protein"] as! String
-            let fat = macronutrients!["fat"] as! String
-            
-            Task {
-                do {
-                    let url = try await ImageApiService().generateImage(mealName)
-                    guard let imageURL = URL(string: url) else {
-                        throw RetrieveImageError.unableToCreateUrl
-                    }
-                    
-                    let (imageData, _) = try await URLSession.shared.data(from: imageURL)
-                    
-                    guard let image = UIImage(data: imageData) else {
-                        throw RetrieveImageError.unableToGetImage
-                    }
-                    
-                    self.dinnerMealImage.image = image.circleMasked
-                    
-                    let meal = Meal(mealName: mealName, mealCalories: calories, mealCarbs: self.percentToDouble(percent: carbs), mealProtein: self.percentToDouble(percent: protein), mealFat: self.percentToDouble(percent: fat), mealImg: url)
-                    
-                    self.dinnerJson = meal
-                    
-                    let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapDinner(_:)))
-                    self.dinnerContainer.addGestureRecognizer(tap)
-                    
-                } catch {
-                    print(error)
+    private func setUpDinner(dinnerData: [String: Any], completion: @escaping () -> Void) {
+        
+        let mealName = dinnerData["mealName"] as! String
+        
+        let calories = dinnerData["calories"] as? Double ?? Double(dinnerData["calories"] as! String)!
+        
+        let macronutrients = dinnerData["macronutrients"] as? [String: Any]
+        
+        let carbs = macronutrients!["carbs"] as! String
+        let protein = macronutrients!["protein"] as! String
+        let fat = macronutrients!["fat"] as! String
+        
+        do {
+            try ImageApiService().generateImage(mealName, completion: { url in
+                guard let imageURL = URL(string: url!) else {
+                    print("invalid url")
+                    return
                 }
-            }
-            
+                let task = URLSession.shared.dataTask(with: imageURL) { data, response, error in
+                    guard let data = data, error == nil else {
+                        // Handle error
+                        return
+                    }
+                    do {
+                        guard let image = UIImage(data: data) else {
+                            throw RetrieveImageError.unableToGetImage
+                        }
+                        DispatchQueue.main.async {
+                            self.dinnerMealImage.image = image.circleMasked
+                        }
+                        let meal = Meal(mealName: mealName, mealCalories: calories, mealCarbs: self.percentToDouble(percent: carbs), mealProtein: self.percentToDouble(percent: protein), mealFat: self.percentToDouble(percent: fat), mealImg: url)
+                        
+                        self.dinnerJson = meal
+                        
+                        DispatchQueue.main.async {
+                            let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapDinner(_:)))
+                            self.dinnerContainer.addGestureRecognizer(tap)
+                        }
+                        
+                        
+                        completion()
+                        
+                    } catch {
+                        print(error)
+                    }
+                }
+                task.resume()
+            })
+        }
+        catch {
+            print(error)
+        }
+        
+        //            Task {
+        //                do {
+        //                    let url = try await ImageApiService().generateImage(mealName)
+        //                    guard let imageURL = URL(string: url) else {
+        //                        throw RetrieveImageError.unableToCreateUrl
+        //                    }
+        //
+        //                    let (imageData, _) = try await URLSession.shared.data(from: imageURL)
+        //
+        //                    guard let image = UIImage(data: imageData) else {
+        //                        throw RetrieveImageError.unableToGetImage
+        //                    }
+        //
+        //                    self.dinnerMealImage.image = image.circleMasked
+        //
+        //                    let meal = Meal(mealName: mealName, mealCalories: calories, mealCarbs: self.percentToDouble(percent: carbs), mealProtein: self.percentToDouble(percent: protein), mealFat: self.percentToDouble(percent: fat), mealImg: url)
+        //
+        //                    self.dinnerJson = meal
+        //
+        //                    let tap = UITapGestureRecognizer(target: self, action: #selector(self.tapDinner(_:)))
+        //                    self.dinnerContainer.addGestureRecognizer(tap)
+        //
+        //                    completion()
+        //
+        //                } catch {
+        //                    print(error)
+        //                }
+        //            }
+        
+        DispatchQueue.main.async {
             self.dinnerMealName.text = mealName
             self.dinnerCalories.text = "\(calories) kcal"
             self.dinnerCarbs.text = carbs
@@ -418,8 +876,8 @@ class NutritionalGuidanceViewController: UIViewController {
             
             self.setUpProportions(color: [.orange, .darkRed, UIColor(hexString: "#83c0ec")], proportions: [self.percentToDouble(percent: carbs), self.percentToDouble(percent: protein), self.percentToDouble(percent: fat)], view: self.dinnerLineView)
             
-            
         }
+        
         
     }
     
@@ -435,6 +893,7 @@ class NutritionalGuidanceViewController: UIViewController {
             mealDetail.mealCarbsText = self.dinnerJson?.mealCarbs
             mealDetail.mealProteinText = self.dinnerJson?.mealProtein
             mealDetail.cal = self.dinnerJson?.mealCalories
+            mealDetail.mealType = "dinner"
             
             let nav = UINavigationController(rootViewController: mealDetail)
             
@@ -445,12 +904,6 @@ class NutritionalGuidanceViewController: UIViewController {
             self.present(nav, animated: true)
         }
         
-    }
-    
-    private func saveMeal(meal: Meal) {
-        mealList?.append(meal)
-        
-        print(mealList)
     }
     
     private func setUpProportions(color: [UIColor], proportions: [Double], view: UIView) {

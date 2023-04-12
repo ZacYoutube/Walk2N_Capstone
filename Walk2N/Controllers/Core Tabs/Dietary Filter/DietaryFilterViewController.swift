@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 class DietaryFilterViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
 
@@ -23,12 +24,14 @@ class DietaryFilterViewController: UIViewController, UIPickerViewDataSource, UIP
     
     let db = DatabaseManager.shared
     
-    var options = ["Vegan", "Vegetarian", "Gluten-free", "Dairy-free", "Low-carb"]
+    var options = ["No restrictions","Vegan", "Vegetarian", "Gluten-free", "Dairy-free", "Low-carb"]
     var selectedOption: String?
     
     var foodAlergents: [String] = []
     
     var otherInfoPlaceHolder: UILabel!
+    
+    var dietGoal: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +44,7 @@ class DietaryFilterViewController: UIViewController, UIPickerViewDataSource, UIP
         
         otherInfo.delegate = self
         otherInfo.layer.borderColor = UIColor.grayish.cgColor
-        otherInfo.layer.borderWidth = 0.5
+        otherInfo.layer.borderWidth = 1
         otherInfo.layer.cornerRadius = 8
         
         otherInfoPlaceHolder = UILabel()
@@ -56,9 +59,11 @@ class DietaryFilterViewController: UIViewController, UIPickerViewDataSource, UIP
         foodAlergiesList.dataSource = self
         foodAlergiesList.delegate = self
         foodAlergiesList.layer.borderColor = UIColor.grayish.cgColor
-        foodAlergiesList.layer.borderWidth = 0.5
+        foodAlergiesList.layer.borderWidth = 1
         foodAlergiesList.layer.cornerRadius = 8
         
+        goal.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
+
         addBtn.setOnClickListener {
             if self.foodAlergiesEnter.text != "" {
                 self.foodAlergents.append(self.foodAlergiesEnter.text!)
@@ -69,11 +74,56 @@ class DietaryFilterViewController: UIViewController, UIPickerViewDataSource, UIP
             print(self.foodAlergents)
         }
         
+        backBtn.setOnClickListener {
+            self.dismiss(animated: true)
+        }
+        
         
         db.getUserDietaryFilter { docs in
             if docs.count > 0 {
                 for doc in docs {
+                    let bloodSugarLevel = doc["bloodSugarLevel"] as? String
+                    let cholesterolLevel = doc["cholesterolLevel"] as? String
+                    let dietGoal = doc["dietGoal"] as? String
+                    let foodAlergies = doc["foodAlergies"] as? [String]
+                    let dietaryPreferences = doc["dietaryPreferences"] as? String
+                    let cusinePreferences = doc["cusinePreferences"] as? String
+                    let otherInfo = doc["otherInfo"] as? String
                     
+                    if bloodSugarLevel != nil {
+                        self.bloodSugarLevel.text = bloodSugarLevel
+                    }
+                    if cholesterolLevel != nil {
+                        self.cholesteralLevel.text = cholesterolLevel
+                    }
+                    if dietGoal != nil {
+                        for i in 0..<self.goal.numberOfSegments {
+                            let title = self.goal.titleForSegment(at: i)
+                            if title == dietGoal {
+                                self.goal.selectedSegmentIndex = i
+                            }
+                        }
+                        self.dietGoal = dietGoal
+                    }
+                    if foodAlergies != nil {
+                        self.foodAlergents = foodAlergies!
+                        self.foodAlergiesList.reloadData()
+                    }
+                    
+                    if dietaryPreferences != nil {
+                        let index = self.options.firstIndex(of: dietaryPreferences!)
+                        self.dietaryPreferences.selectRow(index!, inComponent: 0, animated: true)
+                        self.selectedOption = dietaryPreferences
+                    }
+                    
+                    if cusinePreferences != nil {
+                        self.cuisinePreferences.text = cusinePreferences
+                    }
+                    
+                    if otherInfo != nil {
+                        self.otherInfoPlaceHolder.isHidden = true
+                        self.otherInfo.text = otherInfo
+                    }
                 }
             }
         }
@@ -81,13 +131,28 @@ class DietaryFilterViewController: UIViewController, UIPickerViewDataSource, UIP
     }
     
     @objc private func applyFilter() {
-        print("hehehhehe")
-//        nutritionalFilter
-//        let dict:[String: Date] = ["date": self.chosenDate!]
-//        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "nutritionalFilter"), object: nil, userInfo: dict)
         
-//        if bloodSugarLevel.text != "" || cholesteralLevel.text != "" || foodAlergies.text != "" || dietaryPrefer
+        let uid = Auth.auth().currentUser?.uid
+        
+        let dict: [String: DietFilter] = ["dietaryFilter": DietFilter(uid: uid, bloodSugarLevel: bloodSugarLevel.text!, cholesterolLevel: cholesteralLevel.text!, dietGoal: dietGoal, foodAlergies: foodAlergents, dietaryPreferences: selectedOption, cusinePreferences: cuisinePreferences.text!, otherInfo: otherInfo.text!)]
+        
+        
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "nutritionalFilter"), object: nil, userInfo: dict)
+            
+        db.getUserDietaryFilter { docSnapshot in
+            if docSnapshot.count == 0 {
+                self.db.saveToDietFilter(dietFilter: DietFilter(uid: uid!, bloodSugarLevel: self.bloodSugarLevel.text, cholesterolLevel: self.cholesteralLevel.text, dietGoal: self.dietGoal ?? "", foodAlergies: self.foodAlergents, dietaryPreferences: self.selectedOption ?? "", cusinePreferences: self.cuisinePreferences.text, otherInfo: self.otherInfo.text))
+            } else {
+                self.db.updateUserDietaryFilter(uid: uid!, fieldToUpdate: ["bloodSugarLevel", "cholesterolLevel", "dietGoal", "foodAlergies", "dietaryPreferences", "cusinePreferences", "otherInfo"], fieldValues: [self.bloodSugarLevel.text as Any, self.cholesteralLevel.text as Any, self.dietGoal as Any, self.foodAlergents as Any, self.selectedOption as Any, self.cuisinePreferences.text as Any, self.otherInfo.text as Any]) { bool in }
+            }
+        }
         self.dismiss(animated: true)
+    }
+    
+    @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
+        let selectedIndex = sender.selectedSegmentIndex
+        let selectedValue = sender.titleForSegment(at: selectedIndex)
+        dietGoal = selectedValue
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -104,7 +169,6 @@ class DietaryFilterViewController: UIViewController, UIPickerViewDataSource, UIP
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         selectedOption = options[row]
-        print("Selected option: \(selectedOption ?? "none")")
     }
 }
 
@@ -112,26 +176,18 @@ extension DietaryFilterViewController: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
         otherInfoPlaceHolder?.isHidden = !textView.text.isEmpty
-//        let title = titleText.text
-//        let description = descriptionText.text
-//        let formFilled = title != nil && title != "" && description != nil && description != ""
-//        continueBtn(enabled: formFilled)
     }
     func textViewDidEndEditing(_ textView: UITextView) {
         otherInfoPlaceHolder?.isHidden = !textView.text.isEmpty
-
-        print("text view end")
         moveTextView(textView, moveDistance: -250, up: false)
     }
     func textViewDidBeginEditing(_ textView: UITextView) {
-        print("text view begin")
         moveTextView(textView, moveDistance: -250, up: true)
         otherInfoPlaceHolder?.isHidden = true
     }
     func moveTextView(_ textField: UITextView, moveDistance: Int, up: Bool) {
         let moveDuration = 0.3
         let movement: CGFloat = CGFloat(up ? moveDistance : -moveDistance)
-        print(self.view)
         UIView.beginAnimations("animateTextView", context: nil)
         UIView.setAnimationBeginsFromCurrentState(true)
         UIView.setAnimationDuration(moveDuration)

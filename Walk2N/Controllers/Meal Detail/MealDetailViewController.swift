@@ -7,6 +7,7 @@
 
 import UIKit
 import Charts
+import Firebase
 
 class MealDetailViewController: UIViewController {
     
@@ -30,12 +31,17 @@ class MealDetailViewController: UIViewController {
     
     @IBOutlet weak var backBtn: UIButton!
     
+    let db = DatabaseManager.shared
+    
     var mealNameText: String? = ""
     var mealCarbsText:Double? = 0
     var mealProteinText:Double? = 0
     var mealFatText:Double? = 0
     var cal: Double? = 0
     var imageUrl: String? = nil
+    var mealType: String?
+    var procedureList: [Any]?
+    var ingredientList: [Any]?
     
     var pieChart = PieChartView()
     
@@ -97,10 +103,97 @@ class MealDetailViewController: UIViewController {
         fat.text = "\((cal! * mealFatText!).truncate(places: 0)) kcal"
         
         setUpPieChart()
+        let dispatchGroup = DispatchGroup()
         
-        getCookTime(prompt: "recommend the estimated cook time for \(String(describing: mealNameText)). Just need the json format in the format of \(cookTimeFormat.replacingOccurrences(of: "'", with: "\""))")
-        getIngredients(prompt: "recommend the ingredients for \(String(describing: mealNameText)). Just need the json format in the format of \(ingredientFormat.replacingOccurrences(of: "'", with: "\""))")
-        getDirections(prompt: "recommend the cooking directions for \(String(describing: mealNameText)). Just need the json format in the format of \(directionFormat.replacingOccurrences(of: "'", with: "\""))")
+        db.getRecommendations { docSnapshot in
+            if docSnapshot.count > 0 {
+                for doc in docSnapshot {
+                    let breakfastData = doc["breakfast"] as? [String: Any]
+                    let lunchData = doc["lunch"] as? [String: Any]
+                    let dinnerData = doc["dinner"] as? [String: Any]
+                    
+                    var mealDoc: [String: Any]?
+                    
+                    if self.mealType == "breakfast" {
+                        mealDoc = breakfastData
+                    }
+                    else if self.mealType == "lunch" {
+                        mealDoc = lunchData
+                    }
+                    else if self.mealType == "dinner" {
+                        mealDoc = dinnerData
+                    }
+                    
+                    if mealDoc!["estimatedCookTime"] != nil && mealDoc!["estimatedCookTime"] as? String != nil
+                        && mealDoc!["procedures"] != nil && mealDoc!["procedures"] as? [Any] != nil
+                            && mealDoc!["ingredients"] != nil && mealDoc!["ingredients"] as? [Any] != nil
+                    {
+                        let estimatedCookTime = mealDoc!["estimatedCookTime"] as! String
+                        self.prepTime.text = estimatedCookTime
+                        
+                        let procedures = mealDoc!["procedures"] as! [String]
+                        var procedureText: String = ""
+                        for i in 0..<procedures.count {
+                            procedureText += "\(procedures[i])\n\n"
+                        }
+                        self.directions.text = procedureText
+                        
+                        let ingredients = mealDoc!["ingredients"] as! [String]
+                        var ingredientsText: String = ""
+                        for i in 0..<ingredients.count {
+                            ingredientsText += "\(ingredients[i])\n\n"
+                        }
+                        self.ingredients.text = ingredientsText
+                        
+                        print(ingredientsText)
+                    }
+                    else {
+                        dispatchGroup.enter()
+                        self.getCookTime(prompt: "recommend the estimated cook time for \(String(describing: self.mealNameText)). Just need the json format in the format of \(self.cookTimeFormat.replacingOccurrences(of: "'", with: "\""))"){
+                            dispatchGroup.leave()
+                        }
+                        
+                        dispatchGroup.enter()
+                        self.getIngredients(prompt: "recommend the ingredients for \(String(describing: self.mealNameText)). Just need the json format in the format of \(self.ingredientFormat.replacingOccurrences(of: "'", with: "\""))"){
+                            dispatchGroup.leave()
+                        }
+                        
+                        dispatchGroup.enter()
+                        self.getDirections(prompt: "recommend the cooking directions for \(String(describing: self.mealNameText)). Just need the json format in the format of \(self.directionFormat.replacingOccurrences(of: "'", with: "\""))"){
+                            dispatchGroup.leave()
+                        }
+                        
+                        dispatchGroup.notify(queue: .main) {
+                            let uid = Auth.auth().currentUser?.uid
+                            if self.mealType == "breakfast" {
+                                let breakfast = Meal(mealName: self.mealNameText, mealCalories: self.cal, mealCarbs: self.mealCarbsText, mealProtein: self.mealProteinText, mealFat: self.mealFatText, mealImg: self.imageUrl!)
+                                breakfast.setEstimatedCookTime(estimatedCookTime: self.prepTime.text)
+                                breakfast.setProcedures(procedures: self.procedureList)
+                                breakfast.setIngredients(ingredients: self.ingredientList)
+                                self.db.updateRecom(uid: uid!, date: Date(), field: "breakfast", value: breakfast.firestoreData) { bool in }
+                            }
+                            else if self.mealType == "lunch" {
+                                let lunch = Meal(mealName: self.mealNameText, mealCalories: self.cal, mealCarbs: self.mealCarbsText, mealProtein: self.mealProteinText, mealFat: self.mealFatText, mealImg: self.imageUrl!)
+                                lunch.setEstimatedCookTime(estimatedCookTime: self.prepTime.text)
+                                lunch.setProcedures(procedures: self.procedureList)
+                                lunch.setIngredients(ingredients: self.ingredientList)
+                                self.db.updateRecom(uid: uid!, date: Date(), field: "lunch", value: lunch.firestoreData) { bool in }
+                            }
+                            else if self.mealType == "dinner" {
+                                let dinner = Meal(mealName: self.mealNameText, mealCalories: self.cal, mealCarbs: self.mealCarbsText, mealProtein: self.mealProteinText, mealFat: self.mealFatText, mealImg: self.imageUrl!)
+                                dinner.setEstimatedCookTime(estimatedCookTime: self.prepTime.text)
+                                dinner.setProcedures(procedures: self.procedureList)
+                                dinner.setIngredients(ingredients: self.ingredientList)
+                                self.db.updateRecom(uid: uid!, date: Date(), field: "dinner", value: dinner.firestoreData) { bool in }
+                            }
+                        }
+                    }
+                    
+                }
+            }
+        }
+        
+        
     }
     
     private func setUpPieChart() {
@@ -134,7 +227,7 @@ class MealDetailViewController: UIViewController {
     }
     
     
-    private func getCookTime(prompt: String) {
+    private func getCookTime(prompt: String, completion: @escaping () -> Void) {
         GptApiService().getGptResponse(messagePrompt: prompt) { output in
             if output.contains("{") && output.contains("}") {
                 
@@ -160,6 +253,7 @@ class MealDetailViewController: UIViewController {
                     if let jsonObj = jsonData as? [String: Any], let estimatedCookTime = jsonObj["estimatedCookTime"] as? String {
                         DispatchQueue.main.async {
                             self.prepTime.text = estimatedCookTime
+                            completion()
                         }
                     }
                     else {
@@ -179,7 +273,7 @@ class MealDetailViewController: UIViewController {
         }
     }
         
-    private func getIngredients(prompt: String) {
+    private func getIngredients(prompt: String, completion: @escaping () -> Void) {
         GptApiService().getGptResponse(messagePrompt: prompt) { output in
             if output.contains("{") && output.contains("}") {
                 
@@ -212,6 +306,8 @@ class MealDetailViewController: UIViewController {
                         
                         DispatchQueue.main.async {
                             self.ingredients.text = ingredientStr
+                            self.ingredientList = ingredients
+                            completion()
                         }
                     }
                     else {
@@ -231,7 +327,7 @@ class MealDetailViewController: UIViewController {
         
     }
     
-    private func getDirections(prompt: String) {
+    private func getDirections(prompt: String, completion: @escaping () -> Void) {
         GptApiService().getGptResponse(messagePrompt: prompt) { output in
             if output.contains("{") && output.contains("}") {
                 
@@ -264,6 +360,8 @@ class MealDetailViewController: UIViewController {
                         
                         DispatchQueue.main.async {
                             self.directions.text = directionStr
+                            self.procedureList = directions
+                            completion()
                         }
                     }
                     else {

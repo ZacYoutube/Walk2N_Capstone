@@ -179,7 +179,8 @@ public class DatabaseManager {
     }
     
     func saveTodayRecom(meal: MealHist) {
-        db.collection("mealRecommendation").addDocument(data: [
+        db.collection("mealHist").addDocument(data: [
+            "uid": meal.uid as Any,
             "id": UUID().uuidString as Any,
             "breakfast": meal.breakfast?.firestoreData as Any,
             "lunch": meal.lunch?.firestoreData as Any,
@@ -216,6 +217,63 @@ public class DatabaseManager {
         }
     }
     
+    public func updateUserDietaryFilter(uid: String, fieldToUpdate: [String], fieldValues: [Any], _ completion:@escaping(_ bool: Bool) -> Void) {
+        db.collection("dietFilter").whereField("uid", isEqualTo: uid).getDocuments { querySnapShot, err in
+            if let err = err {
+                print(err)
+                completion(false)
+            }
+            else {
+                let doc = querySnapShot?.documents.first
+                
+                for i in 0..<fieldToUpdate.count {
+                    doc?.reference.updateData([
+                        fieldToUpdate[i] : fieldValues[i]
+                    ])
+                }
+                
+                completion(true)
+            }
+        }
+        
+    }
     
+    func getRecommendations(_ completion:@escaping(_ docSnapshot:[DocumentSnapshot])->Void ) {
+        let uid = Auth.auth().currentUser?.uid
+//        let calendar = Calendar.current
+//        let today = Date()
+//        let startOfDay = calendar.startOfDay(for: today)
+        
+        if uid != nil {
+            db.collection("mealHist").whereField("uid", isEqualTo: uid!).getDocuments { querySnapshot, err in
+                if let err = err {
+                    print("Error getting docs: \(err)")
+                }else{
+                    if let doc = querySnapshot?.documents {
+                        completion(doc)
+                    }
+                }
+            }
+        }
+    }
+    
+    public func updateRecom(uid: String, date: Date, field: String, value: Any, _ completion:@escaping(_ bool: Bool) -> Void) {
+        db.collection("mealHist").whereField("uid", isEqualTo: uid).getDocuments { querySnapShot, err in
+            if let err = err {
+                print(err)
+                completion(false)
+            }
+            else {
+                let doc = querySnapShot?.documents.first
+                
+                doc?.reference.updateData([
+                    field : value
+                ])
+                
+                completion(true)
+            }
+        }
+        
+    }
     
 }

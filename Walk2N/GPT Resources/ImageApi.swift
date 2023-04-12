@@ -7,6 +7,8 @@
 
 import Foundation
 import UIKit
+import Firebase
+import FirebaseStorage
 
 struct Response: Decodable {
     let data: [ImageUrl]
@@ -28,14 +30,14 @@ class ImageApiService {
     private let openaiCompletionUrl = "https://api.openai.com/v1/completions"
     private let id = UUID().uuidString
 
-    func generateImage(_ text: String) async throws -> String {
+    func generateImage(_ text: String, completion: @escaping (String?) -> Void) throws {
         let param: [String: Any] = [
             "prompt": text,
             "n": 1,
             "size": "1024x1024",
             "user": id
         ]
-        
+                
         let data: Data = try JSONSerialization.data(withJSONObject: param)
         
         guard let url = URL(string: openaiImageApiUrl) else {
@@ -48,15 +50,50 @@ class ImageApiService {
         
         urlRequest.httpMethod = "POST"
         urlRequest.httpBody = data
-        
-        let (response, _) = try await URLSession.shared.data(for: urlRequest)
-        
-        
-        let results = try JSONDecoder().decode(Response.self, from: response)
-        
-        let imageURL = results.data[0].url
-        
-        return imageURL
-        
+                
+        let task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+            if let error = error {
+                completion(error.localizedDescription)
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                completion("No image error")
+                return
+            }
+            
+            guard let data = data else {
+                completion("invalid image error")
+                return
+            }
+            
+            do {
+                let results = try JSONDecoder().decode(Response.self, from: data)
+                let imageURL = results.data[0].url
+                
+                let imgData = try Data(contentsOf: URL(string: imageURL)!)
+                let storageRef = Storage.storage().reference().child("foodImages/\(UUID().uuidString)")
+
+                let metadata = StorageMetadata()
+                metadata.contentType = "image/png"
+                storageRef.putData(imgData, metadata: metadata) { metaData, error in
+                    if error == nil, metaData != nil {
+                        storageRef.downloadURL { (url, error) in
+                            if let url = url {
+                                completion(url.absoluteString)
+                            } else {
+                                completion(nil)
+                            }
+                        }
+                    } else {
+                        completion(nil)
+                    }
+                }
+            } catch {
+                completion("url does not work")
+            }
+        }
+        task.resume()
     }
 }
