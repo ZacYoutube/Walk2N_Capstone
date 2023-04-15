@@ -18,14 +18,16 @@ class HealthKitManager {
         if HKHealthStore.isHealthDataAvailable() {
             let stepCount = NSSet(object: HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount) as Any)
             let distance = NSSet(object: HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.distanceWalkingRunning) as Any)
-            let activitySummaryType: Set = [HKObjectType.activitySummaryType()]
             healthStore.requestAuthorization(toShare: nil, read: (stepCount as! Set<HKObjectType>)) { success, err in
                 isEnabled = success
             }
             healthStore.requestAuthorization(toShare: nil, read: (distance as! Set<HKObjectType>)) { success, err in
                 isEnabled = success
             }
-            healthStore.requestAuthorization(toShare: nil, read: activitySummaryType) { (success, error) in
+            let typesToRead: Set<HKObjectType> = [
+                HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!
+            ]
+            healthStore.requestAuthorization(toShare: nil, read: typesToRead) { (success, error) in
                 isEnabled = success
             }
         }else{
@@ -210,44 +212,29 @@ class HealthKitManager {
         healthStore.execute(query)
     }
     
-    func gettingActivityLevel(completion:(([Double]) -> Void)?) {
-        let calendar = Calendar.current
-        let now = calendar.dateComponents([.year, .month, .day, .calendar], from: Date())
+    func gettingActivityLevel(completion:((Double) -> Void)?) {
 
-        let predicate = HKQuery.predicateForActivitySummary(with: now)
-        let query = HKActivitySummaryQuery(predicate: predicate) { (query, summaries, error) in
-            if let error = error {
-                // Handle error
-                print(error)
-                return
-            }
-            if let summary = summaries?.first {
-                // Use the activity summary data
-                let activeEnergyBurned = summary.activeEnergyBurned.doubleValue(for: HKUnit.kilocalorie())
-                let samplesQuery = HKSampleQuery(sampleType: HKQuantityType.quantityType(forIdentifier: .basalEnergyBurned)!, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil) { (query, samples, error) in
-                    if let error = error {
-                        // Handle error
-                        print(error)
-                        return
-                    }
-                    if let sample = samples?.first as? HKQuantitySample {
-                        let restingEnergyBurned = sample.quantity.doubleValue(for: HKUnit.kilocalorie())
-                        let totalEnergyBurned = activeEnergyBurned + restingEnergyBurned
-                        let standingHours = summary.appleStandHours.doubleValue(for: HKUnit.count())
-                        let exerciseMinutes = summary.appleExerciseTime.doubleValue(for: HKUnit.minute())
-                        
-                        print("Active energy burned: \(activeEnergyBurned) kcal")
-                        print("Resting energy burned: \(restingEnergyBurned) kcal")
-                        print("Total energy burned: \(totalEnergyBurned) kcal")
-                        print("Standing hours: \(standingHours) hours")
-                        print("Exercise minutes: \(exerciseMinutes) minutes")
-                        
-                        completion!([restingEnergyBurned, activeEnergyBurned, standingHours, exerciseMinutes])
-                    }
-                }
-                self.healthStore.execute(samplesQuery)
-            }
+        guard let activeEnergyType = HKObjectType.quantityType(forIdentifier: .activeEnergyBurned) else {
+            fatalError("Active Energy Burned data not available")
         }
+
+        let startDate = Calendar.current.startOfDay(for: Date())
+        let endDate = Date()
+
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictEndDate)
+        let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
+        let query = HKSampleQuery(sampleType: activeEnergyType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: [sortDescriptor]) { (query, samples, error) in
+            
+            guard let samples = samples as? [HKQuantitySample], error == nil else {
+                fatalError("Failed to fetch active energy burned data: \(error!.localizedDescription)")
+            }
+            
+            let totalActiveEnergyBurned = samples.reduce(0.0) { $0 + $1.quantity.doubleValue(for: HKUnit.kilocalorie()) }
+            
+            completion!(totalActiveEnergyBurned)
+        }
+
         healthStore.execute(query)
+       
     }
 }

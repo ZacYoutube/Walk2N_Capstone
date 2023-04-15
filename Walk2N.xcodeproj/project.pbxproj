@@ -23,6 +23,8 @@
 		D53A7FC22991EDBA000220B9 /* ShoeListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53A7FC02991EDBA000220B9 /* ShoeListCollectionViewCell.swift */; };
 		D53A7FC32991EDBA000220B9 /* ShoeListCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D53A7FC12991EDBA000220B9 /* ShoeListCollectionViewCell.xib */; };
 		D53A7FC52991EE8D000220B9 /* ShoeStoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53A7FC42991EE8D000220B9 /* ShoeStoreViewController.swift */; };
+		D53D50FF29E780410008AD56 /* FoodApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53D50FE29E780400008AD56 /* FoodApi.swift */; };
+		D53D510229E7DEE10008AD56 /* SaveMealViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53D510129E7DEE10008AD56 /* SaveMealViewController.swift */; };
 		D5631F9B29A6B799007E4678 /* goal_predictor.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D5631F9A29A6B799007E4678 /* goal_predictor.mlmodel */; };
 		D5631F9D29A6B842007E4678 /* GoalPredictManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5631F9C29A6B842007E4678 /* GoalPredictManager.swift */; };
 		D5631F9F29A70958007E4678 /* alert_predictor.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D5631F9E29A70958007E4678 /* alert_predictor.mlmodel */; };
@@ -100,6 +102,8 @@
 		D53A7FC02991EDBA000220B9 /* ShoeListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoeListCollectionViewCell.swift; sourceTree = "<group>"; };
 		D53A7FC12991EDBA000220B9 /* ShoeListCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShoeListCollectionViewCell.xib; sourceTree = "<group>"; };
 		D53A7FC42991EE8D000220B9 /* ShoeStoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoeStoreViewController.swift; sourceTree = "<group>"; };
+		D53D50FE29E780400008AD56 /* FoodApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodApi.swift; sourceTree = "<group>"; };
+		D53D510129E7DEE10008AD56 /* SaveMealViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveMealViewController.swift; sourceTree = "<group>"; };
 		D5631F9A29A6B799007E4678 /* goal_predictor.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = goal_predictor.mlmodel; sourceTree = "<group>"; };
 		D5631F9C29A6B842007E4678 /* GoalPredictManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalPredictManager.swift; sourceTree = "<group>"; };
 		D5631F9E29A70958007E4678 /* alert_predictor.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = alert_predictor.mlmodel; sourceTree = "<group>"; };
@@ -251,6 +255,14 @@
 			path = "Shoe Collection View Cell";
 			sourceTree = "<group>";
 		};
+		D53D510029E7DE970008AD56 /* Save Meals */ = {
+			isa = PBXGroup;
+			children = (
+				D53D510129E7DEE10008AD56 /* SaveMealViewController.swift */,
+			);
+			path = "Save Meals";
+			sourceTree = "<group>";
+		};
 		D570FB3B29E4BEAA001157BA /* Dietary Filter */ = {
 			isa = PBXGroup;
 			children = (
@@ -318,6 +330,7 @@
 		D5A3C382298B1BF100772D1B /* Core Tabs */ = {
 			isa = PBXGroup;
 			children = (
+				D53D510029E7DE970008AD56 /* Save Meals */,
 				D570FB3B29E4BEAA001157BA /* Dietary Filter */,
 				D5B5E20129C157F2009782DF /* Calendar */,
 				D597DF85299EF50A00DF4D13 /* Profile component */,
@@ -392,6 +405,7 @@
 				D5BC397F29DB9AE300FF3546 /* ChatgptApi.swift */,
 				D5BC398429DCF1A100FF3546 /* ImageApi.swift */,
 				D5BC399329DF5BA800FF3546 /* ApiKey.swift */,
+				D53D50FE29E780400008AD56 /* FoodApi.swift */,
 			);
 			path = "GPT Resources";
 			sourceTree = "<group>";
@@ -528,6 +542,7 @@
 				D512E9A32988A33D007B0D2F /* AppDelegate.swift in Sources */,
 				D5A3C387298B30D000772D1B /* DatabaseManager.swift in Sources */,
 				D5CA908029A9751F00C53B7B /* AlertViewController.swift in Sources */,
+				D53D510229E7DEE10008AD56 /* SaveMealViewController.swift in Sources */,
 				D5CA908629ABEEA100C53B7B /* UpdateManager.swift in Sources */,
 				D5A3C38B298B35E500772D1B /* UIExtension.swift in Sources */,
 				D597DF7E29976CCA00DF4D13 /* TrackRunViewController.swift in Sources */,
@@ -562,6 +577,7 @@
 				D5BC398529DCF1A100FF3546 /* ImageApi.swift in Sources */,
 				D5CA908329A9753800C53B7B /* AlertCollectionViewCell.swift in Sources */,
 				D5AD2B3B29B31CE0005CB1EB /* ProfileUserInfo.swift in Sources */,
+				D53D50FF29E780410008AD56 /* FoodApi.swift in Sources */,
 				D5BC398029DB9AE300FF3546 /* ChatgptApi.swift in Sources */,
 				D5B5E20329C1583D009782DF /* CalendarViewController.swift in Sources */,
 				D5AD2B5229B5C2A7005CB1EB /* SaveRunViewController.swift in Sources */,
@@ -713,6 +729,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Walk2N/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Need camera";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Need access to share health statistics";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Need access to location";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Allow location";
@@ -747,6 +764,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Walk2N/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Need camera";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Need access to share health statistics";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Need access to location";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Allow location";

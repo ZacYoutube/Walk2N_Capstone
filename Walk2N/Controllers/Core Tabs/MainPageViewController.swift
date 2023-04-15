@@ -75,6 +75,9 @@ class MainPageViewController: UIViewController {
         
         self.setUpNavbar(text: "Dashboard")
         
+//        FoodApiService().getFoodResponse(query: "fried rice") { s in
+//
+//        }
         authorizeHealthKit()
         contentView.backgroundColor = UIColor.white
         progressCircularViewContainer.backgroundColor = .background1

@@ -25,9 +25,9 @@ class MealHist {
     
     var firestoreData: [String: Any] {
         return [
-            "breakfast": breakfast as Any,
-            "lunch": lunch as Any,
-            "dinner": dinner as Any,
+            "breakfast": breakfast?.firestoreData as Any,
+            "lunch": lunch?.firestoreData as Any,
+            "dinner": dinner?.firestoreData as Any,
             "date": date as Any,
             "uid": uid as Any
         ]

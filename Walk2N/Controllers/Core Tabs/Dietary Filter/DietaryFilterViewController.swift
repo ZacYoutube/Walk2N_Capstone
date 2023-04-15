@@ -62,6 +62,10 @@ class DietaryFilterViewController: UIViewController, UIPickerViewDataSource, UIP
         foodAlergiesList.layer.borderWidth = 1
         foodAlergiesList.layer.cornerRadius = 8
         
+        dietaryPreferences.layer.borderWidth = 1
+        dietaryPreferences.layer.borderColor = UIColor.grayish.cgColor
+        dietaryPreferences.layer.cornerRadius = 8
+        
         goal.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
 
         addBtn.setOnClickListener {

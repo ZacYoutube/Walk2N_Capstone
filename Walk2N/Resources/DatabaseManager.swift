@@ -240,12 +240,12 @@ public class DatabaseManager {
     
     func getRecommendations(_ completion:@escaping(_ docSnapshot:[DocumentSnapshot])->Void ) {
         let uid = Auth.auth().currentUser?.uid
-//        let calendar = Calendar.current
-//        let today = Date()
-//        let startOfDay = calendar.startOfDay(for: today)
+        let calendar = Calendar.current
+        let today = Date()
+        let startOfDay = calendar.startOfDay(for: today)
         
         if uid != nil {
-            db.collection("mealHist").whereField("uid", isEqualTo: uid!).getDocuments { querySnapshot, err in
+            db.collection("mealHist").whereField("uid", isEqualTo: uid!).whereField("date", isEqualTo: startOfDay).getDocuments { querySnapshot, err in
                 if let err = err {
                     print("Error getting docs: \(err)")
                 }else{
