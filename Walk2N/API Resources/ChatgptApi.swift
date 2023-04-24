@@ -20,7 +20,7 @@ struct Model: Codable {
 
 class GptApiService {
     private let apiKey = ApiKeyObject.apiKey
-    var mainPrompt = "As a knowledgeable and passionate caregiver with expertise in personal health, you are being asked to provide brief responses that address the user's queries, while avoiding the use of statistical data. If any health metric appears to be low, kindly offer advice on how the user can improve. Below are some health metrics for the past 14 days to consider. If a value is zero, the user has not inputted anything for that day. Today is \(DateFormatter.localizedString(from: Date(), dateStyle: .full, timeStyle: .none)).\n\n"
+    var mainPrompt = "As a knowledgeable and passionate caregiver with expertise in personal health, you are being asked to provide brief responses that address the user's queries, while avoiding the use of statistical data. If any health metric appears to be low, kindly offer advice on how the user can improve. Some health metrics over the past two weeks (14 days) to incorporate is given below. If a value is zero, the user has not inputted anything for that day. Do NOT say the metric is zero. For example, if heart rate is zero on one day, it simply means user has not recorded his/her heart rate. \n\n"
     let db = DatabaseManager.shared
     
     func getGptResponse(messagePrompt: String, completion:((String) -> Void)?) {
@@ -61,10 +61,26 @@ class GptApiService {
                     dispatchGroup.leave()
                 }
                 
+                dispatchGroup.enter()
+                HealthKitManager().gettingLastFewWeeksHeartRate { heartRates in
+                    for i in 0...13 {
+                        model[i].heartRate = heartRates[i]
+                    }
+                    dispatchGroup.leave()
+                }
+                
+                dispatchGroup.enter()
+                HealthKitManager().gettingDistanceArr(14) { distArr, _ in
+                    for i in 0...13 {
+                        model[i].distance = distArr[i]
+                    }
+                    dispatchGroup.leave()
+                }
+                
                 dispatchGroup.notify(queue: .main) {
                     for i in 0...13 {
                         let data = model[i]
-                        self.mainPrompt += "\(data.date): \(Int(data.steps!)) steps, \(Int(data.activeEnergy!) ) calories burned, \(Int(data.exerciseMinutes!) ) minutes of exercise"
+                        self.mainPrompt += "\(data.date): \(Int(data.steps!)) steps, walked \(Int(data.distance!)) meters, \(Int(data.activeEnergy!) ) calories burned, \(Int(data.exerciseMinutes!) ) minutes of exercise, heart rate of \(Int(data.heartRate ?? 0)) bpm. "
                     }
                     self.loadStatusStr { statusStr in
                         print("status", statusStr)
@@ -72,7 +88,7 @@ class GptApiService {
                         print(self.mainPrompt)
 
                         Task {
-                            let response = try await api.sendMessage(text: messagePrompt,
+                            let response = try await api.sendMessage(text: messagePrompt + " Do not start your answer with: Based on xxxx.",
                                                                      model: "gpt-3.5-turbo",
                                                                      systemText: self.mainPrompt,
                                                                      temperature: 0.9)

@@ -20,7 +20,6 @@
 		D512E9CE2988E229007B0D2F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D512E9CD2988E229007B0D2F /* User.swift */; };
 		D512E9D02988E67E007B0D2F /* HistoricalStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = D512E9CF2988E67E007B0D2F /* HistoricalStep.swift */; };
 		D51BA05D29F1F0B300F787AC /* ChatGptViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51BA05C29F1F0B300F787AC /* ChatGptViewController.swift */; };
-		D51BA06429F2345400F787AC /* ChatUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51BA06329F2345400F787AC /* ChatUIViewController.swift */; };
 		D51BA06929F24A2600F787AC /* MessageRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51BA06829F24A2600F787AC /* MessageRecord.swift */; };
 		D51BA06C29F2668A00F787AC /* MessageKit in Frameworks */ = {isa = PBXBuildFile; productRef = D51BA06B29F2668A00F787AC /* MessageKit */; };
 		D530770929B7BC8700076184 /* UpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D530770829B7BC8700076184 /* UpdateViewController.swift */; };
@@ -102,7 +101,6 @@
 		D512E9CD2988E229007B0D2F /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		D512E9CF2988E67E007B0D2F /* HistoricalStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricalStep.swift; sourceTree = "<group>"; };
 		D51BA05C29F1F0B300F787AC /* ChatGptViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatGptViewController.swift; sourceTree = "<group>"; };
-		D51BA06329F2345400F787AC /* ChatUIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUIViewController.swift; sourceTree = "<group>"; };
 		D51BA06829F24A2600F787AC /* MessageRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRecord.swift; sourceTree = "<group>"; };
 		D530770829B7BC8700076184 /* UpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateViewController.swift; sourceTree = "<group>"; };
 		D53A7FC02991EDBA000220B9 /* ShoeListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoeListCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -258,7 +256,6 @@
 			isa = PBXGroup;
 			children = (
 				D51BA05C29F1F0B300F787AC /* ChatGptViewController.swift */,
-				D51BA06329F2345400F787AC /* ChatUIViewController.swift */,
 			);
 			path = "ChatGpt Tab";
 			sourceTree = "<group>";
@@ -564,7 +561,6 @@
 				D5CA908629ABEEA100C53B7B /* UpdateManager.swift in Sources */,
 				D5A3C38B298B35E500772D1B /* UIExtension.swift in Sources */,
 				D597DF7E29976CCA00DF4D13 /* TrackRunViewController.swift in Sources */,
-				D51BA06429F2345400F787AC /* ChatUIViewController.swift in Sources */,
 				D5631F9B29A6B799007E4678 /* goal_predictor.mlmodel in Sources */,
 				D597DF8429984B1300DF4D13 /* StepCounter.swift in Sources */,
 				D566373129A8251800DE1B21 /* RoundedWhiteButton.swift in Sources */,

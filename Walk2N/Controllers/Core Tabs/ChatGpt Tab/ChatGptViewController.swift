@@ -36,6 +36,8 @@ class ChatGptViewController:  MessagesViewController, MessagesDataSource, Messag
     var messages: [Message] = []
     var clearButton: InputBarButtonItem?
     
+    var isTyping: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -44,7 +46,7 @@ class ChatGptViewController:  MessagesViewController, MessagesDataSource, Messag
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
-        messagesCollectionView.backgroundColor = .background1
+        messagesCollectionView.backgroundColor = .white
         messagesCollectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
         messagesCollectionView.refreshControl = UIRefreshControl()
         messagesCollectionView.refreshControl?.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
@@ -84,7 +86,6 @@ class ChatGptViewController:  MessagesViewController, MessagesDataSource, Messag
         clearButton = InputBarButtonItem(frame: CGRect(origin: .zero, size: CGSize(width: messageInputBar.sendButton.frame.size.width, height: messageInputBar.sendButton.frame.size.height)))
         clearButton!.image = clearImage
         clearButton!.imageView?.contentMode = .scaleAspectFit
-        clearButton!.contentEdgeInsets = UIEdgeInsets(top: 3, left: 0, bottom: 3, right: 0)
         
         let sendImage = UIImage(named: "send")!
         messageInputBar.sendButton.image = sendImage
@@ -92,6 +93,9 @@ class ChatGptViewController:  MessagesViewController, MessagesDataSource, Messag
         messageInputBar.sendButton.imageView?.contentMode = .scaleAspectFit
         messageInputBar.setStackViewItems([messageInputBar.sendButton, clearButton!], forStack: .right, animated: false)
         messageInputBar.setRightStackViewWidthConstant(to: 100, animated: false)
+        messageInputBar.inputTextView.layer.borderWidth = 0.5
+        messageInputBar.inputTextView.layer.borderColor = UIColor.gray.cgColor
+        messageInputBar.inputTextView.layer.cornerRadius = 8
         
         messageInputBar.rightStackView.alignment = .fill
         messageInputBar.rightStackView.distribution = .fillEqually
@@ -122,6 +126,38 @@ class ChatGptViewController:  MessagesViewController, MessagesDataSource, Messag
         
         // Hide keyboard when user starts scrolling
         messageInputBar.inputTextView.resignFirstResponder()
+    }
+    
+    func cellTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        let attributes = [
+            NSAttributedString.Key.foregroundColor: UIColor.lessDark,
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12)
+        ]
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .none
+        dateFormatter.timeStyle = .short
+
+        let calendar = NSCalendar.current
+        let now = Date()
+        let date = message.sentDate
+        
+        if calendar.isDateInToday(date) {
+            dateFormatter.dateFormat = "'Today', h:mm a"
+        } else {
+            dateFormatter.dateFormat = "MMM d, h:mm a"
+        }
+
+        let formattedTime = dateFormatter.string(from: date)
+        
+        return isFromCurrentSender(message: message) ? NSAttributedString(string: formattedTime, attributes: attributes) : NSAttributedString(string: "", attributes: attributes)
+    }
+    
+    func cellTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
+        return isFromCurrentSender(message: message) ? 40 : 0
+    }
+    
+    func messageStyle(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageStyle {
+        return .bubbleTail(isFromCurrentSender(message: message) ? .bottomRight : .bottomLeft, .curved)
     }
     
     private func setUpClearBtn() {
@@ -245,7 +281,11 @@ class ChatGptViewController:  MessagesViewController, MessagesDataSource, Messag
     }
     
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessageKit.MessagesCollectionView) -> MessageKit.MessageType {
-        return messages[indexPath.section]
+        var index = indexPath.section
+        if index > messages.count - 1{
+            index = messages.count - 1
+        }
+        return messages[index]
     }
     
     func numberOfSections(in messagesCollectionView: MessageKit.MessagesCollectionView) -> Int {
@@ -260,13 +300,27 @@ class ChatGptViewController:  MessagesViewController, MessagesDataSource, Messag
         view.inputViewController?.hidesBottomBarWhenPushed = true
         let senderMessage = Message(sender: currentSender, messageId: UUID().uuidString, sentDate: Date(), kind: .text(text))
         messages.append(senderMessage)
+        clearButton?.isEnabled = true
+        DispatchQueue.main.async {
+            self.isTyping = true
+            self.setTypingIndicatorViewHidden(!self.isTyping, animated: true)
+        }
         messagesCollectionView.reloadData()
         if text != "" {
-            GptApiService().getGptStream(messagePrompt: text) { response, done in
+//            GptApiService().getGptStream(messagePrompt: text) { response, done in
+//                self.addChatGptResponse(response)
+//
+//                if done == true {
+//                    self.addMessages(message: self.messages)
+//                }
+//            }
+            
+            GptApiService().getGptResponse(messagePrompt: text) { response in
                 self.addChatGptResponse(response)
-                
-                if done == true {
-                    self.addMessages(message: self.messages)
+                self.addMessages(message: self.messages)
+                self.isTyping = false
+                DispatchQueue.main.async {
+                    self.setTypingIndicatorViewHidden(!self.isTyping, animated: true)
                 }
             }
         }
