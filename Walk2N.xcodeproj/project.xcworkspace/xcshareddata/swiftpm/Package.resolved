@@ -118,6 +118,15 @@
       }
     },
     {
+      "identity" : "inputbaraccessoryview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nathantannar4/InputBarAccessoryView",
+      "state" : {
+        "revision" : "039a9cb3ae8c5bc4d39242a6aa688b88023633d3",
+        "version" : "6.2.0"
+      }
+    },
+    {
       "identity" : "iosdropdown",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/jriosdev/iOSDropDown.git",
@@ -133,6 +142,15 @@
       "state" : {
         "revision" : "0706abcc6b0bd9cedfbb015ba840e4a780b5159b",
         "version" : "1.22.2"
+      }
+    },
+    {
+      "identity" : "messagekit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/MessageKit/MessageKit",
+      "state" : {
+        "branch" : "main",
+        "revision" : "13ce40c187a12f02d6e6be0bb08c32886cec0187"
       }
     },
     {

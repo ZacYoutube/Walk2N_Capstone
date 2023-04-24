@@ -19,6 +19,10 @@
 		D512E9CC2988E1C5007B0D2F /* Shoe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D512E9CB2988E1C5007B0D2F /* Shoe.swift */; };
 		D512E9CE2988E229007B0D2F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D512E9CD2988E229007B0D2F /* User.swift */; };
 		D512E9D02988E67E007B0D2F /* HistoricalStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = D512E9CF2988E67E007B0D2F /* HistoricalStep.swift */; };
+		D51BA05D29F1F0B300F787AC /* ChatGptViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51BA05C29F1F0B300F787AC /* ChatGptViewController.swift */; };
+		D51BA06429F2345400F787AC /* ChatUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51BA06329F2345400F787AC /* ChatUIViewController.swift */; };
+		D51BA06929F24A2600F787AC /* MessageRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51BA06829F24A2600F787AC /* MessageRecord.swift */; };
+		D51BA06C29F2668A00F787AC /* MessageKit in Frameworks */ = {isa = PBXBuildFile; productRef = D51BA06B29F2668A00F787AC /* MessageKit */; };
 		D530770929B7BC8700076184 /* UpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D530770829B7BC8700076184 /* UpdateViewController.swift */; };
 		D53A7FC22991EDBA000220B9 /* ShoeListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53A7FC02991EDBA000220B9 /* ShoeListCollectionViewCell.swift */; };
 		D53A7FC32991EDBA000220B9 /* ShoeListCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D53A7FC12991EDBA000220B9 /* ShoeListCollectionViewCell.xib */; };
@@ -40,7 +44,6 @@
 		D597DF802997713F00DF4D13 /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597DF7F2997713F00DF4D13 /* Annotation.swift */; };
 		D597DF8429984B1300DF4D13 /* StepCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597DF8329984B1300DF4D13 /* StepCounter.swift */; };
 		D597DF87299EF53D00DF4D13 /* ProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597DF86299EF53D00DF4D13 /* ProfileTableViewCell.swift */; };
-		D597DF8929A2C0B500DF4D13 /* Bonus.swift in Sources */ = {isa = PBXBuildFile; fileRef = D597DF8829A2C0B500DF4D13 /* Bonus.swift */; };
 		D5A3C37D298B1BA700772D1B /* MainPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C37C298B1BA700772D1B /* MainPageViewController.swift */; };
 		D5A3C37F298B1BC300772D1B /* HistoricalStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C37E298B1BC300772D1B /* HistoricalStepViewController.swift */; };
 		D5A3C381298B1BE000772D1B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C380298B1BE000772D1B /* ProfileViewController.swift */; };
@@ -98,6 +101,9 @@
 		D512E9CB2988E1C5007B0D2F /* Shoe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shoe.swift; sourceTree = "<group>"; };
 		D512E9CD2988E229007B0D2F /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		D512E9CF2988E67E007B0D2F /* HistoricalStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricalStep.swift; sourceTree = "<group>"; };
+		D51BA05C29F1F0B300F787AC /* ChatGptViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatGptViewController.swift; sourceTree = "<group>"; };
+		D51BA06329F2345400F787AC /* ChatUIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUIViewController.swift; sourceTree = "<group>"; };
+		D51BA06829F24A2600F787AC /* MessageRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRecord.swift; sourceTree = "<group>"; };
 		D530770829B7BC8700076184 /* UpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateViewController.swift; sourceTree = "<group>"; };
 		D53A7FC02991EDBA000220B9 /* ShoeListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoeListCollectionViewCell.swift; sourceTree = "<group>"; };
 		D53A7FC12991EDBA000220B9 /* ShoeListCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShoeListCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -118,7 +124,6 @@
 		D597DF7F2997713F00DF4D13 /* Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Annotation.swift; sourceTree = "<group>"; };
 		D597DF8329984B1300DF4D13 /* StepCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepCounter.swift; sourceTree = "<group>"; };
 		D597DF86299EF53D00DF4D13 /* ProfileTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewCell.swift; sourceTree = "<group>"; };
-		D597DF8829A2C0B500DF4D13 /* Bonus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bonus.swift; sourceTree = "<group>"; };
 		D5A3C37C298B1BA700772D1B /* MainPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPageViewController.swift; sourceTree = "<group>"; };
 		D5A3C37E298B1BC300772D1B /* HistoricalStepViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricalStepViewController.swift; sourceTree = "<group>"; };
 		D5A3C380298B1BE000772D1B /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
@@ -172,6 +177,7 @@
 				D512E9C32988AB27007B0D2F /* FirebaseFirestore in Frameworks */,
 				D5BC399929E3A3DA00FF3546 /* SwiftSpinner in Frameworks */,
 				D5B5E20B29D37F64009782DF /* SideMenu in Frameworks */,
+				D51BA06C29F2668A00F787AC /* MessageKit in Frameworks */,
 				D5BC398329DBBC8700FF3546 /* ChatGPTSwift in Frameworks */,
 				D5A3C3AD298CC6C600772D1B /* Charts in Frameworks */,
 			);
@@ -200,7 +206,7 @@
 		D512E9A12988A33D007B0D2F /* Walk2N */ = {
 			isa = PBXGroup;
 			children = (
-				D5BC397E29DB9ACC00FF3546 /* GPT Resources */,
+				D5BC397E29DB9ACC00FF3546 /* API Resources */,
 				D5AD2B3F29B3EFCE005CB1EB /* ML models */,
 				D5AD2B3D29B3EFB8005CB1EB /* Playground */,
 				D5A3C396298C8F8E00772D1B /* Walk2N.entitlements */,
@@ -221,10 +227,12 @@
 		D512E9BC2988A4AC007B0D2F /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				D5BC399029DE2D0300FF3546 /* Meal Detail */,
-				D5BE8C5B2995E17700ABA0D4 /* Modal */,
-				D5A3C38F298C129600772D1B /* Collect Info */,
-				D5A3C383298B1C2A00772D1B /* Auth */,
+				D597DF85299EF50A00DF4D13 /* Profile Component */,
+				D5B5E20129C157F2009782DF /* Calendar Component */,
+				D53D510029E7DE970008AD56 /* Nutritions Component */,
+				D5BE8C5B2995E17700ABA0D4 /* Modal Component */,
+				D5A3C38F298C129600772D1B /* Collect Info Component */,
+				D5A3C383298B1C2A00772D1B /* Auth Component */,
 				D5A3C382298B1BF100772D1B /* Core Tabs */,
 			);
 			path = Controllers;
@@ -236,42 +244,64 @@
 				D512E9CB2988E1C5007B0D2F /* Shoe.swift */,
 				D512E9CD2988E229007B0D2F /* User.swift */,
 				D512E9CF2988E67E007B0D2F /* HistoricalStep.swift */,
-				D597DF8829A2C0B500DF4D13 /* Bonus.swift */,
 				D5CA906829A95F1E00C53B7B /* Alert.swift */,
 				D5AD2B5329B5E16B005CB1EB /* WalkHist.swift */,
 				D5BC398E29DE20DC00FF3546 /* Meal.swift */,
 				D5BC399529E3265600FF3546 /* MealHist.swift */,
 				D570FB3E29E4DDA2001157BA /* DietFilter.swift */,
+				D51BA06829F24A2600F787AC /* MessageRecord.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
 		};
-		D53A7FBF2991EC69000220B9 /* Shoe Collection View Cell */ = {
+		D51BA06529F247A900F787AC /* ChatGpt Tab */ = {
 			isa = PBXGroup;
 			children = (
+				D51BA05C29F1F0B300F787AC /* ChatGptViewController.swift */,
+				D51BA06329F2345400F787AC /* ChatUIViewController.swift */,
+			);
+			path = "ChatGpt Tab";
+			sourceTree = "<group>";
+		};
+		D51BA06629F2483600F787AC /* Main Page Tab */ = {
+			isa = PBXGroup;
+			children = (
+				D5A3C37C298B1BA700772D1B /* MainPageViewController.swift */,
+			);
+			path = "Main Page Tab";
+			sourceTree = "<group>";
+		};
+		D51BA06729F2485800F787AC /* Historical Steps Tab */ = {
+			isa = PBXGroup;
+			children = (
+				D5A3C37E298B1BC300772D1B /* HistoricalStepViewController.swift */,
+			);
+			path = "Historical Steps Tab";
+			sourceTree = "<group>";
+		};
+		D53A7FBF2991EC69000220B9 /* Shoe Tab */ = {
+			isa = PBXGroup;
+			children = (
+				D5B5E20F29D3C372009782DF /* CurrentSneakerViewController.swift */,
 				D53A7FC02991EDBA000220B9 /* ShoeListCollectionViewCell.swift */,
+				D53A7FC42991EE8D000220B9 /* ShoeStoreViewController.swift */,
 				D53A7FC12991EDBA000220B9 /* ShoeListCollectionViewCell.xib */,
 			);
-			path = "Shoe Collection View Cell";
+			path = "Shoe Tab";
 			sourceTree = "<group>";
 		};
-		D53D510029E7DE970008AD56 /* Save Meals */ = {
+		D53D510029E7DE970008AD56 /* Nutritions Component */ = {
 			isa = PBXGroup;
 			children = (
+				D5BC399129DE2D1D00FF3546 /* MealDetailViewController.swift */,
 				D53D510129E7DEE10008AD56 /* SaveMealViewController.swift */,
-			);
-			path = "Save Meals";
-			sourceTree = "<group>";
-		};
-		D570FB3B29E4BEAA001157BA /* Dietary Filter */ = {
-			isa = PBXGroup;
-			children = (
+				D5B5E20C29D39260009782DF /* NutritionalGuidanceViewController.swift */,
 				D570FB3C29E4BEC4001157BA /* DietaryFilterViewController.swift */,
 			);
-			path = "Dietary Filter";
+			path = "Nutritions Component";
 			sourceTree = "<group>";
 		};
-		D597DF7C29976C6100DF4D13 /* Track run */ = {
+		D597DF7C29976C6100DF4D13 /* Track Run Tab */ = {
 			isa = PBXGroup;
 			children = (
 				D597DF7D29976CCA00DF4D13 /* TrackRunViewController.swift */,
@@ -283,16 +313,17 @@
 				D5AD2B5729B5EFB7005CB1EB /* WalkHistCollectionViewCell.swift */,
 				D5AD2B5829B5EFB7005CB1EB /* WalkHistCollectionViewCell.xib */,
 			);
-			path = "Track run";
+			path = "Track Run Tab";
 			sourceTree = "<group>";
 		};
-		D597DF85299EF50A00DF4D13 /* Profile component */ = {
+		D597DF85299EF50A00DF4D13 /* Profile Component */ = {
 			isa = PBXGroup;
 			children = (
+				D5A3C380298B1BE000772D1B /* ProfileViewController.swift */,
 				D5AD2B3A29B31CE0005CB1EB /* ProfileUserInfo.swift */,
 				D597DF86299EF53D00DF4D13 /* ProfileTableViewCell.swift */,
 			);
-			path = "Profile component";
+			path = "Profile Component";
 			sourceTree = "<group>";
 		};
 		D5A3C36E298B19EF00772D1B /* Resources */ = {
@@ -330,23 +361,16 @@
 		D5A3C382298B1BF100772D1B /* Core Tabs */ = {
 			isa = PBXGroup;
 			children = (
-				D53D510029E7DE970008AD56 /* Save Meals */,
-				D570FB3B29E4BEAA001157BA /* Dietary Filter */,
-				D5B5E20129C157F2009782DF /* Calendar */,
-				D597DF85299EF50A00DF4D13 /* Profile component */,
-				D597DF7C29976C6100DF4D13 /* Track run */,
-				D53A7FBF2991EC69000220B9 /* Shoe Collection View Cell */,
-				D5A3C37C298B1BA700772D1B /* MainPageViewController.swift */,
-				D5A3C37E298B1BC300772D1B /* HistoricalStepViewController.swift */,
-				D5A3C380298B1BE000772D1B /* ProfileViewController.swift */,
-				D53A7FC42991EE8D000220B9 /* ShoeStoreViewController.swift */,
-				D5B5E20C29D39260009782DF /* NutritionalGuidanceViewController.swift */,
-				D5B5E20F29D3C372009782DF /* CurrentSneakerViewController.swift */,
+				D51BA06729F2485800F787AC /* Historical Steps Tab */,
+				D51BA06629F2483600F787AC /* Main Page Tab */,
+				D51BA06529F247A900F787AC /* ChatGpt Tab */,
+				D597DF7C29976C6100DF4D13 /* Track Run Tab */,
+				D53A7FBF2991EC69000220B9 /* Shoe Tab */,
 			);
 			path = "Core Tabs";
 			sourceTree = "<group>";
 		};
-		D5A3C383298B1C2A00772D1B /* Auth */ = {
+		D5A3C383298B1C2A00772D1B /* Auth Component */ = {
 			isa = PBXGroup;
 			children = (
 				D512E9B82988A480007B0D2F /* LoginViewController.swift */,
@@ -354,7 +378,7 @@
 				D566373029A8251800DE1B21 /* RoundedWhiteButton.swift */,
 				D566373229A825B200DE1B21 /* MainMenuViewController.swift */,
 			);
-			path = Auth;
+			path = "Auth Component";
 			sourceTree = "<group>";
 		};
 		D5A3C38C298B8B8900772D1B /* Frameworks */ = {
@@ -365,13 +389,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		D5A3C38F298C129600772D1B /* Collect Info */ = {
+		D5A3C38F298C129600772D1B /* Collect Info Component */ = {
 			isa = PBXGroup;
 			children = (
 				D5A3C390298C12B600772D1B /* CollectInformationViewController.swift */,
 				D530770829B7BC8700076184 /* UpdateViewController.swift */,
 			);
-			path = "Collect Info";
+			path = "Collect Info Component";
 			sourceTree = "<group>";
 		};
 		D5AD2B3D29B3EFB8005CB1EB /* Playground */ = {
@@ -391,15 +415,15 @@
 			path = "ML models";
 			sourceTree = "<group>";
 		};
-		D5B5E20129C157F2009782DF /* Calendar */ = {
+		D5B5E20129C157F2009782DF /* Calendar Component */ = {
 			isa = PBXGroup;
 			children = (
 				D5B5E20229C1583D009782DF /* CalendarViewController.swift */,
 			);
-			path = Calendar;
+			path = "Calendar Component";
 			sourceTree = "<group>";
 		};
-		D5BC397E29DB9ACC00FF3546 /* GPT Resources */ = {
+		D5BC397E29DB9ACC00FF3546 /* API Resources */ = {
 			isa = PBXGroup;
 			children = (
 				D5BC397F29DB9AE300FF3546 /* ChatgptApi.swift */,
@@ -407,18 +431,10 @@
 				D5BC399329DF5BA800FF3546 /* ApiKey.swift */,
 				D53D50FE29E780400008AD56 /* FoodApi.swift */,
 			);
-			path = "GPT Resources";
+			path = "API Resources";
 			sourceTree = "<group>";
 		};
-		D5BC399029DE2D0300FF3546 /* Meal Detail */ = {
-			isa = PBXGroup;
-			children = (
-				D5BC399129DE2D1D00FF3546 /* MealDetailViewController.swift */,
-			);
-			path = "Meal Detail";
-			sourceTree = "<group>";
-		};
-		D5BE8C5B2995E17700ABA0D4 /* Modal */ = {
+		D5BE8C5B2995E17700ABA0D4 /* Modal Component */ = {
 			isa = PBXGroup;
 			children = (
 				D5A93D252996014200E12217 /* PopUpModalViewController.swift */,
@@ -428,7 +444,7 @@
 				D5CA908129A9753800C53B7B /* AlertCollectionViewCell.swift */,
 				D5CA908229A9753800C53B7B /* AlertCollectionViewCell.xib */,
 			);
-			path = Modal;
+			path = "Modal Component";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -459,6 +475,7 @@
 				D5BC398229DBBC8700FF3546 /* ChatGPTSwift */,
 				D5BC398A29DCF71300FF3546 /* OpenAI */,
 				D5BC399829E3A3DA00FF3546 /* SwiftSpinner */,
+				D51BA06B29F2668A00F787AC /* MessageKit */,
 			);
 			productName = Walk2N;
 			productReference = D512E99F2988A33D007B0D2F /* Walk2N.app */;
@@ -497,6 +514,7 @@
 				D5BC398129DBBC8700FF3546 /* XCRemoteSwiftPackageReference "ChatGPTSwift" */,
 				D5BC398929DCF71300FF3546 /* XCRemoteSwiftPackageReference "OpenAI" */,
 				D5BC399729E3A3DA00FF3546 /* XCRemoteSwiftPackageReference "SwiftSpinner" */,
+				D51BA06A29F2668A00F787AC /* XCRemoteSwiftPackageReference "MessageKit" */,
 			);
 			productRefGroup = D512E9A02988A33D007B0D2F /* Products */;
 			projectDirPath = "";
@@ -546,6 +564,7 @@
 				D5CA908629ABEEA100C53B7B /* UpdateManager.swift in Sources */,
 				D5A3C38B298B35E500772D1B /* UIExtension.swift in Sources */,
 				D597DF7E29976CCA00DF4D13 /* TrackRunViewController.swift in Sources */,
+				D51BA06429F2345400F787AC /* ChatUIViewController.swift in Sources */,
 				D5631F9B29A6B799007E4678 /* goal_predictor.mlmodel in Sources */,
 				D597DF8429984B1300DF4D13 /* StepCounter.swift in Sources */,
 				D566373129A8251800DE1B21 /* RoundedWhiteButton.swift in Sources */,
@@ -562,12 +581,13 @@
 				D5A3C381298B1BE000772D1B /* ProfileViewController.swift in Sources */,
 				D5A93D29299602BA00E12217 /* PopUpModalCollectionViewCell.swift in Sources */,
 				D597DF802997713F00DF4D13 /* Annotation.swift in Sources */,
+				D51BA05D29F1F0B300F787AC /* ChatGptViewController.swift in Sources */,
 				D5BC398F29DE20DC00FF3546 /* Meal.swift in Sources */,
 				D512E9CC2988E1C5007B0D2F /* Shoe.swift in Sources */,
 				D566373329A825B200DE1B21 /* MainMenuViewController.swift in Sources */,
 				D5AD2B5429B5E16B005CB1EB /* WalkHist.swift in Sources */,
 				D512E9CE2988E229007B0D2F /* User.swift in Sources */,
-				D597DF8929A2C0B500DF4D13 /* Bonus.swift in Sources */,
+				D51BA06929F24A2600F787AC /* MessageRecord.swift in Sources */,
 				D512E9C52988C02A007B0D2F /* Constants.swift in Sources */,
 				D512E9A52988A33D007B0D2F /* SceneDelegate.swift in Sources */,
 				D570FB3F29E4DDA2001157BA /* DietFilter.swift in Sources */,
@@ -819,6 +839,14 @@
 				kind = branch;
 			};
 		};
+		D51BA06A29F2668A00F787AC /* XCRemoteSwiftPackageReference "MessageKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MessageKit/MessageKit";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		D5A3C3AB298CC6C600772D1B /* XCRemoteSwiftPackageReference "Charts" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/danielgindi/Charts.git";
@@ -887,6 +915,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D512E9BF2988AB27007B0D2F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
+		};
+		D51BA06B29F2668A00F787AC /* MessageKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D51BA06A29F2668A00F787AC /* XCRemoteSwiftPackageReference "MessageKit" */;
+			productName = MessageKit;
 		};
 		D566373429A847D400DE1B21 /* FirebaseStorage */ = {
 			isa = XCSwiftPackageProductDependency;

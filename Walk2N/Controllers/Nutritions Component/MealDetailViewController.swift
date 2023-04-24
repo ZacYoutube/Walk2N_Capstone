@@ -226,7 +226,6 @@ class MealDetailViewController: UIViewController {
         pieChartContainer.addSubview(pieChart)
     }
     
-    
     private func getCookTime(prompt: String, completion: @escaping () -> Void) {
         GptApiService().getGptResponse(messagePrompt: prompt) { output in
             if output.contains("{") && output.contains("}") {

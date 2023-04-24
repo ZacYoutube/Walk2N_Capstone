@@ -23,7 +23,7 @@ public class User {
     var height: Float?
     var age: Int?
     var gender: String?
-    var bonusHistory: Array<Bonus>?
+    var bonusHistory: Array<String>?
     var bonusAwardedForReachingStepGoal: Bool?
     var bonusEarnedDuringRealTimeRun: Double?
     var profileImgUrl: String?
@@ -35,7 +35,7 @@ public class User {
          balance: Float?, boughtShoes: Array<Shoe>?,
          currentShoe: Shoe?, historicalSteps: Array<HistoricalStep>?,
          bonusEarnedToday: Double?, stepGoalToday: Int?, weight: Float?,
-         height: Float?, age: Int?, gender: String?, bonusHistory: Array<Bonus>?,
+         height: Float?, age: Int?, gender: String?, bonusHistory: Array<String>?,
          bonusAwardedForReachingStepGoal: Bool?, bonusEarnedDuringRealTimeRun: Double?,
          profileImgUrl: String?, alertHist: Array<Alert>?, mealHist: Array<MealHist>?) {
         self.uid = uid

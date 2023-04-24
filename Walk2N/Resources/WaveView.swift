@@ -125,7 +125,7 @@ extension WaveView{
 
         if pr >= 1.0 {
             progress = 1.0
-            percentLbl.text = "Done!"
+            percentLbl.text = "100%"
         } else {
             percentLbl.text = "\((pr*100.0).truncate(places: 2))%"
         }

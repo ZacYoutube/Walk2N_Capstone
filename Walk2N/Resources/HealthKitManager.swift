@@ -15,23 +15,15 @@ class HealthKitManager {
     // checks and get authorization from Health app for stepCount and distanceWalkingRunning metrics
     func authorizeHealthKit() -> Bool {
         var isEnabled = true
-        if HKHealthStore.isHealthDataAvailable() {
-            let stepCount = NSSet(object: HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount) as Any)
-            let distance = NSSet(object: HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.distanceWalkingRunning) as Any)
-            healthStore.requestAuthorization(toShare: nil, read: (stepCount as! Set<HKObjectType>)) { success, err in
-                isEnabled = success
-            }
-            healthStore.requestAuthorization(toShare: nil, read: (distance as! Set<HKObjectType>)) { success, err in
-                isEnabled = success
-            }
-            let typesToRead: Set<HKObjectType> = [
-                HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!
-            ]
-            healthStore.requestAuthorization(toShare: nil, read: typesToRead) { (success, error) in
-                isEnabled = success
-            }
-        }else{
-            isEnabled = false
+        let types: Set = [
+            HKObjectType.quantityType(forIdentifier: .stepCount)!,
+            HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!,
+            HKObjectType.quantityType(forIdentifier: .appleExerciseTime)!,
+            HKObjectType.quantityType(forIdentifier: .heartRate)!,
+        ]
+        
+        healthStore.requestAuthorization(toShare: nil, read: types) { success, error in
+            isEnabled = success
         }
         
         return isEnabled
@@ -72,6 +64,7 @@ class HealthKitManager {
                 completion!(stepOverPastNDays, time)
             }
         }
+        
         query.statisticsUpdateHandler = {
             query, statistics, result, error in
             if let res = result {
@@ -89,7 +82,7 @@ class HealthKitManager {
         healthStore.execute(query)
     }
     
-    func getStepCountBetweenTimestamps(startDate: Date, endDate: Date, completion: @escaping (Double, Error?) -> Void) {
+    func gettingStepCountBetweenTimestamps(startDate: Date, endDate: Date, completion: @escaping (Double, Error?) -> Void) {
         
         let stepsCount = HKQuantityType.quantityType(forIdentifier: .stepCount)!
         let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])
@@ -112,8 +105,6 @@ class HealthKitManager {
         
         healthStore.execute(query)
     }
-    
-    
     
     func gettingDistance(_ n: Int, completion:((Double) -> Void)?){
         guard let type = HKSampleType.quantityType(forIdentifier: .distanceWalkingRunning) else {
@@ -142,7 +133,7 @@ class HealthKitManager {
         healthStore.execute(query)
     }
     
-    func getDistOnSpecificDate(_ date: Date, completion:((Double) -> Void)?) {
+    func gettingDistOnSpecificDate(_ date: Date, completion:((Double) -> Void)?) {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: date)
         let startDate = calendar.date(from: components)!
@@ -212,15 +203,15 @@ class HealthKitManager {
         healthStore.execute(query)
     }
     
-    func gettingActivityLevel(completion:((Double) -> Void)?) {
-
+    func gettingActivityLevel(date: Date, completion:((Double) -> Void)?) {
+        
         guard let activeEnergyType = HKObjectType.quantityType(forIdentifier: .activeEnergyBurned) else {
             fatalError("Active Energy Burned data not available")
         }
-
-        let startDate = Calendar.current.startOfDay(for: Date())
+        
+        let startDate = Calendar.current.startOfDay(for: date)
         let endDate = Date()
-
+        
         let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictEndDate)
         let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
         let query = HKSampleQuery(sampleType: activeEnergyType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: [sortDescriptor]) { (query, samples, error) in
@@ -233,8 +224,67 @@ class HealthKitManager {
             
             completion!(totalActiveEnergyBurned)
         }
-
+        
         healthStore.execute(query)
-       
+        
+    }
+    
+    func gettingLastFewDaysQuantityData(for identifier: HKQuantityTypeIdentifier, unit: HKUnit, options: HKStatisticsOptions, days: Int, completion: @escaping ([Double]) -> Void) {
+        let predicate = createDaysPredicate(days)
+        let query = HKStatisticsCollectionQuery(quantityType: HKObjectType.quantityType(forIdentifier: identifier)!, quantitySamplePredicate: predicate, options: options, anchorDate: Date().daysAgoStartOfDay(days), intervalComponents: DateComponents(day: 1))
+        
+        var dailyData: [Double] = []
+        
+        query.initialResultsHandler = { query, results, error in
+            if let statsCollection = results {
+                statsCollection.enumerateStatistics(from: Date().daysAgoStartOfDay(days), to: Date.startOfDay()) { statistics, _ in
+                    if identifier == .heartRate {
+                        if let quantity = statistics.maximumQuantity() {
+                            let countPerSecond = quantity.doubleValue(for: unit.unitDivided(by: .second()))
+                            let count = countPerSecond * 60
+                            dailyData.append(count)
+                        }
+                        else {
+                            dailyData.append(0)
+                        }
+                    } else {
+                        if let quantity = statistics.sumQuantity() {
+                            dailyData.append(quantity.doubleValue(for: unit))
+                        } else {
+                            dailyData.append(0)
+                        }
+                    }
+                    
+                }
+                
+                completion(dailyData)
+            } else {
+                completion([])
+            }
+        }
+        
+        healthStore.execute(query)
+    }
+    
+    func gettingLastFewWeeksStepCount(completion: @escaping ([Double]) -> Void) {
+        gettingLastFewDaysQuantityData(for: .stepCount, unit: HKUnit.count(), options: [.cumulativeSum], days: 14, completion: completion)
+    }
+    
+    func gettingLastFewWeeksActiveEnergy(completion: @escaping ([Double]) -> Void) {
+        gettingLastFewDaysQuantityData(for: .activeEnergyBurned, unit: HKUnit.largeCalorie(), options: [.cumulativeSum], days: 14, completion: completion)
+    }
+    
+    func gettingLastFewWeeksExerciseTime(completion: @escaping ([Double]) -> Void) {
+        gettingLastFewDaysQuantityData(for: .appleExerciseTime, unit: .minute(), options: [.cumulativeSum], days: 14, completion: completion)
+    }
+    
+    func gettingLastFewWeeksHeartRate(completion: @escaping ([Double]) -> Void) {
+        gettingLastFewDaysQuantityData(for: .heartRate, unit: .count(), options: [.discreteMax], days: 14, completion: completion)
+    }
+
+    private func createDaysPredicate(_ day: Int) -> NSPredicate {
+        let now = Date()
+        let startDate = Calendar.current.date(byAdding: DateComponents(day: -day), to: now)!
+        return HKQuery.predicateForSamples(withStart: startDate, end: now, options: .strictStartDate)
     }
 }

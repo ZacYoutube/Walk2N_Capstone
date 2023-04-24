@@ -276,4 +276,57 @@ public class DatabaseManager {
         
     }
     
+    public func addMessageDoc(messageRecord: MessageRecord, completion:@escaping ((String) -> Void)) {
+        var messageDict = [[String: Any]]()
+        for i in 0..<messageRecord.messageList!.count {
+            let record = messageRecord.messageList![i]
+            messageDict.append(record.firestoreData)
+        }
+        db.collection("messageLists").addDocument(data: [
+            "uid": messageRecord.uid as Any,
+            "messageList": messageDict as Any
+        ])
+        {(err) in
+            if err == nil {
+                completion("success")
+            } else {
+                completion(err!.localizedDescription)
+            }
+        }
+    }
+    
+    public func updateMessages(fieldToUpdate: [String], fieldValues: [Any]) {
+        let uid = Auth.auth().currentUser?.uid
+        if uid != nil {
+            db.collection("messageLists").whereField("uid", isEqualTo: uid!).getDocuments { querySnapShot, err in
+                if let err = err {
+                    print(err)
+                }
+                else {
+                    let doc = querySnapShot?.documents.first
+                    
+                    for i in 0..<fieldToUpdate.count {
+                        doc?.reference.updateData([
+                            fieldToUpdate[i] : fieldValues[i]
+                        ])
+                    }
+                }
+            }
+        }
+    }
+    
+    public func getMessages(_ completion:@escaping(_ docSnapshot:[DocumentSnapshot])->Void ) {
+        let uid = Auth.auth().currentUser?.uid
+        if uid != nil {
+            db.collection("messageLists").whereField("uid", isEqualTo: uid!).getDocuments { querySnapShot, err in
+                if let err = err {
+                    print("Error getting docs: \(err)")
+                }else{
+                    if let doc = querySnapShot?.documents {
+                        completion(doc)
+                    }
+                }
+            }
+        }
+    }
 }

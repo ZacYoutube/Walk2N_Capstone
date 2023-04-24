@@ -56,7 +56,6 @@ class SaveMealViewController: UIViewController {
         stepper.value = Double(servingCount.text!)!
         stepper.addTarget(self, action: #selector(stepperValueChanged(_:)), for: .valueChanged)
 
-//        print(<#T##items: Any...##Any#>)
         generateNutrients.setOnClickListener {
             if self.mealName.text != nil && self.mealName.text != "" {
                 FoodApiService().getFoodResponse(query: self.mealName.text!) { Nutrient in
@@ -90,21 +89,27 @@ class SaveMealViewController: UIViewController {
             self.db.getUserInfo { docSnapshot in
                 if docSnapshot.count > 0 {
                     for doc in docSnapshot {
-                        let mealHist = doc["mealHist"] as? [Any]
-                        if mealHist!.count > 0 {
+                        var mealHist = doc["mealHist"] as? [Any]
+                        if mealHist != nil {
+                            mealHist = mealHist!.sorted(by: {
+                                ((($0 as! [String:Any])["date"] as! Timestamp).dateValue()) < ((($1 as! [String:Any])["date"] as! Timestamp).dateValue())
+                            })
+                        }
+
+                        if mealHist != nil && mealHist!.count > 0 {
                             let today = Date()
                             var found: Bool = false
                             var finalList = []
+                            
                             for i in 0..<mealHist!.count {
                                 let meal = mealHist![i] as? [String: Any]
-                                
                                 if meal != nil {
                                     let breakfast = meal!["breakfast"] as? [String: Any]
                                     let lunch = meal!["lunch"] as? [String: Any]
                                     let dinner = meal!["dinner"] as? [String: Any]
                                     let d = (meal!["date"] as! Timestamp).dateValue()
+                                    var newMeal: MealHist?
                                     if self.isSameDay(d, today) {
-                                        var newMeal: MealHist?
                                         if self.mealType == "breakfast" {
                                             var lunchData: Meal? = nil
                                             var dinnerData: Meal? = nil
@@ -115,7 +120,7 @@ class SaveMealViewController: UIViewController {
                                             if dinner != nil {
                                                 dinnerData = Meal(mealName: dinner!["mealName"] as! String, mealCalories: dinner!["mealCalories"] as! Double, mealCarbs: dinner!["mealCarbs"] as! Double, mealProtein: dinner!["mealProtein"] as! Double, mealFat: dinner!["mealFat"] as! Double, mealImg: dinner!["mealImg"] as! String)
                                             }
-                                            newMeal = MealHist(uid: uid, breakfast: Meal(mealName: self.mealName.text, mealCalories: Double(self.totalEnergy.text!)?.truncate(places: 2), mealCarbs: Double(self.carbs.text!)?.truncate(places: 2), mealProtein: Double(self.protein.text!)?.truncate(places: 2), mealFat: Double(self.fat.text!)?.truncate(places: 2), mealImg: url?.absoluteString), lunch: lunchData, dinner: dinnerData, date: Date())
+                                            newMeal = MealHist(uid: uid, breakfast: Meal(mealName: self.mealName.text, mealCalories: Double(self.totalEnergy.text!)?.truncate(places: 2), mealCarbs: Double(self.carbs.text!)?.truncate(places: 2), mealProtein: Double(self.protein.text!)?.truncate(places: 2), mealFat: Double(self.fat.text!)?.truncate(places: 2), mealImg: url?.absoluteString), lunch: lunchData, dinner: dinnerData, date: d)
                                         }
                                         else if self.mealType == "lunch" {
                                             var breakfastData: Meal? = nil
@@ -129,7 +134,7 @@ class SaveMealViewController: UIViewController {
                                                 dinnerData = Meal(mealName: dinner!["mealName"] as! String, mealCalories: dinner!["mealCalories"] as! Double, mealCarbs: dinner!["mealCarbs"] as! Double, mealProtein: dinner!["mealProtein"] as! Double, mealFat: dinner!["mealFat"] as! Double, mealImg: dinner!["mealImg"] as! String)
                                             }
                                             
-                                            newMeal = MealHist(uid: uid, breakfast: breakfastData, lunch: Meal(mealName: self.mealName.text, mealCalories: Double(self.totalEnergy.text!)?.truncate(places: 2), mealCarbs: Double(self.carbs.text!)?.truncate(places: 2), mealProtein: Double(self.protein.text!)?.truncate(places: 2), mealFat: Double(self.fat.text!)?.truncate(places: 2), mealImg: url?.absoluteString), dinner: dinnerData, date: Date())
+                                            newMeal = MealHist(uid: uid, breakfast: breakfastData, lunch: Meal(mealName: self.mealName.text, mealCalories: Double(self.totalEnergy.text!)?.truncate(places: 2), mealCarbs: Double(self.carbs.text!)?.truncate(places: 2), mealProtein: Double(self.protein.text!)?.truncate(places: 2), mealFat: Double(self.fat.text!)?.truncate(places: 2), mealImg: url?.absoluteString), dinner: dinnerData, date: d)
                                         }
                                         else {
                                             var breakfastData: Meal? = nil
@@ -141,34 +146,48 @@ class SaveMealViewController: UIViewController {
                                             if lunch != nil {
                                                 lunchData = Meal(mealName: lunch!["mealName"] as! String, mealCalories: lunch!["mealCalories"] as! Double, mealCarbs: lunch!["mealCarbs"] as! Double, mealProtein: lunch!["mealProtein"] as! Double, mealFat: lunch!["mealFat"] as! Double, mealImg: lunch!["mealImg"] as! String)
                                             }
-                                            newMeal = MealHist(uid: uid, breakfast: breakfastData, lunch: lunchData, dinner: Meal(mealName: self.mealName.text, mealCalories: Double(self.totalEnergy.text!)?.truncate(places: 2), mealCarbs: Double(self.carbs.text!)?.truncate(places: 2), mealProtein: Double(self.protein.text!)?.truncate(places: 2), mealFat: Double(self.fat.text!)?.truncate(places: 2), mealImg: url?.absoluteString), date: Date())
+                                            newMeal = MealHist(uid: uid, breakfast: breakfastData, lunch: lunchData, dinner: Meal(mealName: self.mealName.text, mealCalories: Double(self.totalEnergy.text!)?.truncate(places: 2), mealCarbs: Double(self.carbs.text!)?.truncate(places: 2), mealProtein: Double(self.protein.text!)?.truncate(places: 2), mealFat: Double(self.fat.text!)?.truncate(places: 2), mealImg: url?.absoluteString), date: d)
                                         }
                                         found = true
-                                        finalList.append(newMeal!.firestoreData)
                                     }
                                     else {
-                                        finalList.append(mealHist![i])
+                                        var breakfastData: Meal? = nil
+                                        var lunchData: Meal? = nil
+                                        var dinnerData: Meal? = nil
+
+                                        if breakfast != nil {
+                                            breakfastData = Meal(mealName: breakfast!["mealName"] as! String, mealCalories: breakfast!["mealCalories"] as! Double, mealCarbs: breakfast!["mealCarbs"] as! Double, mealProtein: breakfast!["mealProtein"] as! Double, mealFat: breakfast!["mealFat"] as! Double, mealImg: breakfast!["mealImg"] as! String)
+                                        }
+                                        if lunch != nil {
+                                            lunchData = Meal(mealName: lunch!["mealName"] as! String, mealCalories: lunch!["mealCalories"] as! Double, mealCarbs: lunch!["mealCarbs"] as! Double, mealProtein: lunch!["mealProtein"] as! Double, mealFat: lunch!["mealFat"] as! Double, mealImg: lunch!["mealImg"] as! String)
+                                        }
+                                        if dinner != nil {
+                                            dinnerData = Meal(mealName: dinner!["mealName"] as! String, mealCalories: dinner!["mealCalories"] as! Double, mealCarbs: dinner!["mealCarbs"] as! Double, mealProtein: dinner!["mealProtein"] as! Double, mealFat: dinner!["mealFat"] as! Double, mealImg: dinner!["mealImg"] as! String)
+                                        }
+                                        newMeal = MealHist(uid: uid, breakfast: breakfastData, lunch: lunchData, dinner: dinnerData, date: d)
                                     }
-                                    
-                                    self.db.updateUserInfo(fieldToUpdate: ["mealHist"], fieldValues: finalList) { bool in }
+                                    finalList.append(newMeal!.firestoreData)
                                 }
                             }
                             
-                            if found == false {
-                                var mealToday: MealHist?
-                                if self.mealType == "breakfast" {
-                                    mealToday = MealHist(uid: uid, breakfast: Meal(mealName: self.mealName.text, mealCalories: Double(self.totalEnergy.text!)?.truncate(places: 2), mealCarbs: Double(self.carbs.text!)?.truncate(places: 2), mealProtein: Double(self.protein.text!)?.truncate(places: 2), mealFat: Double(self.fat.text!)?.truncate(places: 2), mealImg: url?.absoluteString), lunch: nil, dinner: nil, date: Date())
+
+                            self.db.updateUserInfo(fieldToUpdate: ["mealHist"], fieldValues: [finalList]) { bool in
+                                if found == false {
+                                    var mealToday: MealHist?
+                                    if self.mealType == "breakfast" {
+                                        mealToday = MealHist(uid: uid, breakfast: Meal(mealName: self.mealName.text, mealCalories: Double(self.totalEnergy.text!)?.truncate(places: 2), mealCarbs: Double(self.carbs.text!)?.truncate(places: 2), mealProtein: Double(self.protein.text!)?.truncate(places: 2), mealFat: Double(self.fat.text!)?.truncate(places: 2), mealImg: url?.absoluteString), lunch: nil, dinner: nil, date: Date())
+                                    }
+                                    else if self.mealType == "lunch" {
+                                        mealToday = MealHist(uid: uid, breakfast: nil, lunch: Meal(mealName: self.mealName.text, mealCalories: Double(self.totalEnergy.text!)?.truncate(places: 2), mealCarbs: Double(self.carbs.text!)?.truncate(places: 2), mealProtein: Double(self.protein.text!)?.truncate(places: 2), mealFat: Double(self.fat.text!)?.truncate(places: 2), mealImg: url?.absoluteString), dinner: nil, date: Date())
+                                    }
+                                    else {
+                                        mealToday = MealHist(uid: uid, breakfast: nil, lunch: nil, dinner: Meal(mealName: self.mealName.text, mealCalories: Double(self.totalEnergy.text!)?.truncate(places: 2), mealCarbs: Double(self.carbs.text!)?.truncate(places: 2), mealProtein: Double(self.protein.text!)?.truncate(places: 2), mealFat: Double(self.fat.text!)?.truncate(places: 2), mealImg: url?.absoluteString), date: Date())
+                                    }
+                                    self.db.updateArrayData(fieldName: "mealHist", fieldVal: mealToday!.firestoreData, pop: false) { bool in completion() }
                                 }
-                                else if self.mealType == "lunch" {
-                                    mealToday = MealHist(uid: uid, breakfast: nil, lunch: Meal(mealName: self.mealName.text, mealCalories: Double(self.totalEnergy.text!)?.truncate(places: 2), mealCarbs: Double(self.carbs.text!)?.truncate(places: 2), mealProtein: Double(self.protein.text!)?.truncate(places: 2), mealFat: Double(self.fat.text!)?.truncate(places: 2), mealImg: url?.absoluteString), dinner: nil, date: Date())
-                                }
-                                else {
-                                    mealToday = MealHist(uid: uid, breakfast: nil, lunch: nil, dinner: Meal(mealName: self.mealName.text, mealCalories: Double(self.totalEnergy.text!)?.truncate(places: 2), mealCarbs: Double(self.carbs.text!)?.truncate(places: 2), mealProtein: Double(self.protein.text!)?.truncate(places: 2), mealFat: Double(self.fat.text!)?.truncate(places: 2), mealImg: url?.absoluteString), date: Date())
-                                }
-                                
-                                self.db.updateArrayData(fieldName: "mealHist", fieldVal: mealToday!.firestoreData, pop: false) { bool in }
                             }
-                        }
+                            completion()
+                            }
                         else {
                             var mealToday: MealHist?
                             if self.mealType == "breakfast" {
@@ -180,8 +199,8 @@ class SaveMealViewController: UIViewController {
                             else {
                                 mealToday = MealHist(uid: uid, breakfast: nil, lunch: nil, dinner: Meal(mealName: self.mealName.text, mealCalories: Double(self.totalEnergy.text!)?.truncate(places: 2), mealCarbs: Double(self.carbs.text!)?.truncate(places: 2), mealProtein: Double(self.protein.text!)?.truncate(places: 2), mealFat: Double(self.fat.text!)?.truncate(places: 2), mealImg: url?.absoluteString), date: Date())
                             }
-                            
-                            
+
+
                             self.db.updateArrayData(fieldName: "mealHist", fieldVal: mealToday!.firestoreData, pop: false) { bool in
                                 completion()
                             }

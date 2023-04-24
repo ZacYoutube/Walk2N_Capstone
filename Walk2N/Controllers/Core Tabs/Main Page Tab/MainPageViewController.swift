@@ -19,6 +19,8 @@ class MainPageViewController: UIViewController {
     @IBOutlet weak var dateChanger: UIButton!
     @IBOutlet weak var dateContainer: UIView!
 
+    @IBOutlet weak var askGptContainer: UIView!
+    @IBOutlet weak var ask: UIButton!
     @IBOutlet weak var sv: UIScrollView!
     
     @IBOutlet weak var weightText: UILabel!
@@ -31,6 +33,7 @@ class MainPageViewController: UIViewController {
     @IBOutlet weak var bonusTitleText: UILabel!
     
     @IBOutlet weak var leftIcon: UIImageView!
+    @IBOutlet weak var logMeal: UIButton!
 
 
 //    @IBOutlet weak var titleText: UILabel!
@@ -40,6 +43,16 @@ class MainPageViewController: UIViewController {
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var contentView: UIView!
+    
+    @IBOutlet weak var activeCal: UILabel!
+    @IBOutlet weak var activityLevel: UILabel!
+    @IBOutlet weak var mealCal: UILabel!
+    @IBOutlet weak var TDEEText: UILabel!
+    @IBOutlet weak var caloriesContainer: UIView!
+    @IBOutlet weak var dailyCalContainer: UIView!
+    
+    @IBOutlet weak var askGptTextView: UITextView!
+    
     let progressShapeLayer = CAShapeLayer()
     
     var tokenEarnedText = UILabel()
@@ -61,6 +74,7 @@ class MainPageViewController: UIViewController {
     let waveView = WaveView()
     var menu: SideMenuNavigationController?
     
+    
     private func authorizeHealthKit() {
         let isEnabled = HealthKitManager().authorizeHealthKit()
         if isEnabled == false {
@@ -75,9 +89,6 @@ class MainPageViewController: UIViewController {
         
         self.setUpNavbar(text: "Dashboard")
         
-//        FoodApiService().getFoodResponse(query: "fried rice") { s in
-//
-//        }
         authorizeHealthKit()
         contentView.backgroundColor = UIColor.white
         progressCircularViewContainer.backgroundColor = .background1
@@ -86,16 +97,24 @@ class MainPageViewController: UIViewController {
         weightContainer.backgroundColor = UIColor.background1
         bonusContainer.backgroundColor = UIColor.background1
         dateContainer.backgroundColor = UIColor.background1
+        caloriesContainer.backgroundColor = UIColor.background1
+        dailyCalContainer.backgroundColor = UIColor.background1
+        askGptContainer.backgroundColor = UIColor.background1
+        askGptTextView.backgroundColor = .background1
+        
         stepCountContainer.layer.cornerRadius = 8
         stepGoalContainer.layer.cornerRadius = 8
         weightContainer.layer.cornerRadius = 8
         bonusContainer.layer.cornerRadius = 8
         dateContainer.layer.cornerRadius = 8
+        caloriesContainer.layer.cornerRadius = 8
+        dailyCalContainer.layer.cornerRadius = 8
+        askGptContainer.layer.cornerRadius = 8
+                
         stepGoalTitle.textColor = .lessDark
         stepCountTitle.textColor = .lessDark
         stepText.textColor = .lightGreen
         distanceText.textColor = .lightGreen
-//        titleText.textColor = .lessDark
         goalText.textColor = .lightGreen
         weightText.textColor = .lightGreen
         weightTitleText.textColor = .lessDark
@@ -108,12 +127,32 @@ class MainPageViewController: UIViewController {
         dateChanger.setTitleColor(.lessDark, for: .normal)
         styleView(view: [ progressCircularViewContainer])
         
+        logMeal.setOnClickListener {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let mealListViewController = storyboard.instantiateViewController(identifier: "mealList") as! NutritionalGuidanceViewController
+            mealListViewController.title = "Meal List"
+
+            let nav = UINavigationController(rootViewController: mealListViewController)
+            nav.modalPresentationStyle = .fullScreen
+            self.present(nav, animated: true)
+        }
+        
+        ask.setOnClickListener {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let chatgptViewController = storyboard.instantiateViewController(identifier: "chat") as! ChatGptViewController
+            chatgptViewController.title = "Health QA"
+
+            let nav = UINavigationController(rootViewController: chatgptViewController)
+            nav.modalPresentationStyle = .fullScreen
+            self.present(nav, animated: true)
+        }
+        
         checkStepGoal()
         loadStepCounts()
-//        loadCircularProgress()
         loadCircularProgressView()
         setUpWeightText()
         loadBonusView()
+        getActivities()
         
         UpdateManager().updateBonusAndHistoricalSteps()
         AlertPredictManager().predictAndSetupNotification()
@@ -187,6 +226,7 @@ class MainPageViewController: UIViewController {
             self.loadCircularProgressView()
             self.setUpWeightText()
             self.loadBonusView()
+            self.getActivities()
             
             UpdateManager().updateBonusAndHistoricalSteps()
             AlertPredictManager().predictAndSetupNotification()
@@ -195,15 +235,111 @@ class MainPageViewController: UIViewController {
         }
     }
     
+        private func getActivities() {
+            db.getUserInfo { docSnapshot in
+                for doc in docSnapshot {
+                    if doc["weight"] != nil && doc["weight"] as? Double != nil
+                        && doc["height"] != nil && doc["height"] as? Double != nil
+                        && doc["gender"] != nil && doc["gender"] as? String != nil
+                        && doc["age"] != nil && doc["age"] as? Double != nil
+                    {
+                        var activeLevel: String = ""
+                        var activeLevelFactor: Double = 0
+                        HealthKitManager().gettingActivityLevel(date: Date()) { cal in
+                            print("active level", cal)
+                            if Double(cal).truncate(places: 2) <= 1000.0 {
+                                activeLevel = "Sedantary"
+                                activeLevelFactor = 1.2
+                            }
+                            else if Double(cal).truncate(places: 2) > 1000.0 && Double(cal).truncate(places: 2) <= 2000.0 {
+                                activeLevel = "Low Active"
+                                activeLevelFactor = 1.375
+                            }
+                            else if Double(cal).truncate(places: 2) > 2000.0 && Double(cal).truncate(places: 2) <= 3000.0 {
+                                activeLevel = "Active"
+                                activeLevelFactor = 1.55
+                            }
+                            else {
+                                activeLevel = "Very Active"
+                                activeLevelFactor = 1.725
+                            }
+                            let weight = doc["weight"] as! Double
+                            let height = doc["height"] as! Double
+                            let age = doc["age"] as! Double
+                            let gender = doc["gender"] as! String
+    
+                            var s: Double = 0
+    
+                            if gender == "Male" {
+                                s = 5
+                            }
+                            else {
+                                s = -161
+                            }
+    
+                            let BMR = 10 * weight + 6.25 * height - 5 * age + s
+                            let TDEE = BMR * activeLevelFactor
+                            var mealCal: Double? = 0
+    
+                            let mealHist = doc["mealHist"] as? [Any]
+                            let today = Date()
+                            if mealHist == nil || mealHist!.count == 0 {
+                                mealCal = 0
+                            } else {
+                                for i in 0..<mealHist!.count {
+                                    let meal = mealHist![i] as! [String: Any]
+                                    let breakfast = meal["breakfast"] as? [String: Any]
+                                    let lunch = meal["lunch"] as? [String: Any]
+                                    let dinner = meal["dinner"] as? [String: Any]
+    
+                                    var breakfastCal = 0.0
+                                    if breakfast != nil {
+                                        breakfastCal = breakfast!["mealCalories"] as? Double ?? 0.0
+                                    }
+                                    var lunchCal = 0.0
+                                    if lunch != nil {
+                                        lunchCal = lunch!["mealCalories"] as? Double ?? 0.0
+                                    }
+                                    var dinnerCal = 0.0
+                                    if dinner != nil {
+                                        dinnerCal = dinner!["mealCalories"] as? Double ?? 0.0
+                                    }
+    
+                                    let date = (meal["date"] as! Timestamp).dateValue()
+                                    if self.isSameDay(today, date) {
+                                        mealCal = breakfastCal + lunchCal + dinnerCal
+                                    }
+                                }
+                            }
+    
+                            DispatchQueue.main.async {
+                                self.activeCal.text = "\(Double(cal).truncate(places: 2))"
+                                self.activityLevel.text = activeLevel
+                                self.TDEEText.text = "\(TDEE.truncate(places: 2))"
+                                self.mealCal.text = "\(String(describing: mealCal!))"
+                            }
+                        }
+                    }
+                }
+            }
+    
+        }
+    
     func updateMetrics(date: Date) {
         print(date)
         
-        HealthKitManager().getDistOnSpecificDate(date) { dist in
+        HealthKitManager().gettingDistOnSpecificDate(date) { dist in
             DispatchQueue.main.sync {
                 if dist != nil {
                     let distInKm = Double(dist / 1000).truncate(places: 2)
                     self.distanceText.text = "\(distInKm) km"
                 }
+            }
+        }
+        
+        HealthKitManager().gettingActivityLevel(date: date) { cals in
+            DispatchQueue.main.async {
+                self.activeCal.text = "\(cals.truncate(places: 2))"
             }
         }
         
@@ -243,6 +379,33 @@ class MainPageViewController: UIViewController {
                             
                             let percent: Double = Double(stepCount / stepGoal).truncate(places: 2)
                             self.waveView.setupProgress(percent)
+                        }
+                    }
+                }
+                if doc["mealHist"] != nil && (doc["mealHist"] as? [Any]) != nil {
+                    let mealHist = doc["mealHist"] as! [Any]
+                    for i in 0..<mealHist.count {
+                        let meal = mealHist[i] as! [String: Any]
+                        let day = (meal["date"] as! Timestamp).dateValue()
+                        if self.isSameDay(date, day) {
+                            let breakfast = meal["breakfast"] as? [String: Any]
+                            let lunch = meal["lunch"] as? [String: Any]
+                            let dinner = meal["dinner"] as? [String: Any]
+
+                            var breakfastCal = 0.0
+                            if breakfast != nil {
+                                breakfastCal = breakfast!["mealCalories"] as? Double ?? 0.0
+                            }
+                            var lunchCal = 0.0
+                            if lunch != nil {
+                                lunchCal = lunch!["mealCalories"] as? Double ?? 0.0
+                            }
+                            var dinnerCal = 0.0
+                            if dinner != nil {
+                                dinnerCal = dinner!["mealCalories"] as? Double ?? 0.0
+                            }
+
+                            self.mealCal.text = "\(breakfastCal + lunchCal + dinnerCal)"
                         }
                     }
                 }
@@ -321,7 +484,7 @@ class MainPageViewController: UIViewController {
             }
         }
         
-        HealthKitManager().getDistOnSpecificDate(Date()) { dist in
+        HealthKitManager().gettingDistOnSpecificDate(Date()) { dist in
             DispatchQueue.main.sync {
                 if dist != nil {
                     let distInKm = Double(dist / 1000).truncate(places: 2)
@@ -387,7 +550,7 @@ class MainPageViewController: UIViewController {
             }
         }
         
-        HealthKitManager().getDistOnSpecificDate(Date()) { dist in
+        HealthKitManager().gettingDistOnSpecificDate(Date()) { dist in
             DispatchQueue.main.sync {
                 if dist != nil {
                     let distInKm = Double(dist / 1000).truncate(places: 2)

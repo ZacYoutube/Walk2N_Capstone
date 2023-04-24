@@ -38,6 +38,8 @@ class FoodApiService {
                 let result = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
                 
                 let parsed = result!["parsed"] as? [Any]
+                
+                print(parsed)
                 let foodList = parsed![0] as! [String: Any]
                 let food = foodList["food"] as? [String: Any]
                 let nutrients = food!["nutrients"] as? [String: Any]
@@ -53,7 +55,7 @@ class FoodApiService {
                 let carbsPercent = ((carbWeight?.truncate(places: 2))! / totalWeight).truncate(places: 2)
                 let fatPercent = (1 - proteinPercent - carbsPercent).truncate(places: 2)
 
-                let nutrient = Nutrient(totalNutrient: TotalNutrientsKCal(carbsKCal: (proteinWeight?.truncate(places: 2))!, proteinKCal: (proteinWeight?.truncate(places: 2))!, fatKCal: (fatWeight?.truncate(places: 2))!, totalKCal: totalEnergy!, percentages: [carbsPercent, proteinPercent, fatPercent]))
+                let nutrient = Nutrient(totalNutrient: TotalNutrientsKCal(carbsKCal: (carbWeight?.truncate(places: 2))!, proteinKCal: (proteinWeight?.truncate(places: 2))!, fatKCal: (fatWeight?.truncate(places: 2))!, totalKCal: totalEnergy!, percentages: [carbsPercent, proteinPercent, fatPercent]))
                 completion!(nutrient)
                 print(nutrient)
             } catch {

@@ -44,7 +44,6 @@ class ShoeStoreViewController: UIViewController {
     }
     
 }
-
 extension ShoeStoreViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
@@ -66,7 +65,6 @@ extension ShoeStoreViewController: UICollectionViewDataSource {
         return cell
     }
 }
-
 extension ShoeStoreViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 340, height: 320)

@@ -90,7 +90,7 @@ extension UILabel {
     func setUpLoadingView(label: UILabel, stop: Bool) {
         let spinner = UIActivityIndicatorView(style: .medium)
         label.addSubview(spinner)
-
+        
         spinner.translatesAutoresizingMaskIntoConstraints = false
         spinner.centerYAnchor.constraint(equalTo: label.centerYAnchor).isActive = true
         spinner.centerXAnchor.constraint(equalTo: label.centerXAnchor).isActive = true
@@ -333,7 +333,7 @@ extension UIViewController {
             else if row == 2 {
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let alertView = storyboard.instantiateViewController(identifier: "AlertViewController")
-               
+                
                 let nav = UINavigationController(rootViewController: alertView)
                 
                 alertView.title = "Notification History"
@@ -373,8 +373,6 @@ extension UIViewController {
     }
 }
 
-
-
 // truncate double decimals
 extension Double {
     func truncate(places : Int)-> Double {
@@ -396,6 +394,14 @@ extension Date {
     }
     var unixTimestamp: UnixTimestamp {
         return UnixTimestamp(self.timeIntervalSince1970 * 1_000)
+    }
+    
+    static func startOfDay() -> Date {
+        return Calendar.current.startOfDay(for: Date())
+    }
+    
+    func daysAgoStartOfDay(_ day: Int) -> Date {
+        return Calendar.current.date(byAdding: DateComponents(day: -day), to: Date.startOfDay())!
     }
     
 }

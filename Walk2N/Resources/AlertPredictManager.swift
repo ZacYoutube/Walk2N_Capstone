@@ -33,7 +33,7 @@ class AlertPredictManager {
             dispatchGroup.enter()
             let startDate = timeIntervals[i][0]
             let endDate = timeIntervals[i][1]
-            HealthKitManager().getStepCountBetweenTimestamps(startDate: startDate, endDate: endDate) { steps, err in
+            HealthKitManager().gettingStepCountBetweenTimestamps(startDate: startDate, endDate: endDate) { steps, err in
                 resultArr.append(steps)
                 self.dispatchGroup.leave()
             }
