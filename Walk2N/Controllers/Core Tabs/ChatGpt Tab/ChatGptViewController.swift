@@ -86,6 +86,17 @@ class ChatGptViewController:  MessagesViewController, MessagesDataSource, Messag
         clearButton = InputBarButtonItem(frame: CGRect(origin: .zero, size: CGSize(width: messageInputBar.sendButton.frame.size.width, height: messageInputBar.sendButton.frame.size.height)))
         clearButton!.image = clearImage
         clearButton!.imageView?.contentMode = .scaleAspectFit
+        clearButton!.setOnClickListener {
+            let alert = UIAlertController(title: "Clear the history?", message: "", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "Clear", style: .default, handler: { action in
+                self.db.updateMessages(fieldToUpdate: ["messageList"], fieldValues: [[]])
+                self.messages = []
+                self.messagesCollectionView.reloadData()
+                self.clearButton!.isEnabled = false
+            }))
+            self.getTopMostViewController()!.present(alert, animated: true)
+        }
         
         let sendImage = UIImage(named: "send")!
         messageInputBar.sendButton.image = sendImage
@@ -156,29 +167,38 @@ class ChatGptViewController:  MessagesViewController, MessagesDataSource, Messag
         return isFromCurrentSender(message: message) ? 40 : 0
     }
     
+    func messageTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        let attributes = [
+            NSAttributedString.Key.foregroundColor: UIColor.lessDark,
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)
+        ]
+        return isFromCurrentSender(message: message) ? NSAttributedString(string: "You", attributes: attributes) : NSAttributedString(string: "Bot assistant", attributes: attributes)
+    }
+    
+    func messageTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
+        return 18
+    }
+    
+    func messageTopLabelAlignment(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> LabelAlignment? {
+        if isFromCurrentSender(message: message) {
+            return LabelAlignment(textAlignment: .right, textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 20))
+        }
+        else {
+            return LabelAlignment(textAlignment: .left, textInsets: UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0))
+        }
+    }
+    
     func messageStyle(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageStyle {
         return .bubbleTail(isFromCurrentSender(message: message) ? .bottomRight : .bottomLeft, .curved)
     }
     
     private func setUpClearBtn() {
         db.getMessages { docSnapshot in
-            print(docSnapshot.count)
             for doc in docSnapshot {
                 let messageList = doc["messageList"] as? [Any]
                 if messageList != nil {
                     if messageList!.count > 0 {
                         self.clearButton!.isEnabled = true
-                        self.clearButton!.setOnClickListener {
-                            let alert = UIAlertController(title: "Clear the history?", message: "", preferredStyle: .actionSheet)
-                            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-                            alert.addAction(UIAlertAction(title: "Clear", style: .default, handler: { action in
-                                self.db.updateMessages(fieldToUpdate: ["messageList"], fieldValues: [[]])
-                                self.messages = []
-                                self.messagesCollectionView.reloadData()
-                                self.clearButton!.isEnabled = false
-                            }))
-                            self.getTopMostViewController()!.present(alert, animated: true)
-                        }
                     } else {
                         self.clearButton!.isEnabled = false
                     }
@@ -225,6 +245,7 @@ class ChatGptViewController:  MessagesViewController, MessagesDataSource, Messag
                             }
                         }
                     }
+                
                     self.messagesCollectionView.reloadData()
                 }
             }
