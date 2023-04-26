@@ -172,7 +172,7 @@ class ChatGptViewController:  MessagesViewController, MessagesDataSource, Messag
             NSAttributedString.Key.foregroundColor: UIColor.lessDark,
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)
         ]
-        return isFromCurrentSender(message: message) ? NSAttributedString(string: "You", attributes: attributes) : NSAttributedString(string: "Bot assistant", attributes: attributes)
+        return isFromCurrentSender(message: message) ? NSAttributedString(string: "You", attributes: attributes) : NSAttributedString(string: "WellnessGPT", attributes: attributes)
     }
     
     func messageTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {

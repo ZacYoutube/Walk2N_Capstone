@@ -203,9 +203,6 @@ class TrackRunViewController: UIViewController {
                 if  let arrayOfTabBarItems = self.tabBarController!.tabBar.items! as AnyObject as? NSArray,let tabBarItem = arrayOfTabBarItems[3] as? UITabBarItem {
                     tabBarItem.isEnabled = false
                 }
-                if  let arrayOfTabBarItems = self.tabBarController!.tabBar.items! as AnyObject as? NSArray,let tabBarItem = arrayOfTabBarItems[4] as? UITabBarItem {
-                    tabBarItem.isEnabled = false
-                }
             }
         }
     }
@@ -257,9 +254,6 @@ class TrackRunViewController: UIViewController {
             tabBarItem.isEnabled = true
         }
         if  let arrayOfTabBarItems = tabBarController!.tabBar.items! as AnyObject as? NSArray,let tabBarItem = arrayOfTabBarItems[3] as? UITabBarItem {
-            tabBarItem.isEnabled = true
-        }
-        if  let arrayOfTabBarItems = tabBarController!.tabBar.items! as AnyObject as? NSArray,let tabBarItem = arrayOfTabBarItems[4] as? UITabBarItem {
             tabBarItem.isEnabled = true
         }
     }

@@ -88,7 +88,7 @@ class GptApiService {
                         print(self.mainPrompt)
 
                         Task {
-                            let response = try await api.sendMessage(text: messagePrompt + " Do not start your answer with: Based on xxxx.",
+                            let response = try await api.sendMessage(text: messagePrompt,
                                                                      model: "gpt-3.5-turbo",
                                                                      systemText: self.mainPrompt,
                                                                      temperature: 0.9)
