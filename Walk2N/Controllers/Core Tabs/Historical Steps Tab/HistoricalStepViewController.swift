@@ -57,8 +57,8 @@ class HistoricalStepViewController: UIViewController, ChartViewDelegate {
         displayGoal()
         self.setUpNavbar(text: "History")
         
-        scrollView.refreshControl = UIRefreshControl()
-        scrollView.refreshControl?.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
+//        scrollView.refreshControl = UIRefreshControl()
+//        scrollView.refreshControl?.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
         
     }
     
@@ -69,17 +69,17 @@ class HistoricalStepViewController: UIViewController, ChartViewDelegate {
         super.viewWillLayoutSubviews()
     }
     
-    @objc private func didPullToRefresh() {
-        // refresh data
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.displayStepMetrics()
-            self.displayDist()
-            self.displayGoal()
-            self.setUpNavbar(text: "History")
-            self.scrollView.refreshControl?.endRefreshing()
-        }
-        
-    }
+//    @objc private func didPullToRefresh() {
+//        // refresh data
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//            self.displayStepMetrics()
+//            self.displayDist()
+//            self.displayGoal()
+//            self.setUpNavbar(text: "History")
+//            self.scrollView.refreshControl?.endRefreshing()
+//        }
+//
+//    }
     
     private func displayStepMetrics() {
         let labelSv = UIStackView(frame: CGRect(x: stepInfoContainer.left + 5, y: stepInfoContainer.top - 5, width: 300, height: 35))

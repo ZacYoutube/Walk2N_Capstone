@@ -217,7 +217,7 @@ class HealthKitManager {
         let query = HKSampleQuery(sampleType: activeEnergyType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: [sortDescriptor]) { (query, samples, error) in
             
             guard let samples = samples as? [HKQuantitySample], error == nil else {
-                fatalError("Failed to fetch active energy burned data: \(error!.localizedDescription)")
+                return
             }
             
             let totalActiveEnergyBurned = samples.reduce(0.0) { $0 + $1.quantity.doubleValue(for: HKUnit.kilocalorie()) }

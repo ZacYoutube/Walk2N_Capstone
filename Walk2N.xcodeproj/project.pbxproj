@@ -750,7 +750,9 @@
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Need access to location";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Allow location";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Need access to location";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Your speech will be detected ";
 				INFOPLIST_KEY_NSMotionUsageDescription = "Please allow for counting the steps";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Speak and watch your words ";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -785,7 +787,9 @@
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Need access to location";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Allow location";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Need access to location";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Your speech will be detected ";
 				INFOPLIST_KEY_NSMotionUsageDescription = "Please allow for counting the steps";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Speak and watch your words ";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

@@ -31,6 +31,7 @@ class GptApiService {
                 var model: [Model] = []
                 let cal = Calendar.current
                 let today = Date()
+                var stepGoalToday: Double = 0.0
                 
                 for day in 1...14 {
                     guard let endDate = cal.date(byAdding: .day, value: -day, to: today) else { continue }
@@ -77,10 +78,21 @@ class GptApiService {
                     dispatchGroup.leave()
                 }
                 
+                dispatchGroup.enter()
+                db.getUserInfo { docSnapshot in
+                    for doc in docSnapshot {
+                        if doc["stepGoalToday"] != nil {
+                            let stepGoal = doc["stepGoalToday"] as! Double
+                            stepGoalToday = stepGoal
+                        }
+                    }
+                    dispatchGroup.leave()
+                }
+                
                 dispatchGroup.notify(queue: .main) {
                     for i in 0...13 {
                         let data = model[i]
-                        self.mainPrompt += "\(data.date): \(Int(data.steps!)) steps, walked \(Int(data.distance!)) meters, \(Int(data.activeEnergy!) ) calories burned, \(Int(data.exerciseMinutes!) ) minutes of exercise, heart rate of \(Int(data.heartRate ?? 0)) bpm. "
+                        self.mainPrompt += "\(data.date): \(Int(data.steps!)) steps, walked \(Int(data.distance!)) meters, \(Int(data.activeEnergy!) ) calories burned, \(Int(data.exerciseMinutes!) ) minutes of exercise, heart rate of \(Int(data.heartRate ?? 0)) bpm. My step goal for today is \(stepGoalToday) steps. "
                     }
                     self.loadStatusStr { statusStr in
                         print("status", statusStr)

@@ -9,6 +9,7 @@ import UIKit
 import MessageKit
 import InputBarAccessoryView
 import Firebase
+import Speech
 
 struct Sender: SenderType {
     var senderId: String
@@ -22,11 +23,10 @@ struct Message: MessageType {
     var kind: MessageKind
 }
 
-class ChatGptViewController:  MessagesViewController, MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate, InputBarAccessoryViewDelegate {
+class ChatGptViewController:  MessagesViewController, MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate, InputBarAccessoryViewDelegate, SFSpeechRecognizerDelegate {
     
     var textViewHeightConstraint: NSLayoutConstraint?
     var messageInputBarBottomConstraint: NSLayoutConstraint?
-    private lazy var keyboardManager = KeyboardManager()
     @IBOutlet weak var backBtn: UIButton!
 
     let db = DatabaseManager.shared
@@ -35,9 +35,16 @@ class ChatGptViewController:  MessagesViewController, MessagesDataSource, Messag
     let chatgptSender: SenderType = Sender(senderId: "2", displayName: "ChatGPT")
     var messages: [Message] = []
     var clearButton: InputBarButtonItem?
+    let audioEngine = AVAudioEngine()
+    let speechRecognizer: SFSpeechRecognizer? = SFSpeechRecognizer()
+    let recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
+    var recognitionTask: SFSpeechRecognitionTask?
+    var startTalking: Bool = false
     
     var isTyping: Bool = false
-    
+    let voiceBtn = UIButton(type: .custom)
+    let voiceImage = UIImage(named: "mic")!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -55,6 +62,9 @@ class ChatGptViewController:  MessagesViewController, MessagesDataSource, Messag
         
         messageInputBar.inputTextView.placeholder = "Type a message"
         messageInputBar.inputTextView.placeholderTextColor = UIColor.lightGray
+        messageInputBar.inputTextView.layer.borderColor = UIColor.gray.cgColor
+        messageInputBar.inputTextView.layer.borderWidth = 0.5
+        messageInputBar.inputTextView.layer.cornerRadius = 8
         messageInputBar.sendButton.tintColor = .white
         messageInputBar.backgroundView.backgroundColor = .white
 
@@ -83,7 +93,8 @@ class ChatGptViewController:  MessagesViewController, MessagesDataSource, Messag
         }
         
         let clearImage = UIImage(named: "clear")
-        clearButton = InputBarButtonItem(frame: CGRect(origin: .zero, size: CGSize(width: messageInputBar.sendButton.frame.size.width, height: messageInputBar.sendButton.frame.size.height)))
+        clearButton = InputBarButtonItem(type: .custom)
+        clearButton?.setSize(CGSize(width: 29, height: 29), animated: false)
         clearButton!.image = clearImage
         clearButton!.imageView?.contentMode = .scaleAspectFit
         clearButton!.setOnClickListener {
@@ -101,14 +112,35 @@ class ChatGptViewController:  MessagesViewController, MessagesDataSource, Messag
         let sendImage = UIImage(named: "send")!
         messageInputBar.sendButton.image = sendImage
         messageInputBar.sendButton.title = ""
+        
         messageInputBar.sendButton.imageView?.contentMode = .scaleAspectFit
+        messageInputBar.sendButton.configure { button in
+            button.setSize(CGSize(width: 29, height: 29), animated: false)
+        }
         messageInputBar.setStackViewItems([messageInputBar.sendButton, clearButton!], forStack: .right, animated: false)
         messageInputBar.setRightStackViewWidthConstant(to: 100, animated: false)
-        messageInputBar.inputTextView.layer.borderWidth = 0.5
-        messageInputBar.inputTextView.layer.borderColor = UIColor.gray.cgColor
         messageInputBar.inputTextView.layer.cornerRadius = 8
+        messageInputBar.inputTextView.textContainerInset = UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 40)
+
         
-        messageInputBar.rightStackView.alignment = .fill
+        voiceBtn.setImage(voiceImage, for: .normal)
+        voiceBtn.setOnClickListener {
+            self.voiceProcessing()
+        }
+        guard let superview = messageInputBar.inputTextView.superview else {
+            return
+        }
+        superview.addSubview(voiceBtn)
+        voiceBtn.autoresizingMask = [.flexibleLeftMargin, .flexibleBottomMargin]
+
+        let buttonWidth: CGFloat = 30
+        let buttonHeight: CGFloat = 30
+        let buttonMargin: CGFloat = 5
+        voiceBtn.frame = CGRect(x: superview.bounds.width - buttonWidth - buttonMargin,
+                                y: (messageInputBar.inputTextView.bounds.height - buttonHeight) / 2,
+                         width: buttonWidth,
+                         height: buttonHeight)
+        
         messageInputBar.rightStackView.distribution = .fillEqually
         
         reloadInputViews()
@@ -225,6 +257,69 @@ class ChatGptViewController:  MessagesViewController, MessagesDataSource, Messag
 
     }
     
+    func voiceProcessing() {
+        startTalking = !startTalking
+
+        if startTalking == true {
+            startSpeechRecognization()
+        }
+        else {
+            cancelSpeechRecognization()
+        }
+
+    }
+    
+    func setUpAudio() {
+        let node = audioEngine.inputNode
+        let format = node.outputFormat(forBus: 0)
+        node.installTap(onBus: 0, bufferSize: 1024, format: format) { buffer, time in
+            self.recognitionRequest.append(buffer)
+        }
+    }
+    
+    func startSpeechRecognization() {
+        setUpAudio()
+        audioEngine.prepare()
+        let tintedImage = self.voiceImage.withTintColor(.red, renderingMode: .alwaysOriginal)
+        self.voiceBtn.setImage(tintedImage, for: .normal)
+        
+        do {
+            try audioEngine.start()
+        } catch {
+            return print(error)
+        }
+        
+        let recognizer = SFSpeechRecognizer()
+        if recognizer == nil {
+            return
+        }
+        
+        recognitionTask = speechRecognizer?.recognitionTask(with: recognitionRequest, resultHandler: { result, err in
+            if let result = result {
+                let str = result.bestTranscription.formattedString
+                self.messageInputBar.inputTextView.text = str
+            }
+            else if let err = err {
+                print(err)
+            }
+        })
+    }
+    
+    func cancelSpeechRecognization() {
+        print("cancelled")
+        recognitionTask?.cancel()
+        recognitionTask = nil
+        audioEngine.stop()
+        recognitionRequest.endAudio()
+        let tintedImage = self.voiceImage.withTintColor(.lightGreen, renderingMode: .alwaysOriginal)
+        self.voiceBtn.setImage(tintedImage, for: .normal)
+        
+        if audioEngine.inputNode.numberOfInputs > 0 {
+            audioEngine.inputNode.removeTap(onBus: 0)
+        }
+
+    }
+    
     func loadMessage() {
         db.getMessages { docSnapshot in
             for doc in docSnapshot {
@@ -335,7 +430,8 @@ class ChatGptViewController:  MessagesViewController, MessagesDataSource, Messag
 //                    self.addMessages(message: self.messages)
 //                }
 //            }
-            
+            cancelSpeechRecognization()
+            startTalking = false
             GptApiService().getGptResponse(messagePrompt: text) { response in
                 self.addChatGptResponse(response)
                 self.addMessages(message: self.messages)
