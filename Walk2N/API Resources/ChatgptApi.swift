@@ -92,20 +92,27 @@ class GptApiService {
                 dispatchGroup.notify(queue: .main) {
                     for i in 0...13 {
                         let data = model[i]
-                        self.mainPrompt += "\(data.date): \(Int(data.steps!)) steps, walked \(Int(data.distance!)) meters, \(Int(data.activeEnergy!) ) calories burned, \(Int(data.exerciseMinutes!) ) minutes of exercise, heart rate of \(Int(data.heartRate ?? 0)) bpm. My step goal for today is \(stepGoalToday) steps. "
+                        self.mainPrompt += "\(data.date): \(Int(data.steps!)) steps, walked \(Int(data.distance!)) meters, \(Int(data.activeEnergy!) ) calories burned, \(Int(data.exerciseMinutes!) ) minutes of exercise, heart rate of \(Int(data.heartRate ?? 0)) bpm. "
                     }
+                    self.mainPrompt += "My step goal for today is \(stepGoalToday) steps."
                     self.loadStatusStr { statusStr in
                         print("status", statusStr)
                         self.mainPrompt += statusStr
                         print(self.mainPrompt)
 
                         Task {
-                            let response = try await api.sendMessage(text: messagePrompt,
-                                                                     model: "gpt-3.5-turbo",
-                                                                     systemText: self.mainPrompt,
-                                                                     temperature: 0.9)
-
-                            completion!(response)
+                            do {
+                                let response = try await api.sendMessage(text: messagePrompt,
+                                                                         model: "gpt-3.5-turbo",
+                                                                         systemText: self.mainPrompt,
+                                                                         temperature: 0.9)
+                                print("response", response)
+                                completion!(response)
+                            }
+                            catch {
+                                print(error.localizedDescription)
+                            }
+                          
                         }
                         
                         
@@ -287,10 +294,11 @@ class GptApiService {
                         originalPrompt += "My active calory consumed is \(ActCal). "
                         originalPrompt += "My calory intake from food so far is \(MealCal). "
                         originalPrompt += Meals
+ 
+                        completion(originalPrompt)
                     }
                     
-                  
-                    completion(originalPrompt)
+                    
                    
                 }
             }
@@ -352,36 +360,39 @@ class GptApiService {
                         } else {
                             for i in 0..<mealHist!.count {
                                 let meal = mealHist![i] as! [String: Any]
+                                let date = (meal["date"] as! Timestamp).dateValue()
                                 let breakfast = meal["breakfast"] as? [String: Any]
                                 let lunch = meal["lunch"] as? [String: Any]
                                 let dinner = meal["dinner"] as? [String: Any]
                                 
-                                var breakfastCal = 0.0
-                                if breakfast != nil {
-                                    breakfastCal = breakfast!["mealCalories"] as? Double ?? 0.0
-                                    let breakfastName = breakfast!["mealName"] as? String ?? ""
-                                    mealStr += " Today I ate \(breakfastName) as my breakfast with \(breakfastCal) calories. "
-                                }
-                                var lunchCal = 0.0
-                                if lunch != nil {
-                                    lunchCal = lunch!["mealCalories"] as? Double ?? 0.0
-                                    let lunchName = lunch!["mealName"] as? String ?? ""
-                                    mealStr += " Today I ate \(lunchName) as my lunch with \(lunchCal) calories. "
-                                }
-                                var dinnerCal = 0.0
-                                if dinner != nil {
-                                    dinnerCal = dinner!["mealCalories"] as? Double ?? 0.0
-                                    let dinnerName = dinner!["mealName"] as? String ?? ""
-                                    mealStr += " Today I ate \(dinnerName) as my dinner with \(dinnerCal) calories. "
-                                }
-                                
-                                let date = (meal["date"] as! Timestamp).dateValue()
                                 if self.isSameDay(today, date) {
+                                    var breakfastCal = 0.0
+                                    if breakfast != nil {
+                                        breakfastCal = breakfast!["mealCalories"] as? Double ?? 0.0
+                                        let breakfastName = breakfast!["mealName"] as? String ?? ""
+                                        mealStr += " Today I ate \(breakfastName) as my breakfast with \(breakfastCal) calories. "
+                                    }
+                                    var lunchCal = 0.0
+                                    if lunch != nil {
+                                        lunchCal = lunch!["mealCalories"] as? Double ?? 0.0
+                                        let lunchName = lunch!["mealName"] as? String ?? ""
+                                        mealStr += " Today I ate \(lunchName) as my lunch with \(lunchCal) calories. "
+                                    }
+                                    var dinnerCal = 0.0
+                                    if dinner != nil {
+                                        dinnerCal = dinner!["mealCalories"] as? Double ?? 0.0
+                                        let dinnerName = dinner!["mealName"] as? String ?? ""
+                                        mealStr += " Today I ate \(dinnerName) as my dinner with \(dinnerCal) calories. "
+                                    }
+                                    
                                     mealCal = breakfastCal + lunchCal + dinnerCal
                                 }
+                               
+                                
                             }
                         }
                         
+                        print("meal today", mealStr)
                         
                         
                         completion(("\(TDEE.truncate(places: 2))", activeLevel, "\(Double(cal).truncate(places: 2))", "\(String(describing: mealCal!))", mealStr))
