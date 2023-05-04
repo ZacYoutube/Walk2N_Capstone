@@ -39,7 +39,6 @@ class FoodApiService {
                 
                 let parsed = result!["parsed"] as? [Any]
                 
-                print(parsed)
                 if parsed!.count > 0 {
                     let foodList = parsed![0] as! [String: Any]
                     let food = foodList["food"] as? [String: Any]

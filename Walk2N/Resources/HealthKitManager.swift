@@ -20,6 +20,7 @@ class HealthKitManager {
             HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!,
             HKObjectType.quantityType(forIdentifier: .appleExerciseTime)!,
             HKObjectType.quantityType(forIdentifier: .heartRate)!,
+            HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)!
         ]
         
         healthStore.requestAuthorization(toShare: nil, read: types) { success, error in

@@ -16,11 +16,12 @@ struct Model: Codable {
     var exerciseMinutes: Double?
     var heartRate: Double?
     var distance: Double?
+    var stepGoal: Double?
 }
 
 class GptApiService {
     private let apiKey = ApiKeyObject.apiKey
-    var mainPrompt = "As a knowledgeable and passionate caregiver with expertise in personal health, you are being asked to provide brief responses that address the user's queries, while avoiding the use of statistical data. If any health metric appears to be low, kindly offer advice on how the user can improve. Some health metrics over the past two weeks (14 days) to incorporate is given below. If a value is zero, the user has not inputted anything for that day. Do NOT say the metric is zero. For example, if heart rate is zero on one day, it simply means user has not recorded his/her heart rate. \n\n"
+    var mainPrompt = "As a knowledgeable and passionate caregiver with expertise in personal health, you are being asked to provide brief responses that address the user's queries, while avoiding the use of statistical data. If any health metric appears to be low, kindly offer advice on how the user can improve. Some health metrics over the past two weeks (14 days) to incorporate is given below. If a value is zero, the user has not inputted anything for that day. For example, if heart rate is zero on one day, it simply means user has not recorded his/her heart rate. It does not mean user has 0 as heart rate! \n\n"
     let db = DatabaseManager.shared
     
     func getGptResponse(messagePrompt: String, completion:((String) -> Void)?) {
@@ -85,6 +86,22 @@ class GptApiService {
                             let stepGoal = doc["stepGoalToday"] as! Double
                             stepGoalToday = stepGoal
                         }
+                        if doc["historicalSteps"] != nil && (doc["historicalSteps"] as? [Any]) != nil {
+                            var historicalSteps = doc["historicalSteps"]! as! [Any]
+                            historicalSteps = historicalSteps.sorted(by: {
+                                ((($0 as! [String:Any])["date"] as! Timestamp).dateValue()) < ((($1 as! [String:Any])["date"] as! Timestamp).dateValue())
+                            })
+                            for i in stride(from: 13, to: 0, by: -1) {
+                                let isIndexValid = historicalSteps.indices.contains(historicalSteps.count - i)
+                                if isIndexValid {
+                                    model[13 - i].stepGoal = ((historicalSteps[historicalSteps.count - i] as! [String: Any])["stepGoal"] as! Double)
+                                } else {
+                                    model[13 - i].stepGoal = 0.0
+                                }
+                                print(model)
+                                
+                            }
+                        }
                     }
                     dispatchGroup.leave()
                 }
@@ -92,21 +109,18 @@ class GptApiService {
                 dispatchGroup.notify(queue: .main) {
                     for i in 0...13 {
                         let data = model[i]
-                        self.mainPrompt += "\(data.date): \(Int(data.steps!)) steps, walked \(Int(data.distance!)) meters, \(Int(data.activeEnergy!) ) calories burned, \(Int(data.exerciseMinutes!) ) minutes of exercise, heart rate of \(Int(data.heartRate ?? 0)) bpm. "
+                        self.mainPrompt += "\(data.date): \(Int(data.steps!)) steps, walked \(Int(data.distance!)) meters, \(Int(data.activeEnergy!) ) calories burned, \(Int(data.exerciseMinutes!) ) minutes of exercise, heart rate of \(Int(data.heartRate ?? 0)) bpm. My step goal was: \(Int(data.stepGoal ?? 0.0)). "
                     }
                     self.mainPrompt += "My step goal for today is \(stepGoalToday) steps."
+                    print(self.mainPrompt)
                     self.loadStatusStr { statusStr in
-                        print("status", statusStr)
                         self.mainPrompt += statusStr
-                        print(self.mainPrompt)
-
                         Task {
                             do {
                                 let response = try await api.sendMessage(text: messagePrompt,
                                                                          model: "gpt-3.5-turbo",
                                                                          systemText: self.mainPrompt,
                                                                          temperature: 0.9)
-                                print("response", response)
                                 completion!(response)
                             }
                             catch {

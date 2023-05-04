@@ -316,7 +316,7 @@ class MainPageViewController: UIViewController {
                                 self.activeCal.text = "\(Double(cal).truncate(places: 2))"
                                 self.activityLevel.text = activeLevel
                                 self.TDEEText.text = "\(TDEE.truncate(places: 2))"
-                                self.mealCal.text = "\(String(describing: mealCal!))"
+                                self.mealCal.text = "\(String(describing: mealCal!.truncate(places: 2)))"
                             }
                         }
                     }
